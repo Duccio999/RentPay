@@ -1,7 +1,7 @@
 {
   "name": "RentPay",
   "short_name": "RentPay",
-  "description": "Pagamenti affitti automatici: contratti digitali, KYC e pagamenti ricorrenti.",
+  "description": "Pagamenti affitti automatici con garanzia del canone (assicurazioni partner).",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
