@@ -1,8 +1,7 @@
-
 // PWA SW
 if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js'));}
 
-// Install
+// Install prompt
 let deferredPrompt; const installBtn = document.getElementById('installBtn');
 window.addEventListener('beforeinstallprompt', (e)=>{e.preventDefault();deferredPrompt=e;installBtn.hidden=false;});
 installBtn?.addEventListener('click', async()=>{if(!deferredPrompt)return; deferredPrompt.prompt(); await deferredPrompt.userChoice; installBtn.hidden=true; deferredPrompt=null;});
@@ -14,14 +13,25 @@ document.getElementById('year').textContent = new Date().getFullYear().toString(
 const app = document.getElementById('app');
 const menuBtn = document.getElementById('menuBtn');
 const menu = document.getElementById('menu');
+const backdrop = document.getElementById('backdrop');
 
-// Robust mobile menu toggle
-function openMenu(){ menu.classList.add('open'); menuBtn.setAttribute('aria-expanded','true'); menu.setAttribute('aria-hidden','false'); }
-function closeMenu(){ menu.classList.remove('open'); menuBtn.setAttribute('aria-expanded','false'); menu.setAttribute('aria-hidden','true'); }
+// Drawer menu logic (works on iOS/Android)
+function openMenu(){
+  menu.classList.add('open');
+  menuBtn.setAttribute('aria-expanded','true');
+  menu.setAttribute('aria-hidden','false');
+  backdrop.hidden = false;
+}
+function closeMenu(){
+  menu.classList.remove('open');
+  menuBtn.setAttribute('aria-expanded','false');
+  menu.setAttribute('aria-hidden','true');
+  backdrop.hidden = true;
+}
 menuBtn.addEventListener('click',(e)=>{ e.stopPropagation(); menu.classList.contains('open') ? closeMenu() : openMenu(); });
-document.addEventListener('click',(e)=>{ if(menu.classList.contains('open')){ const inside = e.target.closest('#menu,.hamburger'); if(!inside) closeMenu(); }});
+backdrop.addEventListener('click', closeMenu);
 
-// Simple hash router
+// Hash router
 const routes = {
   '#/': homeView,
   '#/access': accessView,
@@ -32,14 +42,15 @@ const routes = {
   '#/insurance': insuranceView,
   '#/faq': faqView,
 };
-
 function navigate(hash){ if(location.hash!==hash){ location.hash = hash; } else { render(); } }
 window.addEventListener('hashchange', render);
 
-// Delegate clicks
+// Delegate menu links
 document.addEventListener('click', (e)=>{
   const a = e.target.closest('[data-goto]');
   if(a){ e.preventDefault(); navigate(a.getAttribute('data-goto')); }
+  const navA = e.target.closest('#menu a');
+  if(navA){ closeMenu(); }
 });
 
 // State (demo)
@@ -59,23 +70,24 @@ const button = (txt, on, cls='btn')=>{const b=el('button',{class:cls}, document.
 // Views
 function homeView(){
   const hero = el('section',{class:'hero card'},
-    el('h1',{}, document.createTextNode('Zero pensieri.')),
-    el('p',{class:'lead'}, document.createTextNode('RentPay automatizza i pagamenti degli affitti: contratti digitali, KYC e addebiti ricorrenti su carta o SEPA.')),
+    el('h1',{}, document.createTextNode('Affitti automatici, pagati puntuali.')),
+    el('p',{class:'lead'}, document.createTextNode('Contratti digitali, KYC e addebiti ricorrenti in un’unica app. Niente solleciti, zero sbatti.')),
     el('div',{class:'row'},
       button('Accedi', ()=>navigate('#/access'),'btn'),
       button('Scopri le funzioni', ()=>navigate('#/features'),'btn ghost')
     )
   );
   const highlights = el('div',{class:'highlights'},
-    hl('💳','Pagamenti automatici','Programmi il giorno e incassi su IBAN.'),
+    hl('💳','Pagamenti automatici','Programmi il giorno, incassi su IBAN.'),
     hl('📝','Contratti & Firma','Carichi il PDF e firmi in digitale (demo).'),
-    hl('🛡️','Garanzia canone','Stima premio (demo) con partner assicurativi.')
+    hl('🛡️','Garanzia canone','Stima premio (demo) con partner.')
   );
   return [ hero, el('section',{class:'section'}, highlights) ];
 }
 function hl(emoji,title,desc){
   const d = el('div',{class:'highlight'});
-  d.append(el('h3',{}, document.createTextNode(`${emoji} ${title}`))), d.append(el('p',{}, document.createTextNode(desc)));
+  d.append(el('h3',{}, document.createTextNode(`${emoji} ${title}`)));
+  d.append(el('p',{}, document.createTextNode(desc)));
   return d;
 }
 
@@ -83,12 +95,12 @@ function accessView(){
   const tiles = el('div',{class:'tiles'},
     el('div',{class:'tile'},
       el('h3',{}, document.createTextNode('Sono Proprietario')),
-      el('p',{}, document.createTextNode('Imposta IBAN, canone e giorno. Invita l’inquilino e vedi gli incassi.')),
+      el('p',{}, document.createTextNode('Imposta IBAN, canone e giorno. Invita l’inquilino e monitora gli incassi.')),
       button('Vai alla dashboard', ()=>navigate('#/landlord'), 'btn')
     ),
     el('div',{class:'tile'},
       el('h3',{}, document.createTextNode('Sono Inquilino')),
-      el('p',{}, document.createTextNode('Carica documento (KYC), collega il contratto e imposta il metodo di pagamento.')),
+      el('p',{}, document.createTextNode('KYC, collegamento contratto e metodo di pagamento in pochi tocchi.')),
       button('Entra nell’area inquilino', ()=>navigate('#/tenant'), 'btn ghost')
     )
   );
@@ -96,11 +108,19 @@ function accessView(){
 }
 
 function landlordView(){
-  const name = input('Immobile','l_property','text','Via Roma 10, Firenze', state.l_property||'');
-  const iban = input('IBAN Accredito','l_iban','text','IT60 X054 2811 1010 0000 0123 456', state.l_iban||'');
-  const amount = input('Canone Mensile (EUR)','l_amount','number','850.00', state.l_amount||'850.00');
-  const day = input('Giorno Addebito','l_day','number','5', state.l_day||'5');
-  const months = input('Mesi Garanzia (assicurazione)','l_months','number','6', state.l_months||'6');
+  const left = el('div',{},
+    el('h2',{}, document.createTextNode('Dashboard Proprietario')),
+    input('Immobile','l_property','text','Via Roma 10, Firenze', state.l_property||'').wrap,
+    input('IBAN Accredito','l_iban','text','IT60 X054 2811 1010 0000 0123 456', state.l_iban||'').wrap,
+    input('Canone Mensile (EUR)','l_amount','number','850.00', state.l_amount||'850.00').wrap,
+    input('Giorno Addebito','l_day','number','5', state.l_day||'5').wrap,
+    input('Mesi Garanzia (assicurazione)','l_months','number','6', state.l_months||'6').wrap,
+    button('Salva & Programma', ()=>{
+      const get=(id)=>document.getElementById(id).value;
+      state.l_property=get('l_property'); state.l_iban=get('l_iban'); state.l_amount=get('l_amount');
+      state.l_day=get('l_day'); state.l_months=get('l_months'); save(); alert('Programmazione aggiornata (demo)');
+    }, 'btn')
+  );
 
   const table = el('table',{class:'table'},
     el('thead',{}, el('tr',{}, el('th',{},document.createTextNode('Data')), el('th',{},document.createTextNode('Inquilino')), el('th',{},document.createTextNode('Importo')), el('th',{},document.createTextNode('Stato')))),
@@ -109,90 +129,92 @@ function landlordView(){
       el('tr',{}, el('td',{},document.createTextNode('05/08/2025')), el('td',{},document.createTextNode('Mario Rossi')), el('td',{},document.createTextNode('€'+(state.l_amount||'850,00'))), el('td',{}, el('span',{class:'badge'}, document.createTextNode('Pagato')))),
     )
   );
+  const right = el('div',{},
+    el('h3',{}, document.createTextNode('Incassi')),
+    table
+  );
 
-  const saveBtn = button('Salva & Programma', ()=>{
-    state.l_property=name.input.value; state.l_iban=iban.input.value; state.l_amount=amount.input.value;
-    state.l_day=day.input.value; state.l_months=months.input.value; save();
-    alert('Programmazione aggiornata (demo)');
-  }, 'btn');
-
-  return [
-    el('section',{class:'section card'},
-      el('h2',{}, document.createTextNode('Dashboard Proprietario')),
-      name.wrap, iban.wrap, amount.wrap, day.wrap, months.wrap,
-      el('div',{class:'row'}, saveBtn)
-    ),
-    el('section',{class:'section card'},
-      el('h3',{}, document.createTextNode('Incassi')),
-      table
-    )
-  ];
+  return [ el('section',{class:'section card grid2'}, left, right) ];
 }
 
 function tenantView(){
-  const tname = input('Nome e Cognome','t_name','text','Mario Rossi', state.t_name||'');
-  const email = input('Email','t_email','email','mario@esempio.it', state.t_email||'');
-  const pm = input('Metodo di Pagamento (demo)','t_pm','text','Carta **** 4242 o IBAN', state.t_pm||'');
-
-  const saveBtn = button('Salva metodo di pagamento', ()=>{
-    state.t_name=tname.input.value; state.t_email=email.input.value; state.t_pm=pm.input.value; save();
-    alert('Dati salvati (demo)');
-  }, 'btn');
-
-  return [
-    el('section',{class:'section card'},
-      el('h2',{}, document.createTextNode('Area Inquilino')),
-      tname.wrap, email.wrap, pm.wrap,
-      el('div',{class:'row'}, saveBtn)
-    ),
-    el('section',{class:'section card'},
-      el('h3',{}, document.createTextNode('Prossimo addebito')),
-      el('p',{}, document.createTextNode('Ogni mese il giorno '+(state.l_day||'5')+' — €'+(state.l_amount||'850,00')+' (demo).'))
-    )
-  ];
+  const left = el('div',{},
+    el('h2',{}, document.createTextNode('Area Inquilino')),
+    input('Nome e Cognome','t_name','text','Mario Rossi', state.t_name||'').wrap,
+    input('Email','t_email','email','mario@esempio.it', state.t_email||'').wrap,
+    input('Metodo di Pagamento (demo)','t_pm','text','Carta **** 4242 o IBAN', state.t_pm||'').wrap,
+    button('Salva metodo di pagamento', ()=>{
+      const get=(id)=>document.getElementById(id).value;
+      state.t_name=get('t_name'); state.t_email=get('t_email'); state.t_pm=get('t_pm'); save(); alert('Dati salvati (demo)');
+    }, 'btn')
+  );
+  const right = el('div',{},
+    el('h3',{}, document.createTextNode('Prossimo addebito')),
+    el('p',{}, document.createTextNode('Ogni mese il giorno '+(state.l_day||'5')+' — €'+(state.l_amount||'850,00')+' (demo).'))
+  );
+  return [ el('section',{class:'section card grid2'}, left, right) ];
 }
 
 function featuresView(){
-  return [ el('section',{class:'section card'},
-    el('h2',{}, document.createTextNode('Funzioni')),
-    el('ul',{},
-      el('li',{}, document.createTextNode('Pagamenti ricorrenti su carta/SEPA (demo).')),
-      el('li',{}, document.createTextNode('Contratti digitali con firma OTP/FEA (demo).')),
-      el('li',{}, document.createTextNode('KYC con provider esterni (demo).'))
-    )
-  ) ];
+  const blocks = el('div',{class:'grid2'},
+    feature('💳 Pagamenti ricorrenti','Addebiti mensili automatici su carta e SEPA (demo).'),
+    feature('🧾 Ricevute & report','Storico incassi, esport CSV (demo).'),
+    feature('📝 Contratti digitali','Upload PDF, firma OTP/FEA (demo).'),
+    feature('👤 KYC & AML','Verifica identità con provider esterni (demo).')
+  );
+  return [ el('section',{class:'section card'}, el('h2',{}, document.createTextNode('Funzioni')), blocks) ];
+}
+function feature(icon,title,desc){
+  const b = el('div',{class:'tile'});
+  b.append(el('h3',{}, document.createTextNode(`${icon} ${title}`)));
+  b.append(el('p',{}, document.createTextNode(desc)));
+  return b;
 }
 
 function howView(){
-  return [ el('section',{class:'section card'},
-    el('h2',{}, document.createTextNode('Come funziona')),
-    el('ol',{},
-      el('li',{}, document.createTextNode('Registrazione proprietario/locatario.')),
-      el('li',{}, document.createTextNode('Firma del contratto e KYC.')),
-      el('li',{}, document.createTextNode('Programmazione addebiti mensili.'))
-    )
-  ) ];
+  const steps = el('ol',{},
+    li('Registrazione','Proprietario o inquilino creano l’account.'),
+    li('Firma & KYC','Carica documento e firma digitale del contratto.'),
+    li('Addebiti automatici','Imposti giorno e importo: incasso puntuale.')
+  );
+  return [ el('section',{class:'section card'}, el('h2',{}, document.createTextNode('Come funziona')), steps) ];
 }
+function li(title,desc){ const li=el('li',{}); li.append(el('b',{},document.createTextNode(title)), document.createTextNode(' — '+desc)); return li; }
 
 function insuranceView(){
-  return [ el('section',{class:'section card'},
-    el('h2',{}, document.createTextNode('Garanzia canone')),
-    el('p',{}, document.createTextNode('Stima premio (demo) con partner assicurativi esterni.'))
-  ) ];
+  const calc = el('div',{},
+    input('Canone mensile (€)','ins_amount','number','800','').wrap,
+    input('Mesi coperti','ins_months','number','6','').wrap,
+    input('Franchigia (%)','ins_fr','number','10','').wrap,
+    button('Stima premio (demo)', ()=>{
+      const a = parseFloat(document.getElementById('ins_amount').value||'0');
+      const m = parseInt(document.getElementById('ins_months').value||'0');
+      const f = parseFloat(document.getElementById('ins_fr').value||'0')/100;
+      const base = Math.max(0, a*m*(0.04 - f*0.01));
+      alert('Stima premio indicativa: € ' + base.toFixed(2));
+    }, 'btn')
+  );
+  const copy = el('div',{},
+    el('p',{}, document.createTextNode('La Garanzia Canone è fornita da partner assicurativi esterni. La stima è puramente dimostrativa.'))
+  );
+  return [ el('section',{class:'section card grid2'}, calc, copy) ];
 }
 
 function faqView(){
-  return [ el('section',{class:'section card'},
-    el('h2',{}, document.createTextNode('FAQ')),
-    el('p',{}, document.createTextNode('Info rapide su pagamenti, KYC e garanzia (demo).'))
-  ) ];
+  const list = el('div',{class:'tiles'},
+    qa('Serve un conto speciale?','No, accreditiamo sull’IBAN indicato dal proprietario.'),
+    qa('Come aggiungo il metodo di pagamento?','Dalla tua area inquilino (demo). In produzione integreremo Stripe/SEPA.'),
+    qa('È legale la firma digitale?','Sì: FEA/OTP con provider accreditati.')
+  );
+  return [ el('section',{class:'section card'}, el('h2',{}, document.createTextNode('FAQ')), list) ];
 }
+function qa(q,a){ const d=el('div',{class:'tile'}); d.append(el('h3',{},document.createTextNode(q))); d.append(el('p',{},document.createTextNode(a))); return d; }
 
 // Render
 function render(){
   const view = routes[location.hash] || routes['#/'];
   app.innerHTML = ''; view().forEach(n=>app.append(n));
-  closeMenu(); // ensure menu closes after navigation
+  closeMenu();
 }
 if(!location.hash) location.hash = '#/';
 render();

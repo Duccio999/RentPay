@@ -9,14 +9,14 @@
   <link rel="icon" href="./icons/icon-192.png" sizes="192x192">
   <link rel="apple-touch-icon" href="./icons/icon-192.png">
   <link rel="stylesheet" href="./styles.css">
-  <meta name="description" content="RentPay: pagamenti affitti automatici, firma e KYC. Zero pensieri.">
+  <meta name="description" content="RentPay: pagamenti affitti automatici, firma e KYC.">
 </head>
 <body>
   <header class="nav">
     <a class="brand" href="#/" data-goto="#/">
       <span class="house">🏠</span><span class="brand-text">RentPay</span>
     </a>
-    <button id="menuBtn" class="hamburger" aria-controls="menu" aria-expanded="false" aria-label="Menu">☰</button>
+    <button id="menuBtn" class="hamburger" aria-controls="menu" aria-expanded="false" aria-label="Apri menu" type="button">☰</button>
     <nav id="menu" class="menu" aria-hidden="true">
       <a href="#/" data-goto="#/">Home</a>
       <a href="#/access" data-goto="#/access">Accedi</a>
@@ -25,6 +25,7 @@
       <a href="#/insurance" data-goto="#/insurance">Garanzia</a>
       <a href="#/faq" data-goto="#/faq">FAQ</a>
     </nav>
+    <div id="backdrop" class="backdrop" hidden></div>
   </header>
 
   <main id="app" class="app"></main>
