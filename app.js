@@ -11,27 +11,13 @@ document.getElementById('year').textContent = new Date().getFullYear().toString(
 
 // Elements
 const app = document.getElementById('app');
-const menuBtn = document.getElementById('menuBtn');
-const menu = document.getElementById('menu');
-const backdrop = document.getElementById('backdrop');
+const navToggle = document.getElementById('navToggle');
 
-// Drawer menu logic (no overlap: display none when closed)
-function openMenu(){
-  menu.classList.add('open');
-  menuBtn.setAttribute('aria-expanded','true');
-  menu.setAttribute('aria-hidden','false');
-  backdrop.hidden = false;
-  document.body.classList.add('no-scroll');
-}
-function closeMenu(){
-  menu.classList.remove('open');
-  menuBtn.setAttribute('aria-expanded','false');
-  menu.setAttribute('aria-hidden','true');
-  backdrop.hidden = true;
-  document.body.classList.remove('no-scroll');
-}
-menuBtn.addEventListener('click',(e)=>{ e.stopPropagation(); menu.classList.contains('open') ? closeMenu() : openMenu(); });
-backdrop.addEventListener('click', closeMenu);
+// Close drawer when clicking a link
+document.addEventListener('click',(e)=>{
+  const link = e.target.closest('.drawer a, .menu-desktop a, .brand');
+  if(link){ navToggle.checked = false; }
+});
 
 // Hash router
 const routes = {
@@ -47,10 +33,10 @@ const routes = {
 function navigate(hash){ if(location.hash!==hash){ location.hash = hash; } else { render(); } }
 window.addEventListener('hashchange', render);
 
-// Delegate clicks
-document.addEventListener('click', (e)=>{
-  const a = e.target.closest('[data-goto]'); if(a){ e.preventDefault(); navigate(a.getAttribute('data-goto')); }
-  if(e.target.closest('#menu a')) closeMenu();
+// Delegate data-goto clicks
+document.addEventListener('click',(e)=>{
+  const a = e.target.closest('[data-goto]');
+  if(a){ e.preventDefault(); navigate(a.getAttribute('data-goto')); }
 });
 
 // State (demo)
@@ -65,7 +51,7 @@ const button = (txt, on, cls='btn')=>{const b=el('button',{class:cls}, document.
 // Views
 function homeView(){
   const hero = el('section',{class:'hero card'},
-    el('h1',{}, document.createTextNode('Affitti automatici, pagati puntuali.')),
+    el('h1',{}, document.createTextNode('Affitti automatici, zero pensieri')),
     el('p',{class:'lead'}, document.createTextNode('Contratti digitali, KYC e addebiti ricorrenti in un’unica app.')),
     el('div',{class:'row'}, button('Accedi', ()=>navigate('#/access'),'btn'), button('Scopri le funzioni', ()=>navigate('#/features'),'btn ghost'))
   );
@@ -149,5 +135,5 @@ function faqView(){
 function qa(q,a){ const d=el('div',{class:'tile'}); d.append(el('h3',{},document.createTextNode(q))); d.append(el('p',{},document.createTextNode(a))); return d; }
 
 // Render
-function render(){ const view = routes[location.hash] || routes['#/']; app.innerHTML = ''; view().forEach(n=>app.append(n)); closeMenu(); }
+function render(){ const view = routes[location.hash] || routes['#/']; app.innerHTML = ''; view().forEach(n=>app.append(n)); }
 if(!location.hash) location.hash = '#/'; render();

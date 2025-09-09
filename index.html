@@ -12,12 +12,26 @@
   <meta name="description" content="RentPay: affitti automatici, contratti digitali, KYC e addebiti ricorrenti.">
 </head>
 <body>
+  <!-- Mobile menu toggle (CSS-based) -->
+  <input id="navToggle" type="checkbox" class="nav-toggle" aria-hidden="true" />
+  <nav class="drawer" aria-label="Menu principale">
+    <a href="#/" data-goto="#/">Home</a>
+    <a href="#/access" data-goto="#/access">Accedi</a>
+    <a href="#/features" data-goto="#/features">Funzioni</a>
+    <a href="#/how" data-goto="#/how">Come funziona</a>
+    <a href="#/insurance" data-goto="#/insurance">Garanzia</a>
+    <a href="#/faq" data-goto="#/faq">FAQ</a>
+  </nav>
+  <div class="drawer-backdrop"></div>
+
   <header class="nav">
     <a class="brand" href="#/" data-goto="#/">
       <span class="house">🏠</span><span class="brand-text">RentPay</span>
     </a>
-    <button id="menuBtn" class="hamburger" aria-controls="menu" aria-expanded="false" aria-label="Apri menu" type="button">☰</button>
-    <nav id="menu" class="menu" aria-hidden="true">
+    <!-- Hamburger triggers the hidden checkbox -->
+    <label for="navToggle" id="menuBtn" class="hamburger" aria-label="Apri menu" role="button" tabindex="0">☰</label>
+    <!-- Desktop menu -->
+    <nav class="menu-desktop">
       <a href="#/" data-goto="#/">Home</a>
       <a href="#/access" data-goto="#/access">Accedi</a>
       <a href="#/features" data-goto="#/features">Funzioni</a>
@@ -26,7 +40,6 @@
       <a href="#/faq" data-goto="#/faq">FAQ</a>
     </nav>
   </header>
-  <div id="backdrop" class="backdrop" hidden></div>
 
   <main id="app" class="app"></main>
 
