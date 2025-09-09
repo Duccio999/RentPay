@@ -15,9 +15,21 @@ const menuBtn = document.getElementById('menuBtn');
 const menu = document.getElementById('menu');
 const backdrop = document.getElementById('backdrop');
 
-// Drawer menu logic
-function openMenu(){ menu.classList.add('open'); menuBtn.setAttribute('aria-expanded','true'); menu.setAttribute('aria-hidden','false'); backdrop.hidden=false; }
-function closeMenu(){ menu.classList.remove('open'); menuBtn.setAttribute('aria-expanded','false'); menu.setAttribute('aria-hidden','true'); backdrop.hidden=true; }
+// Drawer menu logic (no overlap: display none when closed)
+function openMenu(){
+  menu.classList.add('open');
+  menuBtn.setAttribute('aria-expanded','true');
+  menu.setAttribute('aria-hidden','false');
+  backdrop.hidden = false;
+  document.body.classList.add('no-scroll');
+}
+function closeMenu(){
+  menu.classList.remove('open');
+  menuBtn.setAttribute('aria-expanded','false');
+  menu.setAttribute('aria-hidden','true');
+  backdrop.hidden = true;
+  document.body.classList.remove('no-scroll');
+}
 menuBtn.addEventListener('click',(e)=>{ e.stopPropagation(); menu.classList.contains('open') ? closeMenu() : openMenu(); });
 backdrop.addEventListener('click', closeMenu);
 
