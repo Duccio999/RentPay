@@ -2,38 +2,35 @@
 <html lang="it">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>RentPay</title>
   <meta name="theme-color" content="#0a7cff">
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" href="./icons/icon-192.png" sizes="192x192">
   <link rel="apple-touch-icon" href="./icons/icon-192.png">
   <link rel="stylesheet" href="./styles.css">
-  <meta name="description" content="RentPay: incassi affitti automatici con firma e KYC.">
+  <meta name="description" content="Pagamenti affitti automatici, firma digitale e KYC.">
 </head>
 <body>
-  <header class="nav">
-    <div class="brand" data-goto="#/">
-      <div class="logo">🏠</div>
-      <strong>RentPay</strong>
-    </div>
-    <button id="navToggle" class="hamburger" aria-label="Menu">☰</button>
-    <nav id="navMenu" class="menu">
-      <a data-goto="#/features">Funzioni</a>
-      <a data-goto="#/how">Come funziona</a>
-      <a data-goto="#/insurance">Garanzia</a>
-      <a data-goto="#/faq">FAQ</a>
-      <a data-goto="#/app" class="btn sm">Accedi</a>
-    </nav>
+  <header class="topbar">
+    <button id="menuBtn" aria-label="Menu" class="icon-btn">☰</button>
+    <div class="brand">RentPay</div>
+    <div style="width:40px"></div>
   </header>
 
-  <main id="app" class="container"></main>
+  <nav id="drawer" class="drawer" aria-hidden="true">
+    <a data-goto="#/" class="navlink">Home</a>
+    <a data-goto="#/features" class="navlink">Funzioni</a>
+    <a data-goto="#/how" class="navlink">Come funziona</a>
+    <a data-goto="#/insurance" class="navlink">Garanzia</a>
+    <a data-goto="#/app" class="navlink">Accedi</a>
+  </nav>
 
-  <footer class="footer">
-    <small>© <span id="year"></span> RentPay</small>
-  </footer>
+  <main id="app"></main>
 
   <button id="installBtn" class="install" hidden>Installa app</button>
+
+  <footer class="foot">© <span id="year"></span> RentPay</footer>
 
   <script src="./app.js"></script>
 </body>

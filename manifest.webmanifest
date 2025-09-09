@@ -1,7 +1,7 @@
 {
   "name": "RentPay",
   "short_name": "RentPay",
-  "description": "Incassi affitti automatici con contratto digitale, KYC e garanzia.",
+  "description": "Pagamenti affitti automatici. Firma digitale e KYC.",
   "start_url": "./#/",
   "scope": "./",
   "display": "standalone",
