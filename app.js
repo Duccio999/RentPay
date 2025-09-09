@@ -15,19 +15,9 @@ const menuBtn = document.getElementById('menuBtn');
 const menu = document.getElementById('menu');
 const backdrop = document.getElementById('backdrop');
 
-// Drawer menu logic (works on iOS/Android)
-function openMenu(){
-  menu.classList.add('open');
-  menuBtn.setAttribute('aria-expanded','true');
-  menu.setAttribute('aria-hidden','false');
-  backdrop.hidden = false;
-}
-function closeMenu(){
-  menu.classList.remove('open');
-  menuBtn.setAttribute('aria-expanded','false');
-  menu.setAttribute('aria-hidden','true');
-  backdrop.hidden = true;
-}
+// Drawer menu logic
+function openMenu(){ menu.classList.add('open'); menuBtn.setAttribute('aria-expanded','true'); menu.setAttribute('aria-hidden','false'); backdrop.hidden=false; }
+function closeMenu(){ menu.classList.remove('open'); menuBtn.setAttribute('aria-expanded','false'); menu.setAttribute('aria-hidden','true'); backdrop.hidden=true; }
 menuBtn.addEventListener('click',(e)=>{ e.stopPropagation(); menu.classList.contains('open') ? closeMenu() : openMenu(); });
 backdrop.addEventListener('click', closeMenu);
 
@@ -45,12 +35,10 @@ const routes = {
 function navigate(hash){ if(location.hash!==hash){ location.hash = hash; } else { render(); } }
 window.addEventListener('hashchange', render);
 
-// Delegate menu links
+// Delegate clicks
 document.addEventListener('click', (e)=>{
-  const a = e.target.closest('[data-goto]');
-  if(a){ e.preventDefault(); navigate(a.getAttribute('data-goto')); }
-  const navA = e.target.closest('#menu a');
-  if(navA){ closeMenu(); }
+  const a = e.target.closest('[data-goto]'); if(a){ e.preventDefault(); navigate(a.getAttribute('data-goto')); }
+  if(e.target.closest('#menu a')) closeMenu();
 });
 
 // State (demo)
@@ -59,50 +47,29 @@ function save(){localStorage.setItem('rentpay_state', JSON.stringify(state));}
 
 // Helpers
 const el = (t,a={},...c)=>{const n=document.createElement(t); Object.entries(a).forEach(([k,v])=>{if(k==='class')n.className=v; else if(k==='html')n.innerHTML=v; else n.setAttribute(k,v)}); c.forEach(x=>n.append(x)); return n;};
-const input = (label, id, type='text', ph='', val='')=>{
-  const w=el('div',{});
-  const l=el('div',{class:'label'}, document.createTextNode(label));
-  const i=el('input',{id, class:'input', type, placeholder:ph, value:val});
-  w.append(l,i); return {wrap:w, input:i};
-};
+const input = (label, id, type='text', ph='', val='')=>{ const w=el('div',{}), l=el('div',{class:'label'}, document.createTextNode(label)), i=el('input',{id, class:'input', type, placeholder:ph, value:val}); w.append(l,i); return {wrap:w, input:i}; };
 const button = (txt, on, cls='btn')=>{const b=el('button',{class:cls}, document.createTextNode(txt)); b.onclick=on; return b;};
 
 // Views
 function homeView(){
   const hero = el('section',{class:'hero card'},
     el('h1',{}, document.createTextNode('Affitti automatici, pagati puntuali.')),
-    el('p',{class:'lead'}, document.createTextNode('Contratti digitali, KYC e addebiti ricorrenti in un’unica app. Niente solleciti, zero sbatti.')),
-    el('div',{class:'row'},
-      button('Accedi', ()=>navigate('#/access'),'btn'),
-      button('Scopri le funzioni', ()=>navigate('#/features'),'btn ghost')
-    )
+    el('p',{class:'lead'}, document.createTextNode('Contratti digitali, KYC e addebiti ricorrenti in un’unica app.')),
+    el('div',{class:'row'}, button('Accedi', ()=>navigate('#/access'),'btn'), button('Scopri le funzioni', ()=>navigate('#/features'),'btn ghost'))
   );
   const highlights = el('div',{class:'highlights'},
     hl('💳','Pagamenti automatici','Programmi il giorno, incassi su IBAN.'),
-    hl('📝','Contratti & Firma','Carichi il PDF e firmi in digitale (demo).'),
+    hl('📝','Contratti & Firma','Upload PDF e firma digitale (demo).'),
     hl('🛡️','Garanzia canone','Stima premio (demo) con partner.')
   );
   return [ hero, el('section',{class:'section'}, highlights) ];
 }
-function hl(emoji,title,desc){
-  const d = el('div',{class:'highlight'});
-  d.append(el('h3',{}, document.createTextNode(`${emoji} ${title}`)));
-  d.append(el('p',{}, document.createTextNode(desc)));
-  return d;
-}
+function hl(emoji,title,desc){ const d=el('div',{class:'highlight'}); d.append(el('h3',{}, document.createTextNode(`${emoji} ${title}`))); d.append(el('p',{}, document.createTextNode(desc))); return d; }
 
 function accessView(){
   const tiles = el('div',{class:'tiles'},
-    el('div',{class:'tile'},
-      el('h3',{}, document.createTextNode('Sono Proprietario')),
-      el('p',{}, document.createTextNode('Imposta IBAN, canone e giorno. Invita l’inquilino e monitora gli incassi.')),
-      button('Vai alla dashboard', ()=>navigate('#/landlord'), 'btn')
-    ),
-    el('div',{class:'tile'},
-      el('h3',{}, document.createTextNode('Sono Inquilino')),
-      el('p',{}, document.createTextNode('KYC, collegamento contratto e metodo di pagamento in pochi tocchi.')),
-      button('Entra nell’area inquilino', ()=>navigate('#/tenant'), 'btn ghost')
-    )
+    el('div',{class:'tile'}, el('h3',{}, document.createTextNode('Sono Proprietario')), el('p',{}, document.createTextNode('IBAN, canone, giorno, invito inquilino. Monitoraggio incassi.')), button('Vai alla dashboard', ()=>navigate('#/landlord'), 'btn')),
+    el('div',{class:'tile'}, el('h3',{}, document.createTextNode('Sono Inquilino')), el('p',{}, document.createTextNode('KYC, collegamento contratto e metodo di pagamento.')), button('Entra nell’area inquilino', ()=>navigate('#/tenant'), 'btn ghost'))
   );
   return [ el('section',{class:'section'}, tiles) ];
 }
@@ -115,13 +82,8 @@ function landlordView(){
     input('Canone Mensile (EUR)','l_amount','number','850.00', state.l_amount||'850.00').wrap,
     input('Giorno Addebito','l_day','number','5', state.l_day||'5').wrap,
     input('Mesi Garanzia (assicurazione)','l_months','number','6', state.l_months||'6').wrap,
-    button('Salva & Programma', ()=>{
-      const get=(id)=>document.getElementById(id).value;
-      state.l_property=get('l_property'); state.l_iban=get('l_iban'); state.l_amount=get('l_amount');
-      state.l_day=get('l_day'); state.l_months=get('l_months'); save(); alert('Programmazione aggiornata (demo)');
-    }, 'btn')
+    button('Salva & Programma', ()=>{ const g=(id)=>document.getElementById(id).value; state.l_property=g('l_property'); state.l_iban=g('l_iban'); state.l_amount=g('l_amount'); state.l_day=g('l_day'); state.l_months=g('l_months'); save(); alert('Programmazione aggiornata (demo)'); }, 'btn')
   );
-
   const table = el('table',{class:'table'},
     el('thead',{}, el('tr',{}, el('th',{},document.createTextNode('Data')), el('th',{},document.createTextNode('Inquilino')), el('th',{},document.createTextNode('Importo')), el('th',{},document.createTextNode('Stato')))),
     el('tbody',{},
@@ -129,11 +91,7 @@ function landlordView(){
       el('tr',{}, el('td',{},document.createTextNode('05/08/2025')), el('td',{},document.createTextNode('Mario Rossi')), el('td',{},document.createTextNode('€'+(state.l_amount||'850,00'))), el('td',{}, el('span',{class:'badge'}, document.createTextNode('Pagato')))),
     )
   );
-  const right = el('div',{},
-    el('h3',{}, document.createTextNode('Incassi')),
-    table
-  );
-
+  const right = el('div',{}, el('h3',{}, document.createTextNode('Incassi')), table);
   return [ el('section',{class:'section card grid2'}, left, right) ];
 }
 
@@ -143,15 +101,9 @@ function tenantView(){
     input('Nome e Cognome','t_name','text','Mario Rossi', state.t_name||'').wrap,
     input('Email','t_email','email','mario@esempio.it', state.t_email||'').wrap,
     input('Metodo di Pagamento (demo)','t_pm','text','Carta **** 4242 o IBAN', state.t_pm||'').wrap,
-    button('Salva metodo di pagamento', ()=>{
-      const get=(id)=>document.getElementById(id).value;
-      state.t_name=get('t_name'); state.t_email=get('t_email'); state.t_pm=get('t_pm'); save(); alert('Dati salvati (demo)');
-    }, 'btn')
+    button('Salva metodo di pagamento', ()=>{ const g=(id)=>document.getElementById(id).value; state.t_name=g('t_name'); state.t_email=g('t_email'); state.t_pm=g('t_pm'); save(); alert('Dati salvati (demo)'); }, 'btn')
   );
-  const right = el('div',{},
-    el('h3',{}, document.createTextNode('Prossimo addebito')),
-    el('p',{}, document.createTextNode('Ogni mese il giorno '+(state.l_day||'5')+' — €'+(state.l_amount||'850,00')+' (demo).'))
-  );
+  const right = el('div',{}, el('h3',{}, document.createTextNode('Prossimo addebito')), el('p',{}, document.createTextNode('Ogni mese il giorno '+(state.l_day||'5')+' — €'+(state.l_amount||'850,00')+' (demo).')));
   return [ el('section',{class:'section card grid2'}, left, right) ];
 }
 
@@ -164,57 +116,26 @@ function featuresView(){
   );
   return [ el('section',{class:'section card'}, el('h2',{}, document.createTextNode('Funzioni')), blocks) ];
 }
-function feature(icon,title,desc){
-  const b = el('div',{class:'tile'});
-  b.append(el('h3',{}, document.createTextNode(`${icon} ${title}`)));
-  b.append(el('p',{}, document.createTextNode(desc)));
-  return b;
-}
+function feature(icon,title,desc){ const b = el('div',{class:'tile'}); b.append(el('h3',{}, document.createTextNode(`${icon} ${title}`))); b.append(el('p',{}, document.createTextNode(desc))); return b; }
 
 function howView(){
-  const steps = el('ol',{},
-    li('Registrazione','Proprietario o inquilino creano l’account.'),
-    li('Firma & KYC','Carica documento e firma digitale del contratto.'),
-    li('Addebiti automatici','Imposti giorno e importo: incasso puntuale.')
-  );
+  const steps = el('ol',{}, li('Registrazione','Proprietario o inquilino creano l’account.'), li('Firma & KYC','Carica documento e firma digitale del contratto.'), li('Addebiti automatici','Imposti giorno e importo: incasso puntuale.'));
   return [ el('section',{class:'section card'}, el('h2',{}, document.createTextNode('Come funziona')), steps) ];
 }
 function li(title,desc){ const li=el('li',{}); li.append(el('b',{},document.createTextNode(title)), document.createTextNode(' — '+desc)); return li; }
 
 function insuranceView(){
-  const calc = el('div',{},
-    input('Canone mensile (€)','ins_amount','number','800','').wrap,
-    input('Mesi coperti','ins_months','number','6','').wrap,
-    input('Franchigia (%)','ins_fr','number','10','').wrap,
-    button('Stima premio (demo)', ()=>{
-      const a = parseFloat(document.getElementById('ins_amount').value||'0');
-      const m = parseInt(document.getElementById('ins_months').value||'0');
-      const f = parseFloat(document.getElementById('ins_fr').value||'0')/100;
-      const base = Math.max(0, a*m*(0.04 - f*0.01));
-      alert('Stima premio indicativa: € ' + base.toFixed(2));
-    }, 'btn')
-  );
-  const copy = el('div',{},
-    el('p',{}, document.createTextNode('La Garanzia Canone è fornita da partner assicurativi esterni. La stima è puramente dimostrativa.'))
-  );
+  const calc = el('div',{}, input('Canone mensile (€)','ins_amount','number','800','').wrap, input('Mesi coperti','ins_months','number','6','').wrap, input('Franchigia (%)','ins_fr','number','10','').wrap, button('Stima premio (demo)', ()=>{ const a=parseFloat(document.getElementById('ins_amount').value||'0'); const m=parseInt(document.getElementById('ins_months').value||'0'); const f=parseFloat(document.getElementById('ins_fr').value||'0')/100; const base=Math.max(0,a*m*(0.04 - f*0.01)); alert('Stima premio indicativa: € '+base.toFixed(2)); }, 'btn'));
+  const copy = el('div',{}, el('p',{}, document.createTextNode('La Garanzia Canone è fornita da partner assicurativi esterni. La stima è puramente dimostrativa.')));
   return [ el('section',{class:'section card grid2'}, calc, copy) ];
 }
 
 function faqView(){
-  const list = el('div',{class:'tiles'},
-    qa('Serve un conto speciale?','No, accreditiamo sull’IBAN indicato dal proprietario.'),
-    qa('Come aggiungo il metodo di pagamento?','Dalla tua area inquilino (demo). In produzione integreremo Stripe/SEPA.'),
-    qa('È legale la firma digitale?','Sì: FEA/OTP con provider accreditati.')
-  );
+  const list = el('div',{class:'tiles'}, qa('Serve un conto speciale?','No, accreditiamo sull’IBAN indicato dal proprietario.'), qa('Come aggiungo il metodo di pagamento?','Dalla tua area inquilino (demo). In produzione integreremo Stripe/SEPA.'), qa('È legale la firma digitale?','Sì: FEA/OTP con provider accreditati.'));
   return [ el('section',{class:'section card'}, el('h2',{}, document.createTextNode('FAQ')), list) ];
 }
 function qa(q,a){ const d=el('div',{class:'tile'}); d.append(el('h3',{},document.createTextNode(q))); d.append(el('p',{},document.createTextNode(a))); return d; }
 
 // Render
-function render(){
-  const view = routes[location.hash] || routes['#/'];
-  app.innerHTML = ''; view().forEach(n=>app.append(n));
-  closeMenu();
-}
-if(!location.hash) location.hash = '#/';
-render();
+function render(){ const view = routes[location.hash] || routes['#/']; app.innerHTML = ''; view().forEach(n=>app.append(n)); closeMenu(); }
+if(!location.hash) location.hash = '#/'; render();

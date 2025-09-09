@@ -1,7 +1,7 @@
 {
   "name": "RentPay",
   "short_name": "RentPay",
-  "description": "Affitti automatici, pagati puntuali. Contratti, KYC e addebiti in un’unica app.",
+  "description": "Affitti automatici, pagati puntuali. Contratti, KYC e addebiti ricorrenti.",
   "start_url": "./#/",
   "scope": "./",
   "display": "standalone",
