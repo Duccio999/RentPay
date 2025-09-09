@@ -9,28 +9,31 @@
   <link rel="icon" href="./icons/icon-192.png" sizes="192x192">
   <link rel="apple-touch-icon" href="./icons/icon-192.png">
   <link rel="stylesheet" href="./styles.css">
-  <meta name="description" content="Pagamenti affitti automatici, firma digitale e KYC.">
+  <meta name="description" content="RentPay: pagamenti affitti automatici, firma e KYC. Zero pensieri.">
 </head>
 <body>
-  <header class="topbar">
-    <button id="menuBtn" aria-label="Menu" class="icon-btn">☰</button>
-    <div class="brand">RentPay</div>
-    <div style="width:40px"></div>
+  <header class="nav">
+    <a class="brand" href="#/" data-goto="#/">
+      <span class="house">🏠</span><span class="brand-text">RentPay</span>
+    </a>
+    <button id="menuBtn" class="hamburger" aria-label="Menu">☰</button>
+    <nav id="menu" class="menu">
+      <a href="#/" data-goto="#/">Home</a>
+      <a href="#/access" data-goto="#/access">Accedi</a>
+      <a href="#/features" data-goto="#/features">Funzioni</a>
+      <a href="#/how" data-goto="#/how">Come funziona</a>
+      <a href="#/insurance" data-goto="#/insurance">Garanzia</a>
+      <a href="#/faq" data-goto="#/faq">FAQ</a>
+    </nav>
   </header>
 
-  <nav id="drawer" class="drawer" aria-hidden="true">
-    <a data-goto="#/" class="navlink">Home</a>
-    <a data-goto="#/features" class="navlink">Funzioni</a>
-    <a data-goto="#/how" class="navlink">Come funziona</a>
-    <a data-goto="#/insurance" class="navlink">Garanzia</a>
-    <a data-goto="#/app" class="navlink">Accedi</a>
-  </nav>
+  <main id="app" class="app"></main>
 
-  <main id="app"></main>
+  <footer class="footer">
+    <small>© <span id="year"></span> RentPay — PWA</small>
+  </footer>
 
   <button id="installBtn" class="install" hidden>Installa app</button>
-
-  <footer class="foot">© <span id="year"></span> RentPay</footer>
 
   <script src="./app.js"></script>
 </body>

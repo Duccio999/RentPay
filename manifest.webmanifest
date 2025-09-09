@@ -1,7 +1,7 @@
 {
   "name": "RentPay",
   "short_name": "RentPay",
-  "description": "Pagamenti affitti automatici. Firma digitale e KYC.",
+  "description": "Pagamenti affitti automatici: contratto, KYC e addebiti ricorrenti. Zero pensieri.",
   "start_url": "./#/",
   "scope": "./",
   "display": "standalone",
