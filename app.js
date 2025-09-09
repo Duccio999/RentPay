@@ -10,8 +10,18 @@ installBtn?.addEventListener('click', async()=>{if(!deferredPrompt)return; defer
 // Year
 document.getElementById('year').textContent = new Date().getFullYear().toString();
 
-// Simple hash router
+// Elements
 const app = document.getElementById('app');
+const menuBtn = document.getElementById('menuBtn');
+const menu = document.getElementById('menu');
+
+// Robust mobile menu toggle
+function openMenu(){ menu.classList.add('open'); menuBtn.setAttribute('aria-expanded','true'); menu.setAttribute('aria-hidden','false'); }
+function closeMenu(){ menu.classList.remove('open'); menuBtn.setAttribute('aria-expanded','false'); menu.setAttribute('aria-hidden','true'); }
+menuBtn.addEventListener('click',(e)=>{ e.stopPropagation(); menu.classList.contains('open') ? closeMenu() : openMenu(); });
+document.addEventListener('click',(e)=>{ if(menu.classList.contains('open')){ const inside = e.target.closest('#menu,.hamburger'); if(!inside) closeMenu(); }});
+
+// Simple hash router
 const routes = {
   '#/': homeView,
   '#/access': accessView,
@@ -22,13 +32,11 @@ const routes = {
   '#/insurance': insuranceView,
   '#/faq': faqView,
 };
-function navigate(hash){location.hash = hash;}
+
+function navigate(hash){ if(location.hash!==hash){ location.hash = hash; } else { render(); } }
 window.addEventListener('hashchange', render);
 
-// Mobile menu
-const menuBtn = document.getElementById('menuBtn');
-const menu = document.getElementById('menu');
-menuBtn.addEventListener('click', ()=> menu.classList.toggle('open'));
+// Delegate clicks
 document.addEventListener('click', (e)=>{
   const a = e.target.closest('[data-goto]');
   if(a){ e.preventDefault(); navigate(a.getAttribute('data-goto')); }
@@ -48,17 +56,27 @@ const input = (label, id, type='text', ph='', val='')=>{
 };
 const button = (txt, on, cls='btn')=>{const b=el('button',{class:cls}, document.createTextNode(txt)); b.onclick=on; return b;};
 
-// VIEWS
+// Views
 function homeView(){
   const hero = el('section',{class:'hero card'},
     el('h1',{}, document.createTextNode('Zero pensieri.')),
-    el('p',{class:'lead'}, document.createTextNode('Affitti automatici: contratto, KYC e pagamenti ricorrenti. Tutto in un’unica app.')),
+    el('p',{class:'lead'}, document.createTextNode('RentPay automatizza i pagamenti degli affitti: contratti digitali, KYC e addebiti ricorrenti su carta o SEPA.')),
     el('div',{class:'row'},
-      button('Accedi', ()=>navigate('#/access'), 'btn'),
-      button('Scopri di più', ()=>navigate('#/features'), 'btn ghost')
+      button('Accedi', ()=>navigate('#/access'),'btn'),
+      button('Scopri le funzioni', ()=>navigate('#/features'),'btn ghost')
     )
   );
-  return [hero];
+  const highlights = el('div',{class:'highlights'},
+    hl('💳','Pagamenti automatici','Programmi il giorno e incassi su IBAN.'),
+    hl('📝','Contratti & Firma','Carichi il PDF e firmi in digitale (demo).'),
+    hl('🛡️','Garanzia canone','Stima premio (demo) con partner assicurativi.')
+  );
+  return [ hero, el('section',{class:'section'}, highlights) ];
+}
+function hl(emoji,title,desc){
+  const d = el('div',{class:'highlight'});
+  d.append(el('h3',{}, document.createTextNode(`${emoji} ${title}`))), d.append(el('p',{}, document.createTextNode(desc)));
+  return d;
 }
 
 function accessView(){
@@ -74,8 +92,7 @@ function accessView(){
       button('Entra nell’area inquilino', ()=>navigate('#/tenant'), 'btn ghost')
     )
   );
-  const wrap = el('section',{class:'section'}, tiles);
-  return [wrap];
+  return [ el('section',{class:'section'}, tiles) ];
 }
 
 function landlordView(){
@@ -175,8 +192,7 @@ function faqView(){
 function render(){
   const view = routes[location.hash] || routes['#/'];
   app.innerHTML = ''; view().forEach(n=>app.append(n));
-  // close mobile menu on navigation
-  menu.classList.remove('open');
+  closeMenu(); // ensure menu closes after navigation
 }
 if(!location.hash) location.hash = '#/';
 render();
