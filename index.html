@@ -2,37 +2,39 @@
 <html lang="it">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>RentPay — Affitti automatici, contratti digitali e garanzia canone</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>RentPay — Pagamenti Affitti Automatici</title>
   <meta name="theme-color" content="#0a7cff">
+  <meta name="description" content="RentPay automatizza i pagamenti degli affitti: contratti digitali, KYC e addebiti ricorrenti su carta o SEPA.">
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" href="./icons/icon-192.png" sizes="192x192">
   <link rel="apple-touch-icon" href="./icons/icon-192.png">
   <link rel="stylesheet" href="./styles.css">
-  <meta name="description" content="RentPay: pagamenti affitti ricorrenti, contratti digitali, KYC e garanzia canone con partner assicurativi. PWA installabile.">
 </head>
 <body>
   <header class="nav">
+    <button id="navToggle" class="hamburger" aria-label="Apri menu">☰</button>
     <div class="nav-left">
       <div class="logo">🏠</div>
-      <div class="brand">RentPay</div>
+      <a class="brand" href="#/">RentPay</a>
     </div>
-    <nav class="nav-right">
+    <nav id="navMenu" class="nav-right">
       <a href="#/" class="link">Home</a>
-      <a href="#/features" class="link">Funzioni</a>
-      <a href="#/how" class="link">Come funziona</a>
-      <a href="#/insurance" class="link">Garanzia Canone</a>
-      <a href="#/app" class="btn small">Accedi</a>
+      <a href="#/funzioni" class="link">Funzioni</a>
+      <a href="#/come-funziona" class="link">Come funziona</a>
+      <a href="#/garanzia" class="link">Garanzia canone</a>
+      <a href="#/faq" class="link">FAQ</a>
+      <a href="#/app" class="btn small">Apri app</a>
     </nav>
   </header>
 
-  <main id="app"></main>
+  <main id="app" class="safe"></main>
 
   <footer class="footer">
-    <div>© <span id="year"></span> RentPay • PWA MVP</div>
+    <div>© <span id="year"></span> RentPay • PWA</div>
   </footer>
 
-  <button id="installBtn" class="install" hidden>Installa App</button>
+  <button id="installBtn" class="install" hidden>Installa app</button>
 
   <script src="./app.js"></script>
 </body>

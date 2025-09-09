@@ -1,228 +1,171 @@
 
-// ---- PWA basics ----
-if('serviceWorker' in navigator){
-  window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(console.error));
-}
+// SW
+if('serviceWorker' in navigator){ window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(console.error)); }
+
 let deferredPrompt;
 const installBtn = document.getElementById('installBtn');
-window.addEventListener('beforeinstallprompt',(e)=>{e.preventDefault();deferredPrompt=e;installBtn.hidden=false;});
-installBtn?.addEventListener('click',async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;installBtn.hidden=true;deferredPrompt=null;});
+window.addEventListener('beforeinstallprompt', (e)=>{ e.preventDefault(); deferredPrompt=e; installBtn.hidden=false; });
+installBtn?.addEventListener('click', async ()=>{ if(!deferredPrompt) return; deferredPrompt.prompt(); await deferredPrompt.userChoice; installBtn.hidden=true; deferredPrompt=null; });
 document.getElementById('year').textContent = new Date().getFullYear().toString();
 
-// ---- App setup ----
+// Mobile menu
+const navToggle = document.getElementById('navToggle');
+const navMenu = document.getElementById('navMenu');
+navToggle?.addEventListener('click', ()=> navMenu.classList.toggle('open'));
+
+// Routes (hash-based for GH Pages)
 const app = document.getElementById('app');
 const routes = {
-  '#/': homeView,
-  '#/features': featuresView,
-  '#/how': howView,
-  '#/pricing': pricingView,
-  '#/insurance': insuranceView,
-  '#/app': appShellView,
-  '#/landlord': landlordView,
-  '#/tenant': tenantView,
+  '#/': home,
+  '#/funzioni': features,
+  '#/come-funziona': how,
+  '#/garanzia': insurance,
+  '#/faq': faq,
+  '#/app': appShell,
+  '#/landlord': landlord,
+  '#/tenant': tenant,
 };
-function navigate(hash){location.hash = hash; render();}
+function render(){
+  const route = location.hash || '#/';
+  const view = routes[route] || home;
+  app.innerHTML = '';
+  view().forEach(n=>app.append(n));
+}
 window.addEventListener('hashchange', render);
 
-// state
-const state = JSON.parse(localStorage.getItem('rentpay_state')||'{}');
-function save(){localStorage.setItem('rentpay_state', JSON.stringify(state));}
-function money(n){ try{ return new Intl.NumberFormat('it-IT',{style:'currency',currency:'EUR'}).format(parseFloat(n||0)); }catch(e){ return `€${n}`; } }
+// Helpers
+function el(tag, attrs={}, ...children){ const n=document.createElement(tag); Object.entries(attrs).forEach(([k,v])=>{ if(k==='class') n.className=v; else if(k==='html') n.innerHTML=v; else n.setAttribute(k,v); }); children.forEach(c=>n.append(c)); return n; }
+function btn(label, click, cls='btn'){ const b=el('button',{class:cls}, document.createTextNode(label)); b.onclick=click; return b; }
+function input(label, id, type='text', ph='', val=''){ const w=el('div',{class:'row'}); const l=el('label',{class:'smallcaps'}, document.createTextNode(label)); const i=el('input',{class:'input',id,type,placeholder:ph,value:val}); w.append(l,i); return {wrap:w, input:i}; }
+function card(title, body){ return el('div',{class:'card'}, el('div',{class:'h2'}, document.createTextNode(title)), body); }
 
-// helpers
-function el(tag, attrs={}, ...children){
-  const n=document.createElement(tag);
-  Object.entries(attrs).forEach(([k,v])=>{ if(k==='class') n.className=v; else if(k==='html') n.innerHTML=v; else if(k==='style') n.style.cssText=v; else n.setAttribute(k,v);});
-  children.forEach(c=>{ if(typeof c==='string') n.append(document.createTextNode(c)); else if(c) n.append(c); });
-  return n;
-}
-function section(cls,...children){ return el('section',{class:cls},...children); }
-function card(title, body){ return el('div',{class:'card'}, el('div',{class:'title'},title), body); }
-function btn(label, click, cls='btn'){ const b=el('button',{class:cls}, label); b.onclick=click; return b;}
-function input(label, id, type='text', ph='', val=''){
-  const w=el('div',{class:'row'});
-  const l=el('label',{}, label);
-  const i=el('input',{class:'input',id,type,placeholder:ph,value:val});
-  w.append(l,i); return {wrap:w, input:i};
-}
-
-// ---- Views ----
-function homeView(){
-  const hero = el('div',{class:'container hero'},
-    el('div',{class:'hgrid'},
-      el('div',{}, 
-        el('h1',{class:'h-title'}, 'Gestione Automatica dei Pagamenti degli Affitti'),
-        el('p',{class:'h-sub'}, 'Pagamenti ricorrenti sicuri, contratti digitali, KYC e garanzia canone con partner assicurativi.'),
+// Views
+function home(){
+  const brief = el('div',{class:'container hero'},
+    el('div',{class:'hero-grid'},
+      el('div',{},
+        el('h1',{class:'h1'}, document.createTextNode('Automatizza i pagamenti degli affitti')),
+        el('p',{class:'p'}, document.createTextNode('RentPay semplifica la gestione tra proprietari e inquilini: contratti digitali, verifica identità (KYC) e addebiti ricorrenti su carta o SEPA. Tutto in un’unica app, anche da smartphone.')),
         el('div',{class:'row'},
-          btn('Inizia Subito',()=>navigate('#/app'),'btn'),
-          btn('Guarda Funzioni',()=>navigate('#/features'),'btn ghost')
+          btn('Apri app', ()=>location.hash='#/app','btn'),
+          btn('Scopri come funziona', ()=>location.hash='#/come-funziona','btn ghost')
         ),
         el('div',{class:'kpis'},
-          el('div',{class:'kpi'}, el('div',{},'Tasso incasso'), el('b',{},'98.7%')),
-          el('div',{class:'kpi'}, el('div',{},'Tempo setup'), el('b',{},'3 min')),
-          el('div',{class:'kpi'}, el('div',{},'Commissione da'), el('b',{},'1.5%'))
+          el('div',{class:'kpi'}, el('div',{},document.createTextNode('Setup medio')), el('b',{},document.createTextNode('3 minuti'))),
+          el('div',{class:'kpi'}, el('div',{},document.createTextNode('Incassi puntuali')), el('b',{},document.createTextNode('98.7%'))),
+          el('div',{class:'kpi'}, el('div',{},document.createTextNode('Commissione da')), el('b',{},document.createTextNode('1.5%'))),
         )
       ),
-      card('Perché RentPay?',
-        el('div',{},
-          el('p',{}, 'Riduci i ritardi, automatizza i solleciti e incassa su IBAN.'),
-          el('p',{}, 'Integra Stripe (carte) e SEPA SDD. Firma digitale e KYC integrati.')
-        )
-      )
+      card('Cosa fa RentPay', el('p',{class:'p'}, document.createTextNode('Raccoglie i metodi di pagamento, programma addebiti mensili, incassa e invia al proprietario. Gestisce contratti, KYC, notifiche e report, con garanzia canone opzionale tramite partner assicurativi.')))
     )
   );
-  return [hero, ...featuresView(true), ...howView(true), ...pricingView(true)];
+  return [brief, features(true)[0], how(true)[0]];
 }
 
-function featuresView(embed=false){
+function features(embed=false){
   const inner = el('div',{class:'container section'},
-    el('div',{class:'title'}, 'Funzioni principali'),
+    el('div',{class:'h2'}, document.createTextNode('Funzioni principali')),
     el('div',{class:'grid3'},
-      el('div',{class:'feature'}, el('div',{class:'icon'}, '💳'), el('h3',{},'Pagamenti Ricorrenti'), el('p',{class:'muted'},'Addebito automatico su carta o SEPA SDD con riconciliazione.')),
-      el('div',{class:'feature'}, el('div',{class:'icon'}, '📝'), el('h3',{},'Contratti Digitali'), el('p',{class:'muted'},'Carica il PDF o genera da template. Firma OTP/FEA.')),
-      el('div',{class:'feature'}, el('div',{class:'icon'}, '🛡️'), el('h3',{},'Garanzia Canone'), el('p',{class:'muted'},'Partner assicurativi per copertura in caso di morosità.')),
+      card('Pagamenti ricorrenti', el('p',{class:'p'}, document.createTextNode('Addebiti automatici su carta o SEPA SDD, riconciliazione e reportistica.'))),
+      card('Contratti digitali + Firma', el('p',{class:'p'}, document.createTextNode('Carica PDF o usa template. Firma OTP/FEA tramite provider esterni.'))),
+      card('KYC & GDPR', el('p',{class:'p'}, document.createTextNode('Verifica identità con Onfido/Sumsub e gestione privacy conforme.')))
     )
   );
   return embed ? [inner] : [inner];
 }
 
-function howView(embed=false){
+function how(embed=false){
   const inner = el('div',{class:'container section'},
-    el('div',{class:'title'}, 'Come funziona'),
-    el('div',{class:'steps'},
-      el('div',{class:'step'}, el('div',{class:'badge'},'1') , el('h3',{},'Registrazione'), el('p',{class:'muted'},'Proprietario o Inquilino completano il profilo.')),
-      el('div',{class:'step'}, el('div',{class:'badge'},'2') , el('h3',{},'Firma & KYC'), el('p',{class:'muted'},'Carica documenti e firma digitale.')),
-      el('div',{class:'step'}, el('div',{class:'badge'},'3') , el('h3',{},'Pagamenti'), el('p',{class:'muted'},'Programma addebiti mensili automatici.')),
+    el('div',{class:'h2'}, document.createTextNode('Come funziona')),
+    el('div',{class:'grid3'},
+      card('1) Registrazione', el('p',{class:'p'}, document.createTextNode('Proprietario e inquilino creano il profilo.'))),
+      card('2) Contratto & KYC', el('p',{class:'p'}, document.createTextNode('Upload contratto e verifica documenti.'))),
+      card('3) Pagamenti', el('p',{class:'p'}, document.createTextNode('Si imposta il giorno e l’importo: RentPay addebita ogni mese.')))
     ),
-    el('div',{class:'row',style:'margin-top:16px;'}, btn('Prova la demo',()=>navigate('#/app'),'btn'))
+    el('div',{class:'row'}, btn('Vai all’app', ()=>location.hash='#/app','btn'))
   );
   return embed ? [inner] : [inner];
 }
 
-function pricingView(embed=false){
-  const inner = el('div',{class:'container section'},
-    el('div',{class:'title'}, 'Prezzi'),
-    el('div',{class:'pricing'},
-      el('div',{class:'price-card'}, el('h3',{},'Starter'), el('p',{class:'muted'},'Per singoli proprietari'), el('h2',{},'1.5% + €0,20'), el('p',{class:'muted'},'per transazione')),
-      el('div',{class:'price-card'}, el('h3',{},'Pro'), el('p',{class:'muted'},'Per agenzie'), el('h2',{},'1.2% + €0,20'), el('p',{class:'muted'},'sopra 50 unità')),
-      el('div',{class:'price-card'}, el('h3',{},'Enterprise'), el('p',{class:'muted'},'Volumi alti'), el('h2',{},'Custom'), el('p',{class:'muted'},'contattaci'))
-    )
-  );
-  return embed ? [inner] : [inner];
-}
-
-function insuranceView(){
-  const amount = input('Canone mensile (EUR)','i_amount','number','850', state.i_amount||'850');
-  const months = input('Mesi copertura','i_months','number','12', state.i_months||'12');
-  const excess = input('Franchigia (mesi)','i_excess','number','1', state.i_excess||'1');
-
-  function calc(){
-    const a = parseFloat(amount.input.value||0);
-    const m = parseInt(months.input.value||0);
-    const ex = parseInt(excess.input.value||0);
-    const coveredMonths = Math.max(m - ex, 0);
-    const premium = a * coveredMonths * 0.025; // 2.5% demo
-    return {coveredMonths, premium};
-  }
-  const res = el('div',{class:'notice'},'—');
-  const actions = el('div',{class:'row'},
-    btn('Richiedi preventivo',()=>alert('Invio a partner assicurativo (demo)'),'btn'),
-    btn('Apri sinistro',()=>alert('Modulo sinistro (demo)'),'btn ghost')
-  );
-
+function insurance(){
+  const canone = input('Canone mensile (EUR)','i_amount','number','800', '');
+  const mesi = input('Mesi garantiti','i_months','number','6','');
+  const franchigia = input('Franchigia (mesi)','i_deduct','number','1','');
+  const out = el('div',{class:'p'});
   function renderQuote(){
-    const {coveredMonths, premium} = calc();
-    res.textContent = `Stima DEMO: copertura ${coveredMonths} mesi • Premio: ${money(premium)}`;
+    const A = parseFloat(canone.input.value||'0');
+    const M = parseInt(mesi.input.value||'0');
+    const F = parseInt(franchigia.input.value||'0');
+    const base = Math.max(0,(M-F))*A;
+    const premio = (base * 0.045).toFixed(2); // demo
+    out.textContent = `Stima premio: € ${premio} (demo)`;
   }
-  renderQuote();
-
-  [amount.input, months.input, excess.input].forEach(i=>i.addEventListener('input',()=>{state.i_amount=amount.input.value;state.i_months=months.input.value;state.i_excess=excess.input.value;save();renderQuote();}));
-
+  [canone.input, mesi.input, franchigia.input].forEach(i=>i.addEventListener('input', renderQuote));
+  setTimeout(renderQuote,0);
   const c = el('div',{class:'container section'},
-    el('div',{class:'title'}, 'Garanzia Canone'),
-    el('div',{class:'panel'}, amount.wrap, months.wrap, excess.wrap, res, actions)
+    el('div',{class:'h2'}, document.createTextNode('Garanzia Canone (partner assicurativi)')),
+    el('p',{class:'p'}, document.createTextNode('Copertura facoltativa contro morosità. La polizza è emessa da partner terzi: calcolo dimostrativo.')),
+    el('div',{class:'panel'}, canone.wrap, mesi.wrap, franchigia.wrap, out, el('div',{class:'row'}, btn('Richiedi preventivo',()=>alert('Invio richiesta (demo)'),'btn'), btn('Apri sinistro',()=>alert('Apertura sinistro (demo)'),'btn ghost')))
   );
   return [c];
 }
 
-function appShellView(){
+function faq(){
   const c = el('div',{class:'container section'},
-    el('div',{class:'title'}, 'Seleziona il tuo ruolo'),
-    el('div',{class:'row'},
-      btn('Sono Proprietario',()=>navigate('#/landlord'),'btn'),
-      btn('Sono Inquilino',()=>navigate('#/tenant'),'btn ghost')
-    )
+    el('div',{class:'h2'}, document.createTextNode('Domande frequenti')),
+    card('Serve un conto dedicato?', el('p',{class:'p'}, document.createTextNode('No: accrediti direttamente sull’IBAN del proprietario.'))),
+    card('I dati carta/IBAN dove finiscono?', el('p',{class:'p'}, document.createTextNode('Sono gestiti da PSP esterni conformi PSD2. Noi non li memorizziamo.'))),
+    card('Posso disattivare l’assicurazione?', el('p',{class:'p'}, document.createTextNode('Certo: la garanzia canone è totalmente opzionale.')))
   );
   return [c];
 }
 
-function landlordView(){
+// App & dashboards (demo)
+function appShell(){
+  const c = el('div',{class:'container section'},
+    el('div',{class:'h2'}, document.createTextNode('Seleziona il tuo ruolo')),
+    el('div',{class:'row'}, btn('Sono Proprietario', ()=>location.hash='#/landlord','btn'), btn('Sono Inquilino', ()=>location.hash='#/tenant','btn ghost'))
+  );
+  return [c];
+}
+
+const state = JSON.parse(localStorage.getItem('rentpay_state')||'{}');
+function save(){ localStorage.setItem('rentpay_state', JSON.stringify(state)); }
+
+function landlord(){
   const name = input('Immobile','l_property','text','Via Roma 10, Firenze', state.l_property||'');
   const iban = input('IBAN Accredito','l_iban','text','IT60 X054 2811 1010 0000 0123 456', state.l_iban||'');
   const amount = input('Canone Mensile (EUR)','l_amount','number','850.00', state.l_amount||'850.00');
   const day = input('Giorno Addebito','l_day','number','5', state.l_day||'5');
-  const months = input('Mesi di Garanzia (demo)','l_gmonths','number','12', state.l_gmonths||'12');
-  const premiumBox = el('div',{class:'notice'});
-
-  function updatePremium(){
-    const a = parseFloat(amount.input.value||0);
-    const m = parseInt(months.input.value||0);
-    const prem = a * m * 0.02; // demo 2%
-    premiumBox.textContent = `Stima premio garanzia: ${money(prem)} (demo)`;
-  }
-  updatePremium();
-  [amount.input, months.input].forEach(i=>i.addEventListener('input',updatePremium));
-
+  const months = input('Mesi garanzia (facoltativo)','l_months','number','6', state.l_months||'6');
+  const out = el('div',{class:'p'});
+  function calc(){ const A=parseFloat(amount.input.value||'0'); const M=parseInt(months.input.value||'0'); const premio=(A*M*0.045).toFixed(2); out.textContent = `Stima premio garanzia: € ${premio} (demo)`; }
+  [amount.input, months.input].forEach(i=>i.addEventListener('input', calc)); setTimeout(calc,0);
   const table = el('table',{class:'table'},
-    el('thead',{}, el('tr',{}, el('th',{},'Data'), el('th',{},'Inquilino'), el('th',{},'Importo'), el('th',{},'Stato') )),
+    el('thead',{}, el('tr',{}, el('th',{},document.createTextNode('Data')), el('th',{},document.createTextNode('Inquilino')), el('th',{},document.createTextNode('Importo')), el('th',{},document.createTextNode('Stato')) )),
     el('tbody',{}, 
-      el('tr',{}, el('td',{},'05/09/2025'), el('td',{},'Mario Rossi'), el('td',{},money(850)), el('td',{}, el('span',{class:'badge'},'Programmato') )),
-      el('tr',{}, el('td',{},'05/08/2025'), el('td',{},'Mario Rossi'), el('td',{},money(850)), el('td',{}, el('span',{class:'badge'},'Pagato') ))
+      el('tr',{}, el('td',{},document.createTextNode('05/09/2025')), el('td',{},document.createTextNode('Mario Rossi')), el('td',{},document.createTextNode('€850,00')), el('td',{}, document.createTextNode('Programmato')) ),
+      el('tr',{}, el('td',{},document.createTextNode('05/08/2025')), el('td',{},document.createTextNode('Mario Rossi')), el('td',{},document.createTextNode('€850,00')), el('td',{}, document.createTextNode('Pagato')) )
     )
   );
-
   const c = el('div',{class:'container section'},
-    el('div',{class:'title'}, 'Dashboard Proprietario'),
-    el('div',{class:'panel'},
-      el('div',{class:'toolbar'},
-        btn('Nuovo Contratto',()=>alert('Upload contratto (demo)'),'btn'),
-        btn('Invita Inquilino',()=>alert('Link inviato (demo)'),'btn ghost'),
-        btn('Esporta Report',()=>alert('CSV generato (demo)'),'btn ghost')
-      ),
-      name.wrap, iban.wrap, amount.wrap, day.wrap, months.wrap, premiumBox,
-      el('div',{class:'row'}, btn('Salva & Programma',()=>{state.l_property=name.input.value;state.l_iban=iban.input.value;state.l_amount=amount.input.value;state.l_day=day.input.value;state.l_gmonths=months.input.value;save();alert('Programmazione aggiornata (demo)');},'btn'))
-    ),
+    el('div',{class:'h2'}, document.createTextNode('Dashboard Proprietario')),
+    el('div',{class:'panel'}, name.wrap, iban.wrap, amount.wrap, day.wrap, months.wrap, out, el('div',{class:'row'}, btn('Salva & Programma', ()=>{ state.l_property=name.input.value; state.l_iban=iban.input.value; state.l_amount=amount.input.value; state.l_day=day.input.value; state.l_months=months.input.value; save(); alert('Programmazione aggiornata (demo)'); }, 'btn'))),
     card('Incassi', el('div',{}, table))
   );
   return [c];
 }
 
-function tenantView(){
+function tenant(){
   const tname = input('Nome e Cognome','t_name','text','Mario Rossi', state.t_name||'');
   const email = input('Email','t_email','email','mario@esempio.it', state.t_email||'');
   const pm = input('Metodo di Pagamento (demo)','t_pm','text','Carta **** 4242 o IBAN', state.t_pm||'');
   const c = el('div',{class:'container section'},
-    el('div',{class:'title'}, 'Area Inquilino'),
-    el('div',{class:'panel'},
-      el('div',{class:'toolbar'},
-        btn('Carica Documento (KYC)',()=>alert('KYC provider (demo)'),'btn ghost'),
-        btn('Collega Contratto',()=>alert('Seleziona contratto (demo)'),'btn ghost')
-      ),
-      tname.wrap, email.wrap, pm.wrap,
-      el('div',{class:'row'}, btn('Salva Metodo Pagamento',()=>{state.t_name=tname.input.value;state.t_email=email.input.value;state.t_pm=pm.input.value;save();alert('Metodo salvato (demo)');},'btn'))
-    ),
-    card('Prossimo addebito', el('p',{class:'muted'}, '05 del mese — €850,00 → IBAN del proprietario (demo).'))
+    el('div',{class:'h2'}, document.createTextNode('Area Inquilino')),
+    el('div',{class:'panel'}, tname.wrap, email.wrap, pm.wrap, el('div',{class:'row'}, btn('Salva Metodo Pagamento', ()=>{ state.t_name=tname.input.value; state.t_email=email.input.value; state.t_pm=pm.input.value; save(); alert('Metodo salvato (demo)'); }, 'btn'))),
+    card('Prossimo addebito', el('p',{class:'p'}, document.createTextNode('05 del mese — €850,00 → IBAN del proprietario (demo).')))
   );
   return [c];
 }
 
-// ---- Render ----
-function render(){
-  app.innerHTML='';
-  const key = location.hash || '#/';
-  const view = routes[key] || homeView;
-  const out = view();
-  out.forEach(n=>app.append(n));
-}
-if(!location.hash) location.hash = '#/';
 render();
