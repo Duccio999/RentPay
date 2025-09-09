@@ -2,36 +2,35 @@
 <html lang="it">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>RentPay — Pagamenti Affitti Automatici</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RentPay</title>
   <meta name="theme-color" content="#0a7cff">
-  <meta name="description" content="RentPay automatizza i pagamenti degli affitti: contratti digitali, KYC e addebiti ricorrenti su carta o SEPA.">
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" href="./icons/icon-192.png" sizes="192x192">
   <link rel="apple-touch-icon" href="./icons/icon-192.png">
   <link rel="stylesheet" href="./styles.css">
+  <meta name="description" content="RentPay: incassi affitti automatici con firma e KYC.">
 </head>
 <body>
   <header class="nav">
-    <button id="navToggle" class="hamburger" aria-label="Apri menu">☰</button>
-    <div class="nav-left">
+    <div class="brand" data-goto="#/">
       <div class="logo">🏠</div>
-      <a class="brand" href="#/">RentPay</a>
+      <strong>RentPay</strong>
     </div>
-    <nav id="navMenu" class="nav-right">
-      <a href="#/" class="link">Home</a>
-      <a href="#/funzioni" class="link">Funzioni</a>
-      <a href="#/come-funziona" class="link">Come funziona</a>
-      <a href="#/garanzia" class="link">Garanzia canone</a>
-      <a href="#/faq" class="link">FAQ</a>
-      <a href="#/app" class="btn small">Apri app</a>
+    <button id="navToggle" class="hamburger" aria-label="Menu">☰</button>
+    <nav id="navMenu" class="menu">
+      <a data-goto="#/features">Funzioni</a>
+      <a data-goto="#/how">Come funziona</a>
+      <a data-goto="#/insurance">Garanzia</a>
+      <a data-goto="#/faq">FAQ</a>
+      <a data-goto="#/app" class="btn sm">Accedi</a>
     </nav>
   </header>
 
-  <main id="app" class="safe"></main>
+  <main id="app" class="container"></main>
 
   <footer class="footer">
-    <div>© <span id="year"></span> RentPay • PWA</div>
+    <small>© <span id="year"></span> RentPay</small>
   </footer>
 
   <button id="installBtn" class="install" hidden>Installa app</button>

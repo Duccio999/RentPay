@@ -1,7 +1,7 @@
 {
   "name": "RentPay",
   "short_name": "RentPay",
-  "description": "Automatizza i pagamenti degli affitti: contratti digitali, KYC e addebiti ricorrenti su carta o SEPA.",
+  "description": "Incassi affitti automatici con contratto digitale, KYC e garanzia.",
   "start_url": "./#/",
   "scope": "./",
   "display": "standalone",
