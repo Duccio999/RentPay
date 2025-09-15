@@ -4,59 +4,42 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Visione — RentPay</title>
-  <meta name="description" content="La visione di RentPay: pagamenti d'affitto automatici, contratti digitali e garanzie contro i mancati pagamenti.">
+  <meta name="description" content="La visione di RentPay.">
   <link rel="stylesheet" href="styles.css">
-  <style>
-    .page{max-width:980px;margin:24px auto;padding:0 16px}
-    .card{border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:18px;
-      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03))}
-    .nav{position:sticky;top:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;
-      padding:12px 16px;background:rgba(2,10,24,.9);backdrop-filter:blur(8px);border-bottom:1px solid rgba(255,255,255,.08)}
-    .brand{display:flex;gap:10px;align-items:center;font-weight:800;text-decoration:none}
-    .brand:before{content:"🏠"}
-  </style>
 </head>
 <body>
   <header class="nav">
-    <a class="brand" href="index.html">RentPay</a>
+    <a class="brand" href="index.html"><span class="logo">🏠</span><span>RentPay</span></a>
+    <nav class="nav-links always">
+      <a href="vision.html" class="active">Visione</a>
+      <a href="funzioni.html">Funzioni</a>
+      <a href="garanzia.html">Garanzia</a>
+      <a href="login.html" class="accent">Accedi</a>
+    </nav>
   </header>
 
-  <main class="page">
-    <h1>La nostra visione</h1>
-    <section class="card">
-      <p><strong>RentPay</strong> è l’app pensata per chi vuole affittare o prendere in affitto una casa senza timori
-        per i mancati pagamenti. Vogliamo eliminare questa ansia con tre pilastri semplici:</p>
+  <main class="container">
+    <article class="card">
+      <h1>La nostra visione</h1>
+      <p><strong>RentPay</strong> vuole sostenere chi affitta o prende in affitto, eliminando l’ansia dei mancati pagamenti.</p>
       <ol>
-        <li><strong>Pagamenti automatici</strong>: addebiti ricorrenti e puntuali, con report chiari e notifiche.</li>
-        <li><strong>Contratti digitali</strong>: caricamento dei documenti e firma elettronica in pochi click.</li>
+        <li><strong>Pagamenti automatici</strong>: addebiti ricorrenti, puntuali e tracciati.</li>
+        <li><strong>Contratti digitali</strong>: caricamento documenti e firma elettronica.</li>
         <li><strong>Garanzia canone</strong>: su richiesta, copertura assicurativa con partner specializzati.</li>
       </ol>
-      <p>
-        L’obiettivo è rendere l’affitto un’esperienza <em>zero pensieri</em> per proprietari e inquilini:
-        processi trasparenti, meno solleciti, più fiducia. Tutto in un’unica app.
-      </p>
-      <p>
-        Questa è una <strong>versione demo</strong>: mostriamo il funzionamento e raccogliamo feedback e
-        adesioni per attivare i primi piloti con proprietari selezionati.
-      </p>
-      <p style="margin-top:12px">
-        <a class="btn primary" href="index.html#login">Partecipa al pilota</a>
-        <a class="btn secondary" href="index.html#funzioni" style="margin-left:8px">Scopri le funzioni</a>
-      </p>
-    </section>
-
-    <p style="margin-top:24px">
-      <a href="index.html">← Torna alla Home</a>
-    </p>
+      <p>Obiettivo: rendere l’affitto un’esperienza <em>zero pensieri</em>, trasparente e affidabile per proprietari e inquilini.</p>
+    </article>
   </main>
 
-  <footer class="footer page">
-    <p>
-      <a href="terms.html">Termini di servizio</a> ·
-      <a href="privacy.html">Privacy Policy</a> ·
+  <footer class="footer container">
+    <div class="f-links">
+      <a href="terms.html">Termini di servizio</a>
+      <a href="privacy.html">Privacy Policy</a>
       <a href="cookie.html">Cookie Policy</a>
-    </p>
-    <p>© 2025 RentPay — PWA</p>
+      <a href="vision.html" class="active">Visione</a>
+      <a href="https://forms.gle/INSERISCI-LINK-FORM" target="_blank" rel="noopener">Questionario investitori</a>
+    </div>
+    <div class="copy">© 2025 RentPay — PWA</div>
   </footer>
 </body>
 </html>
