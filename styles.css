@@ -71,11 +71,11 @@ h1{font-size:clamp(26px,5vw,40px);line-height:1.08;margin:0}
 .table th,.table td{padding:10px;border-bottom:1px solid rgba(255,255,255,.08);text-align:left}
 .badge{display:inline-block;padding:4px 8px;border-radius:999px;border:1px solid rgba(255,255,255,.2);font-size:12px}
 
-/* Footer & install */
+/* Footer & install 
 .footer{padding:26px 16px;text-align:center;color:var(--muted);border-top:1px solid rgba(255,255,255,.06);margin-top:18px}
 .install{position:fixed;right:16px;bottom:16px;padding:12px 16px;border-radius:14px;border:none;background:linear-gradient(135deg,#2ea0ff,#7cc4ff);color:white;font-weight:800;box-shadow:0 10px 30px rgba(46,160,255,.35)}
 
 .sep{border:0;border-top:1px solid rgba(255,255,255,.1);margin:8px 0}
 .section.card ul{margin:8px 0 0 18px}
 .section.card li{margin:6px 0;color:var(--muted)}
-.footer .footer-links{margin-bottom:8px}
+.footer .footer-links{margin-bottom:8px}*/
