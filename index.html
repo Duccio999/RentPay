@@ -9,18 +9,40 @@
   <link rel="icon" href="./icons/icon-192.png" sizes="192x192">
   <link rel="apple-touch-icon" href="./icons/icon-192.png">
   <link rel="stylesheet" href="./styles.css">
-  <meta name="description" content="RentPay: affitti automatici, contratti digitali, KYC e addebiti ricorrenti.">
+  <meta name="description" content="RentPay: affitti automatici, contratti digitali, KYC e garanzia canone.">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ELHNQ36D70"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ELHNQ36D70');
+  </script>
+
+  <!-- Microsoft Clarity -->
+  <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "tb7r154uwi");
+  </script>
 </head>
 <body>
-  <!-- Mobile menu toggle (CSS-based) -->
+  <!-- Toggle menu mobile -->
   <input id="navToggle" type="checkbox" class="nav-toggle" aria-hidden="true" />
   <nav class="drawer" aria-label="Menu principale">
     <a href="#/" data-goto="#/">Home</a>
-    <a href="#/access" data-goto="#/access">Accedi</a>
+    <a href="#/vision" data-goto="#/vision">Visione</a>
     <a href="#/features" data-goto="#/features">Funzioni</a>
     <a href="#/how" data-goto="#/how">Come funziona</a>
     <a href="#/insurance" data-goto="#/insurance">Garanzia</a>
-    <a href="#/faq" data-goto="#/faq">FAQ</a>
+    <a href="#/access" data-goto="#/access">Accedi</a>
+    <hr class="sep"/>
+    <a href="#/terms" data-goto="#/terms">Termini di servizio</a>
+    <a href="#/privacy" data-goto="#/privacy">Privacy Policy</a>
+    <a href="https://forms.gle/REPLACE_FORM_ID" target="_blank" rel="noopener">Questionario investitori</a>
   </nav>
   <div class="drawer-backdrop"></div>
 
@@ -28,25 +50,29 @@
     <a class="brand" href="#/" data-goto="#/">
       <span class="house">🏠</span><span class="brand-text">RentPay</span>
     </a>
-    <!-- Hamburger triggers the hidden checkbox -->
     <label for="navToggle" id="menuBtn" class="hamburger" aria-label="Apri menu" role="button" tabindex="0">☰</label>
-    <!-- Desktop menu -->
     <nav class="menu-desktop">
-      <a href="#/" data-goto="#/">Home</a>
-      <a href="#/access" data-goto="#/access">Accedi</a>
+      <a href="#/vision" data-goto="#/vision">Visione</a>
       <a href="#/features" data-goto="#/features">Funzioni</a>
       <a href="#/how" data-goto="#/how">Come funziona</a>
       <a href="#/insurance" data-goto="#/insurance">Garanzia</a>
-      <a href="#/faq" data-goto="#/faq">FAQ</a>
+      <a href="#/access" data-goto="#/access">Accedi</a>
     </nav>
   </header>
 
   <main id="app" class="app"></main>
 
   <footer class="footer">
+    <div class="footer-links">
+      <a href="#/terms" data-goto="#/terms">Termini di servizio</a> ·
+      <a href="#/privacy" data-goto="#/privacy">Privacy Policy</a> ·
+      <a href="#/vision" data-goto="#/vision">Visione</a> ·
+      <a href="https://forms.gle/REPLACE_FORM_ID" target="_blank" rel="noopener">Questionario investitori</a>
+    </div>
     <small>© <span id="year"></span> RentPay — PWA</small>
   </footer>
 
+  <!-- Banner iOS A2HS opzionale: puoi lasciarlo se già presente nel tuo progetto -->
   <button id="installBtn" class="install" hidden>Installa app</button>
 
   <script src="./app.js"></script>
