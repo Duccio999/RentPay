@@ -4,14 +4,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>RentPay</title>
-  <meta name="description" content="RentPay: affitti automatici, contratti digitali, KYC e addebiti ricorrenti.">
+  <meta name="description" content="Affitti automatici, contratti digitali, KYC e garanzie.">
+
   <link rel="stylesheet" href="styles.css">
 
-  <!-- Cookiebot (lascia il tuo ID) -->
+  <!-- Cookiebot -->
   <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js"
           data-cbid="5bcf64ab-7ce1-4b46-958c-548ecf3d9c05" data-blockingmode="auto" type="text/javascript"></script>
 
-  <!-- Google Analytics (bloccato da Cookiebot: statistics) -->
+  <!-- GA4 (consenso 'statistics') -->
   <script type="text/plain" data-cookieconsent="statistics" async src="https://www.googletagmanager.com/gtag/js?id=G-ELHNQ36D70"></script>
   <script type="text/plain" data-cookieconsent="statistics">
     window.dataLayer = window.dataLayer || [];
@@ -20,7 +21,7 @@
     gtag('config', 'G-ELHNQ36D70');
   </script>
 
-  <!-- Microsoft Clarity (bloccato da Cookiebot: statistics) -->
+  <!-- Clarity (consenso 'statistics') -->
   <script type="text/plain" data-cookieconsent="statistics">
     (function(c,l,a,r,i,t,y){
       c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
@@ -32,63 +33,23 @@
 <body>
   <!-- NAV -->
   <header class="nav">
-    <a class="brand" href="index.html"><span class="logo">🏠</span> <span>RentPay</span></a>
-
-    <button class="burger" id="burger"
-            aria-label="Apri menu" aria-controls="site-nav" aria-expanded="false">
-      ☰
-    </button>
-
+    <a class="brand" href="index.html"><span class="logo">🏠</span><span>RentPay</span></a>
+    <button class="burger" id="burger" aria-label="Apri menu" aria-controls="site-nav" aria-expanded="false">☰</button>
     <nav class="nav-links" id="site-nav" role="navigation">
       <a href="vision.html">Visione</a>
-      <a href="#funzioni">Funzioni</a>
-      <a href="#garanzia">Garanzia</a>
-      <a href="#login" class="accent">Accedi</a>
+      <a href="funzioni.html">Funzioni</a>
+      <a href="garanzia.html">Garanzia</a>
+      <a href="login.html" class="accent">Accedi</a>
     </nav>
   </header>
 
-  <!-- HERO -->
+  <!-- SOLO RIQUADRO HERO -->
   <section class="hero container">
     <h1>Affitti automatici, zero pensieri</h1>
-    <p class="lead">
-      Contratti digitali, KYC e addebiti ricorrenti in un’unica app. Pagamenti puntuali e garanzie contro i mancati affitti.
-    </p>
+    <p class="lead">Contratti digitali, KYC e addebiti ricorrenti in un’unica app. Pagamenti puntuali e garanzie contro i mancati affitti.</p>
     <div class="actions">
-      <a class="btn primary" href="#login">Accedi</a>
-      <a class="btn ghost" href="#funzioni">Scopri le funzioni</a>
-    </div>
-  </section>
-
-  <!-- FUNZIONI -->
-  <section id="funzioni" class="container grid">
-    <article class="card">
-      <h3>💳 Pagamenti automatici</h3>
-      <p>Programmi il giorno, incassi su IBAN o carta con promemoria e ricevute.</p>
-    </article>
-    <article class="card">
-      <h3>📑 Contratti &amp; Firma</h3>
-      <p>Carichi il PDF e firmi in digitale (demo). Archivio centralizzato dei documenti.</p>
-    </article>
-    <article class="card">
-      <h3>🛡️ Garanzia canone</h3>
-      <p>Stima del premio (demo) e copertura con partner assicurativi per mancati pagamenti.</p>
-    </article>
-  </section>
-
-  <!-- GARANZIA -->
-  <section id="garanzia" class="container promo">
-    <div class="promo-inner">
-      <h2>Proteggi i tuoi incassi</h2>
-      <p>Con la garanzia canone, in collaborazione con compagnie partner, riduci il rischio di mancati pagamenti e aumenti la serenità sia per te che per il tuo inquilino.</p>
-    </div>
-  </section>
-
-  <!-- LOGIN DEMO -->
-  <section id="login" class="container">
-    <div class="card center">
-      <h2>Accedi (demo)</h2>
-      <p>Accesso dimostrativo per proprietari e inquilini. Le funzioni sono simulate per mostrare il flusso.</p>
-      <a class="btn primary" href="#">Accedi Demo</a>
+      <a class="btn primary" href="login.html">Accedi</a>
+      <a class="btn ghost" href="funzioni.html">Scopri le funzioni</a>
     </div>
   </section>
 
@@ -104,24 +65,18 @@
     <div class="copy">© 2025 RentPay — PWA</div>
   </footer>
 
-  <!-- JS: burger mobile -->
+  <!-- JS: burger -->
   <script>
     const burger = document.getElementById('burger');
     const nav = document.getElementById('site-nav');
-    burger.addEventListener('click', () => {
+    burger.addEventListener('click', ()=>{
       const open = nav.classList.toggle('open');
       burger.setAttribute('aria-expanded', open ? 'true' : 'false');
       document.body.classList.toggle('no-scroll', open);
     });
-
-    // Chiudi menu quando clicchi un link
-    nav.querySelectorAll('a').forEach(a => {
-      a.addEventListener('click', () => {
-        nav.classList.remove('open');
-        burger.setAttribute('aria-expanded', 'false');
-        document.body.classList.remove('no-scroll');
-      });
-    });
+    nav.querySelectorAll('a').forEach(a => a.addEventListener('click', ()=>{
+      nav.classList.remove('open'); burger.setAttribute('aria-expanded','false'); document.body.classList.remove('no-scroll');
+    }));
   </script>
 </body>
 </html>
