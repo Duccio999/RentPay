@@ -1,18 +1,21 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>RentPay</title>
-  <meta name="description" content="RentPay: affitti automatici, contratti digitali, KYC e addebiti ricorrenti.">
+  <meta name="description" content="RentPay: affitti automatici, contratti digitali, KYC e garanzie contro i mancati pagamenti.">
+  <meta name="theme-color" content="#0a7cff">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="styles.css">
 
   <!-- Cookiebot -->
-  <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="5bcf64ab-7ce1-4b46-958c-548ecf3d9c05" data-blockingmode="auto" type="text/javascript"></script>
+<script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="5bcf64ab-7ce1-4b46-958c-548ecf3d9c05" data-blockingmode="auto" type="text/javascript"></script>
 
-  <!-- Google Analytics 4 -->
-  <script type="text/plain" data-cookieconsent="statistics" async src="https://www.googletagmanager.com/gtag/js?id=G-ELHNQ36D70"></script>
-  <script type="text/plain" data-cookieconsent="statistics">
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ELHNQ36D70"></script>
+  <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
@@ -20,62 +23,68 @@
   </script>
 
   <!-- Microsoft Clarity -->
-  <script type="text/plain" data-cookieconsent="statistics">
-      (function(c,l,a,r,i,t,y){
-          c[a]=c[a]||(){(c[a].q=c[a].q||[]).push(arguments)};
-          t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-          y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-      })(window, document, "clarity", "script", "tb7r154uwi");
+  <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "tb7r154uwi");
   </script>
-
-  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <!-- Toggle menu mobile -->
-  <input id="navToggle" type="checkbox" class="nav-toggle" aria-hidden="true" />
-  <nav class="drawer" aria-label="Menu principale">
-    <a href="#/" data-goto="#/">Home</a>
-    <a href="#/vision" data-goto="#/vision">Visione</a>
-    <a href="#/features" data-goto="#/features">Funzioni</a>
-    <a href="#/how" data-goto="#/how">Come funziona</a>
-    <a href="#/insurance" data-goto="#/insurance">Garanzia</a>
-    <a href="#/access" data-goto="#/access">Accedi</a>
-    <hr class="sep"/>
-    <a href="#/terms" data-goto="#/terms">Termini di servizio</a>
-    <a href="#/privacy" data-goto="#/privacy">Privacy Policy</a>
-    <a href="https://forms.gle/REPLACE_FORM_ID" target="_blank" rel="noopener">Questionario investitori</a>
-  </nav>
-  <div class="drawer-backdrop"></div>
-
-  <header class="nav">
-    <a class="brand" href="#/" data-goto="#/">
-      <span class="house">🏠</span><span class="brand-text">RentPay</span>
-    </a>
-    <label for="navToggle" id="menuBtn" class="hamburger" aria-label="Apri menu" role="button" tabindex="0">☰</label>
-    <nav class="menu-desktop">
-      <a href="#/vision" data-goto="#/vision">Visione</a>
-      <a href="#/features" data-goto="#/features">Funzioni</a>
-      <a href="#/how" data-goto="#/how">Come funziona</a>
-      <a href="#/insurance" data-goto="#/insurance">Garanzia</a>
-      <a href="#/access" data-goto="#/access">Accedi</a>
+  <!-- HEADER -->
+  <header>
+    <nav>
+      <a href="#home" class="brand">🏠 RentPay</a>
+      <ul>
+        <li><a href="#visione">Visione</a></li>
+        <li><a href="#funzioni">Funzioni</a></li>
+        <li><a href="#garanzia">Garanzia</a></li>
+        <li><a href="#login">Accedi</a></li>
+      </ul>
     </nav>
   </header>
 
-  <main id="app" class="app"></main>
-
-  <footer class="footer">
-    <div class="footer-links">
-      <a href="#/terms" data-goto="#/terms">Termini di servizio</a> ·
-      <a href="#/privacy" data-goto="#/privacy">Privacy Policy</a> ·
-      <a href="#/vision" data-goto="#/vision">Visione</a> ·
-      <a href="https://forms.gle/REPLACE_FORM_ID" target="_blank" rel="noopener">Questionario investitori</a>
+  <!-- HOME -->
+  <section id="home" class="hero">
+    <h1>Affitti automatici, zero pensieri</h1>
+    <p>Contratti digitali, KYC e addebiti ricorrenti in un’unica app. 
+       Pagamenti puntuali e garanzie contro i mancati affitti.</p>
+    <div class="cta">
+      <a href="#login" class="btn-primary">Accedi</a>
+      <a href="#funzioni" class="btn-secondary">Scopri le funzioni</a>
     </div>
-    <small>© <span id="year"></span> RentPay — PWA</small>
+  </section>
+
+  <!-- VISIONE -->
+  <section id="visione">
+    <h2>Visione</h2>
+    <p>RentPay nasce per dare sicurezza sia ai proprietari sia agli inquilini. 
+       Automatizziamo i pagamenti, gestiamo i contratti digitali con firma elettronica e 
+       offriamo soluzioni assicurative contro i mancati pagamenti. 
+       L’obiettivo è semplice: rendere l’affitto un’esperienza senza stress, 
+       affidabile e trasparente.</p>
+  </section>
+
+  <!-- FUNZIONI -->
+  <section id="funzioni">
+    <h2>Funzioni principali</h2>
+    <ul>
+      <li>💳 <b>Pagamenti automatici</b>: incassi ricorrenti con bonifico diretto o carta.</li>
+      <li>📑 <b>Contratti & Firma</b>: upload PDF e firma digitale integrata (demo).</li>
+      <li>🛡️ <b>Garanzia canone</b>: assicurazione partner per coprire i mancati pagamenti.</li>
+    </ul>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2025 RentPay — PWA</p>
+    <p>
+      <a href="terms.html">Termini di servizio</a> ·
+      <a href="privacy.html">Privacy Policy</a> ·
+      <a href="vision.html">Visione</a> ·
+      <a href="https://forms.gle/INSERISCI-LINK-FORM" target="_blank">Questionario investitori</a>
+    </p>
   </footer>
-
-  <!-- Banner iOS A2HS opzionale: puoi lasciarlo se già presente nel tuo progetto -->
-  <button id="installBtn" class="install" hidden>Installa app</button>
-
-  <script src="./app.js"></script>
 </body>
 </html>
