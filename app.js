@@ -22,13 +22,15 @@ document.addEventListener('click',(e)=>{
 // Hash router
 const routes = {
   '#/': homeView,
-  '#/access': accessView,
-  '#/landlord': landlordView,
-  '#/tenant': tenantView,
+  '#/vision': visionView,
   '#/features': featuresView,
   '#/how': howView,
   '#/insurance': insuranceView,
-  '#/faq': faqView,
+  '#/access': accessView,
+  '#/landlord': landlordView,
+  '#/tenant': tenantView,
+  '#/terms': termsView,
+  '#/privacy': privacyView,
 };
 function navigate(hash){ if(location.hash!==hash){ location.hash = hash; } else { render(); } }
 window.addEventListener('hashchange', render);
