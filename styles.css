@@ -79,3 +79,6 @@ h1{font-size:clamp(26px,5vw,40px);line-height:1.08;margin:0}
 .section.card ul{margin:8px 0 0 18px}
 .section.card li{margin:6px 0;color:var(--muted)}
 .footer .footer-links{margin-bottom:8px}
+
+html { scroll-behavior: smooth; }
+section { scroll-margin-top: 90px; }      /* evita che la sezione rimanga sotto la navbar */
