@@ -94,6 +94,55 @@ function landlordView(){
   const right = el('div',{}, el('h3',{}, document.createTextNode('Incassi')), table);
   return [ el('section',{class:'section card grid2'}, left, right) ];
 }
+function termsView(){
+  const c = el('section',{class:'section card'},
+    el('h2',{}, document.createTextNode('Termini di servizio (Demo)')),
+    el('p',{}, document.createTextNode(
+      'Questa applicazione è un prototipo dimostrativo (“Demo”) e non gestisce pagamenti reali. ' +
+      'L’uso è consentito al solo scopo di test e valutazione. Non vengono stipulati contratti vincolanti ' +
+      'attraverso la Demo e le funzionalità possono essere rimosse o modificate senza preavviso.'
+    )),
+    el('h3',{}, document.createTextNode('Limitazione di responsabilità')),
+    el('p',{}, document.createTextNode(
+      'RentPay non è responsabile per danni diretti o indiretti derivanti dall’uso della Demo, ' +
+      'compresi perdita di dati, malfunzionamenti o indisponibilità del servizio.'
+    )),
+    el('h3',{}, document.createTextNode('Proprietà intellettuale')),
+    el('p',{}, document.createTextNode(
+      'Il marchio, la grafica e i contenuti della Demo sono di proprietà dei rispettivi titolari e ' +
+      'non possono essere riutilizzati senza autorizzazione.'
+    )),
+    el('p',{}, document.createTextNode(
+      'Per informazioni: demo@rentpay.it'
+    ))
+  );
+  return [c];
+}
+
+function privacyView(){
+  const c = el('section',{class:'section card'},
+    el('h2',{}, document.createTextNode('Privacy Policy (Demo)')),
+    el('p',{}, document.createTextNode(
+      'Durante la Demo possiamo raccogliere dati minimi (es. nome, email) tramite form, ' +
+      'al solo fine di contattarti e misurare l’interesse. I dati possono essere elaborati con ' +
+      'strumenti terzi (es. Google Analytics, Microsoft Clarity, moduli Google) e non vengono ' +
+      'venduti a terzi.'
+    )),
+    el('h3',{}, document.createTextNode('Base giuridica e conservazione')),
+    el('p',{}, document.createTextNode(
+      'Il trattamento si basa sul consenso prestato dall’utente. I dati sono conservati fino a 12 mesi ' +
+      'e poi cancellati o anonimizzati.'
+    )),
+    el('h3',{}, document.createTextNode('Diritti')),
+    el('p',{}, document.createTextNode(
+      'Puoi chiedere accesso, rettifica o cancellazione scrivendo a demo@rentpay.it.'
+    )),
+    el('p',{}, document.createTextNode(
+      'Versione semplificata per finalità dimostrative. Per la versione produttiva saranno pubblicati documenti completi.'
+    ))
+  );
+  return [c];
+}
 
 function visionView(){
   const h = el('section',{class:'section card'},
