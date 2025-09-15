@@ -11,7 +11,7 @@
   <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js"
           data-cbid="5bcf64ab-7ce1-4b46-958c-548ecf3d9c05" data-blockingmode="auto" type="text/javascript"></script>
 
-  <!-- GA4 (bloccato da Cookiebot se configurato) -->
+  <!-- Google Analytics (bloccato da Cookiebot: statistics) -->
   <script type="text/plain" data-cookieconsent="statistics" async src="https://www.googletagmanager.com/gtag/js?id=G-ELHNQ36D70"></script>
   <script type="text/plain" data-cookieconsent="statistics">
     window.dataLayer = window.dataLayer || [];
@@ -20,7 +20,7 @@
     gtag('config', 'G-ELHNQ36D70');
   </script>
 
-  <!-- Clarity (bloccato da Cookiebot se configurato) -->
+  <!-- Microsoft Clarity (bloccato da Cookiebot: statistics) -->
   <script type="text/plain" data-cookieconsent="statistics">
     (function(c,l,a,r,i,t,y){
       c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
@@ -28,97 +28,100 @@
       y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
     })(window, document, "clarity", "script", "tb7r154uwi");
   </script>
-
-  <style>
-    /* piccoli aiuti per lo scroll e il mobile */
-    html{scroll-behavior:smooth}
-    section{scroll-margin-top:90px}
-    /* se vuoi rendere l’hero più vicino a “quello iniziale” */
-    .hero{max-width:980px;margin:24px auto;padding:28px 20px;border-radius:18px;
-      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      border:1px solid rgba(255,255,255,.12)}
-    .hero h1{font-size:clamp(28px,5vw,44px);line-height:1.1;margin:0 0 12px}
-    .hero p{opacity:.9;margin:0 0 18px}
-    .actions{display:flex;gap:12px;flex-wrap:wrap}
-    .btn{display:inline-block;padding:10px 16px;border-radius:10px;text-decoration:none;font-weight:600}
-    .btn.primary{background:#2ea0ff;color:#04101f}
-    .btn.secondary{background:transparent;border:1px solid rgba(255,255,255,.25)}
-    /* nav burger compatibile mobile */
-    .nav{position:sticky;top:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;
-      padding:12px 16px;background:rgba(2,10,24,.9);backdrop-filter:blur(8px);border-bottom:1px solid rgba(255,255,255,.08)}
-    .brand{display:flex;gap:10px;align-items:center;font-weight:800;text-decoration:none}
-    .brand:before{content:"🏠"}
-    .nav-toggle{display:none}
-    .hamburger{display:none;cursor:pointer;border:1px solid rgba(255,255,255,.25);padding:8px 10px;border-radius:10px}
-    .menu{display:flex;gap:16px}
-    .menu a{text-decoration:none}
-    @media (max-width:860px){
-      .hamburger{display:block}
-      .menu{position:absolute;left:12px;right:12px;top:64px;flex-direction:column;gap:12px;
-        background:#0b1930;border:1px solid rgba(255,255,255,.15);border-radius:14px;padding:14px;display:none}
-      .nav-toggle:checked ~ .menu{display:flex}
-    }
-    .section{max-width:980px;margin:24px auto;padding:0 16px}
-    .feature{margin:10px 0}
-    .footer{max-width:980px;margin:40px auto 24px;padding:0 16px;opacity:.85}
-    .footer a{margin-right:10px}
-  </style>
 </head>
 <body>
   <!-- NAV -->
   <header class="nav">
-    <a class="brand" href="index.html">RentPay</a>
-    <input type="checkbox" id="navToggle" class="nav-toggle">
-    <label for="navToggle" class="hamburger">☰</label>
-    <nav class="menu">
+    <a class="brand" href="index.html"><span class="logo">🏠</span> <span>RentPay</span></a>
+
+    <button class="burger" id="burger"
+            aria-label="Apri menu" aria-controls="site-nav" aria-expanded="false">
+      ☰
+    </button>
+
+    <nav class="nav-links" id="site-nav" role="navigation">
       <a href="vision.html">Visione</a>
       <a href="#funzioni">Funzioni</a>
       <a href="#garanzia">Garanzia</a>
-      <a href="#login">Accedi</a>
+      <a href="#login" class="accent">Accedi</a>
     </nav>
   </header>
 
-  <!-- HERO snello -->
-  <section class="hero">
+  <!-- HERO -->
+  <section class="hero container">
     <h1>Affitti automatici, zero pensieri</h1>
-    <p>Contratti digitali, KYC e addebiti ricorrenti in un’unica app. Pagamenti puntuali e garanzie contro i mancati affitti.</p>
+    <p class="lead">
+      Contratti digitali, KYC e addebiti ricorrenti in un’unica app. Pagamenti puntuali e garanzie contro i mancati affitti.
+    </p>
     <div class="actions">
       <a class="btn primary" href="#login">Accedi</a>
-      <a class="btn secondary" href="#funzioni">Scopri le funzioni</a>
+      <a class="btn ghost" href="#funzioni">Scopri le funzioni</a>
     </div>
   </section>
 
-  <!-- FUNZIONI (restano in home, ma compatte) -->
-  <section id="funzioni" class="section">
-    <h2>Funzioni principali</h2>
-    <div class="feature">💳 <strong>Pagamenti automatici</strong> — incassi ricorrenti con bonifico diretto o carta.</div>
-    <div class="feature">📑 <strong>Contratti & Firma</strong> — carichi PDF e firmi in digitale (demo).</div>
-    <div class="feature">🛡️ <strong>Garanzia canone</strong> — stima premio (demo) con partner assicurativi.</div>
+  <!-- FUNZIONI -->
+  <section id="funzioni" class="container grid">
+    <article class="card">
+      <h3>💳 Pagamenti automatici</h3>
+      <p>Programmi il giorno, incassi su IBAN o carta con promemoria e ricevute.</p>
+    </article>
+    <article class="card">
+      <h3>📑 Contratti &amp; Firma</h3>
+      <p>Carichi il PDF e firmi in digitale (demo). Archivio centralizzato dei documenti.</p>
+    </article>
+    <article class="card">
+      <h3>🛡️ Garanzia canone</h3>
+      <p>Stima del premio (demo) e copertura con partner assicurativi per mancati pagamenti.</p>
+    </article>
   </section>
 
   <!-- GARANZIA -->
-  <section id="garanzia" class="section">
-    <h2>Garanzia sugli affitti</h2>
-    <p>Con compagnie assicurative partner puoi aggiungere una protezione contro i mancati pagamenti, così proprietari e inquilini vivono l’affitto con più serenità.</p>
+  <section id="garanzia" class="container promo">
+    <div class="promo-inner">
+      <h2>Proteggi i tuoi incassi</h2>
+      <p>Con la garanzia canone, in collaborazione con compagnie partner, riduci il rischio di mancati pagamenti e aumenti la serenità sia per te che per il tuo inquilino.</p>
+    </div>
   </section>
 
-  <!-- LOGIN (demo) -->
-  <section id="login" class="section">
-    <h2>Accedi</h2>
-    <p>Accesso dimostrativo per proprietari e inquilini (funzione simulata).</p>
-    <a class="btn primary" href="#">Accedi Demo</a>
+  <!-- LOGIN DEMO -->
+  <section id="login" class="container">
+    <div class="card center">
+      <h2>Accedi (demo)</h2>
+      <p>Accesso dimostrativo per proprietari e inquilini. Le funzioni sono simulate per mostrare il flusso.</p>
+      <a class="btn primary" href="#">Accedi Demo</a>
+    </div>
   </section>
 
   <!-- FOOTER -->
-  <footer class="footer">
-    <p>© 2025 RentPay — PWA</p>
-    <p>
-      <a href="terms.html">Termini di servizio</a> ·
-      <a href="privacy.html">Privacy Policy</a> ·
-      <a href="cookie.html">Cookie Policy</a> ·
-      <a href="vision.html">Visione</a> ·
+  <footer class="footer container">
+    <div class="f-links">
+      <a href="terms.html">Termini di servizio</a>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="cookie.html">Cookie Policy</a>
+      <a href="vision.html">Visione</a>
       <a href="https://forms.gle/INSERISCI-LINK-FORM" target="_blank" rel="noopener">Questionario investitori</a>
-    </p>
+    </div>
+    <div class="copy">© 2025 RentPay — PWA</div>
   </footer>
+
+  <!-- JS: burger mobile -->
+  <script>
+    const burger = document.getElementById('burger');
+    const nav = document.getElementById('site-nav');
+    burger.addEventListener('click', () => {
+      const open = nav.classList.toggle('open');
+      burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+      document.body.classList.toggle('no-scroll', open);
+    });
+
+    // Chiudi menu quando clicchi un link
+    nav.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => {
+        nav.classList.remove('open');
+        burger.setAttribute('aria-expanded', 'false');
+        document.body.classList.remove('no-scroll');
+      });
+    });
+  </script>
 </body>
 </html>
