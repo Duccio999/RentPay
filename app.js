@@ -95,6 +95,39 @@ function landlordView(){
   return [ el('section',{class:'section card grid2'}, left, right) ];
 }
 
+function visionView(){
+  const h = el('section',{class:'section card'},
+    el('h2',{}, document.createTextNode('La nostra visione')),
+    el('p',{}, document.createTextNode(
+      'RentPay nasce per togliere l’ansia dei mancati pagamenti dalla locazione. ' +
+      'Vogliamo che qualsiasi persona – dal piccolo proprietario allo studente fuori sede – ' +
+      'possa vivere l’affitto come un’esperienza semplice, digitale e sicura.'
+    )),
+    el('h3',{}, document.createTextNode('Cosa risolviamo')),
+    el('ul',{},
+      li('Pagamenti automatici','Niente bonifici manuali o solleciti: l’addebito è ricorrente e puntuale.'),
+      li('Contratti digitali','Gestiamo firma e KYC con provider esterni conformi, riducendo tempi e carta.'),
+      li('Trasparenza','Dashboard con storico incassi e ricevute, visibile a proprietario e inquilino.'),
+      li('Protezione','Su richiesta attiviamo una garanzia canone tramite assicurazioni partner.')
+    ),
+    el('h3',{}, document.createTextNode('Come lo facciamo')),
+    el('p',{}, document.createTextNode(
+      'Un’unica app installabile (PWA), pensata mobile-first: crei il contratto, verifichi l’identità, ' +
+      'imposti importo e giorno di incasso, e monitori tutto in tempo reale. ' +
+      'La nostra priorità è l’affidabilità dei pagamenti e la semplicità d’uso.'
+    )),
+    el('p',{}, document.createTextNode(
+      'Il percorso è progressivo: partiamo con una demo che mostra il flusso completo, ' +
+      'poi integriamo i pagamenti reali con un PSP regolamentato e attiviamo la garanzia con partner assicurativi.'
+    ))
+  );
+  return [h];
+}
+function li(title,desc){
+  const x=el('li',{}); x.append(el('b',{},document.createTextNode(title)), document.createTextNode(' — '+desc));
+  return x;
+}
+
 function tenantView(){
   const left = el('div',{},
     el('h2',{}, document.createTextNode('Area Inquilino')),
