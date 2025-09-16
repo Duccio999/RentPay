@@ -9,15 +9,43 @@
 </head>
 <body>
   <header class="nav">
-    <a class="brand" href="index.html"><span class="logo">🏠</span><span>RentPay</span></a>
-    <nav class="nav-links always">
-      <a href="vision.html">Visione</a>
-      <a href="funzioni.html" class="active">Funzioni</a>
-      <a href="garanzia.html">Garanzia</a>
-      <a href="./prezzi.html">Prezzi</a>
+   <!-- NAVBAR GLOBALE -->
+<nav class="rp-nav">
+  <a class="rp-brand" href="./index.html" aria-label="RentPay Home">
+    <span class="rp-house" aria-hidden="true">🏠</span>
+    <span class="rp-brand-text">RentPay</span>
+  </a>
+
+  <!-- Desktop -->
+  <div class="rp-menu-desktop">
+    <a href="./index.html">Home</a>
+    <a href="./funzioni.html">Funzioni</a>
+    <a href="./garanzia.html">Garanzia</a>
+    <a href="./prezzi.html">Prezzi</a>
     <a href="./firma.html">Firma (demo)</a>
-      <a href="login.html" class="accent">Accedi</a>
-    </nav>
+    <a class="rp-accent" href="./login.html">Accedi</a>
+  </div>
+
+  <!-- Mobile -->
+  <button id="rpHamburger" class="rp-hamburger" aria-label="Apri menu" aria-expanded="false">☰</button>
+</nav>
+
+<!-- Drawer mobile -->
+<aside id="rpDrawer" class="rp-drawer" aria-hidden="true">
+  <div class="rp-drawer-head">
+    <span class="rp-drawer-title">Menù</span>
+    <button id="rpDrawerClose" class="rp-close" aria-label="Chiudi menu">×</button>
+  </div>
+  <a href="./index.html">Home</a>
+  <a href="./funzioni.html">Funzioni</a>
+  <a href="./garanzia.html">Garanzia</a>
+  <a href="./prezzi.html">Prezzi</a>
+  <a href="./firma.html">Firma (demo)</a>
+  <a class="rp-accent" href="./login.html">Accedi</a>
+</aside>
+<div id="rpBackdrop" class="rp-backdrop" hidden></div>
+<!-- /NAVBAR GLOBALE -->
+>
   </header>
 
   <main class="container grid">
