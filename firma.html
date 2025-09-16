@@ -11,16 +11,42 @@
   <meta name="description" content="Dimostrazione di firma contratto di locazione con KYC e firma elettronica (simulata).">
 </head>
 <body>
-  <nav class="nav">
-    <a class="brand" href="./index.html"><span class="house">🏠</span><span class="brand-text">RentPay</span></a>
-    <div class="menu-desktop">
-      <a href="./index.html">Home</a>
-      <a href="./funzioni.html">Funzioni</a>
-      <a href="./garanzia.html">Garanzia Canone</a>
-      <a href="./prezzi.html">Prezzi</a>
-      <a href="./login.html">Accedi</a>
-    </div>
-  </nav>
+ <!-- NAVBAR GLOBALE -->
+<nav class="rp-nav">
+  <a class="rp-brand" href="./index.html" aria-label="RentPay Home">
+    <span class="rp-house" aria-hidden="true">🏠</span>
+    <span class="rp-brand-text">RentPay</span>
+  </a>
+
+  <!-- Desktop -->
+  <div class="rp-menu-desktop">
+    <a href="./index.html">Home</a>
+    <a href="./funzioni.html">Funzioni</a>
+    <a href="./garanzia.html">Garanzia</a>
+    <a href="./prezzi.html">Prezzi</a>
+    <a href="./firma.html">Firma (demo)</a>
+    <a class="rp-accent" href="./login.html">Accedi</a>
+  </div>
+
+  <!-- Mobile -->
+  <button id="rpHamburger" class="rp-hamburger" aria-label="Apri menu" aria-expanded="false">☰</button>
+</nav>
+
+<!-- Drawer mobile -->
+<aside id="rpDrawer" class="rp-drawer" aria-hidden="true">
+  <div class="rp-drawer-head">
+    <span class="rp-drawer-title">Menù</span>
+    <button id="rpDrawerClose" class="rp-close" aria-label="Chiudi menu">×</button>
+  </div>
+  <a href="./index.html">Home</a>
+  <a href="./funzioni.html">Funzioni</a>
+  <a href="./garanzia.html">Garanzia</a>
+  <a href="./prezzi.html">Prezzi</a>
+  <a href="./firma.html">Firma (demo)</a>
+  <a class="rp-accent" href="./login.html">Accedi</a>
+</aside>
+<div id="rpBackdrop" class="rp-backdrop" hidden></div>
+<!-- /NAVBAR GLOBALE -->
 
   <main class="container">
     <div class="demo-banner"><strong>DEMO</strong> – Questa è una simulazione di firma. Non vengono eseguite verifiche reali né create scritture vincolanti.</div>
