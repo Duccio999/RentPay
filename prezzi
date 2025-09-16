@@ -47,15 +47,16 @@
   <main class="page">
     <div class="demo-banner"><strong>DEMO</strong> — Valori indicativi. Aggiorneremo i listini al lancio.</div>
 
-    <!-- HERO -->
-    <section class="card hero">
-      <h1>Prezzi trasparenti</h1>
-      <p>Paghi solo quando incassi. Con l’abbonamento annuale ottieni sconti automatici sulle commissioni.</p>
-      <div class="actions">
-        <a class="btn" href="./firma.html">Prova la firma (demo)</a>
-        <a class="btn primary" href="./login.html">Accedi alla demo</a>
-      </div>
-    </section>
+   <!-- HERO -->
+<section class="card hero">
+  <h1>Piani e Prezzi</h1>
+  <p>Scopri commissioni, fee assicurazioni e abbonamenti annuali.</p>
+  <div class="actions">
+    <a class="btn" href="./firma.html">Prova la firma (demo)</a>
+    <a class="btn primary" href="./login.html">Accedi alla demo</a>
+  </div>
+</section>
+
 
     <!-- PIANI / COMMISSIONI -->
     <section class="grid-cards">
