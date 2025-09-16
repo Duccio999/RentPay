@@ -4,65 +4,99 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>RentPay – Prezzi</title>
+  <meta name="description" content="Commissioni su canoni, fee assicurazione e abbonamenti annuali con sconti.">
+  <link rel="stylesheet" href="./styles.css">
   <link rel="icon" href="./icons/icon-192.png" sizes="192x192">
   <link rel="apple-touch-icon" href="./icons/icon-192.png">
   <link rel="manifest" href="./manifest.webmanifest">
-  <link rel="stylesheet" href="./styles.css">
-  <meta name="description" content="Commissioni su canoni, fee sulle garanzie canone e abbonamenti premium annuali con sconti.">
+
+  <!-- Piccolo CSS di sicurezza per questa pagina (non rompe gli altri file) -->
+  <style>
+    .page { max-width: 1000px; margin: 0 auto; padding: 20px; }
+    .hero.card { margin-bottom: 16px; }
+    .grid-cards { display: grid; gap: 12px; grid-template-columns: repeat(3, minmax(0,1fr)); }
+    @media (max-width: 900px){ .grid-cards { grid-template-columns: 1fr; } }
+    .small { font-size: .9rem; opacity: .85; }
+    .calc-out { margin-top: 12px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; }
+    @media (max-width:740px){ .grid-2{ grid-template-columns:1fr; } }
+    .demo-banner{
+      background: rgba(250, 204, 21, .12);
+      border: 1px solid rgba(250, 204, 21, .5);
+      color:#eab308; padding:12px 14px; border-radius:12px; margin:16px 0 8px;
+    }
+    .actions { display:flex; gap:10px; flex-wrap:wrap; margin-top:8px; }
+    .btn { padding:10px 14px; border-radius:10px; border:1px solid rgba(255,255,255,.15); text-decoration:none; }
+    .btn.primary { background:#2ea0ff; color:#04111f; border-color:transparent; font-weight:700; }
+  </style>
 </head>
 <body>
+  <!-- NAV -->
   <nav class="nav">
-    <a class="brand" href="./index.html"><span class="house">🏠</span><span class="brand-text">RentPay</span></a>
+    <a class="brand" href="./index.html"><span class="logo">🏠</span><span>RentPay</span></a>
     <div class="menu-desktop">
       <a href="./index.html">Home</a>
       <a href="./funzioni.html">Funzioni</a>
-      <a href="./garanzia.html">Garanzia Canone</a>
+      <a href="./garanzia.html">Garanzia</a>
+      <a href="./firma.html">Firma (demo)</a>
       <a class="active" href="./prezzi.html">Prezzi</a>
-      <a href="./login.html">Accedi</a>
+      <a href="./login.html" class="accent">Accedi</a>
     </div>
   </nav>
 
-  <main class="container">
+  <main class="page">
+    <div class="demo-banner"><strong>DEMO</strong> — Valori indicativi. Aggiorneremo i listini al lancio.</div>
+
+    <!-- HERO -->
     <section class="card hero">
       <h1>Prezzi trasparenti</h1>
-      <p>Paghi solo quando incassi. Con gli abbonamenti annuali ottieni sconti sulle commissioni.</p>
+      <p>Paghi solo quando incassi. Con l’abbonamento annuale ottieni sconti automatici sulle commissioni.</p>
+      <div class="actions">
+        <a class="btn" href="./firma.html">Prova la firma (demo)</a>
+        <a class="btn primary" href="./login.html">Accedi alla demo</a>
+      </div>
     </section>
 
+    <!-- PIANI / COMMISSIONI -->
     <section class="grid-cards">
-      <div class="card">
+      <article class="card">
         <h3>Commissione sui canoni</h3>
-        <p><b>1,5% + €0,25</b> per ogni pagamento riuscito.<br>
-        <span class="small">Valori di esempio per la demo — configurabili in produzione.</span></p>
+        <p><b>1,5% + €0,25</b> per ogni pagamento andato a buon fine.<br>
+          <span class="small">Commissione applicata all’incasso mensile dell’affitto.</span>
+        </p>
         <ul>
           <li>Addebiti ricorrenti carta/SEPA</li>
+          <li>Ricevute e report</li>
           <li>Nessun costo di attivazione</li>
-          <li>Reportistica e ricevute</li>
         </ul>
-      </div>
+      </article>
 
-      <div class="card">
+      <article class="card">
         <h3>Fee garanzia canone</h3>
-        <p><b>5% del premio</b> della polizza garanzia canoni (se attivata).<br>
-        <span class="small">La tariffa reale dipende dal partner assicurativo.</span></p>
+        <p><b>5% del premio</b> della polizza garanzia (se attivata).<br>
+          <span class="small">Il premio è calcolato dal partner assicurativo.</span>
+        </p>
         <ul>
-          <li>Preventivo e checkout in-app</li>
-          <li>Integrazione partner</li>
+          <li>Preventivo integrato</li>
+          <li>Acquisto in pochi click</li>
+          <li>Gestione sinistri con partner</li>
         </ul>
-      </div>
+      </article>
 
-      <div class="card">
+      <article class="card">
         <h3>Abbonamenti annuali</h3>
         <ul>
-          <li><b>Starter — €99/anno</b>: <u>-10%</u> sulla commissione canoni</li>
-          <li><b>Pro — €299/anno</b>: <u>-20%</u> sulla commissione + supporto prioritario</li>
+          <li><b>Starter — €99/anno</b> → sconto <u>−10%</u> sulla commissione canoni</li>
+          <li><b>Pro — €299/anno</b> → sconto <u>−20%</u> + supporto prioritario</li>
         </ul>
         <p class="small">Gli sconti si applicano automaticamente ad ogni incasso.</p>
-      </div>
+      </article>
     </section>
 
-    <section class="card">
+    <!-- CALCOLATORE DEMO -->
+    <section class="card" style="margin-top:16px">
       <h2>Calcola il costo (demo)</h2>
-      <div class="grid">
+      <div class="grid-2">
         <label>Canone mensile (€)
           <input id="c-rent" type="number" min="1" step="1" value="800">
         </label>
@@ -72,31 +106,47 @@
         <label>Abbonamento
           <select id="c-plan">
             <option value="none">Nessuno</option>
-            <option value="starter">Starter (-10%)</option>
-            <option value="pro">Pro (-20%)</option>
+            <option value="starter">Starter (−10%)</option>
+            <option value="pro">Pro (−20%)</option>
           </select>
         </label>
       </div>
       <div class="actions">
         <button class="btn primary" id="c-run">Calcola</button>
+        <a class="btn" href="./login.html">Fai una prova (demo)</a>
       </div>
       <div id="c-out" class="calc-out"></div>
-      <p class="small">Questi importi sono una stima di esempio per la demo.</p>
+      <p class="small">Stime di esempio. Commissioni PSP/IVA escluse se applicabili.</p>
+    </section>
+
+    <!-- LINK UTILI -->
+    <section class="card" style="margin-top:16px">
+      <h2>Continua</h2>
+      <div class="actions">
+        <a class="btn" href="./funzioni.html">Vedi le funzioni</a>
+        <a class="btn" href="./garanzia.html">Scopri la garanzia</a>
+        <a class="btn" href="./firma.html">Come si firma (demo)</a>
+        <a class="btn primary" href="./login.html">Accedi</a>
+      </div>
     </section>
   </main>
 
+  <!-- FOOTER -->
   <footer class="footer">
     <div class="links">
       <a href="./terms.html">Termini di servizio</a>
       <a href="./privacy.html">Privacy Policy</a>
       <a href="./cookie.html">Cookie</a>
+      <a href="./prezzi.html" class="active">Prezzi</a>
+      <a href="./firma.html">Firma (demo)</a>
       <a href="https://forms.gle" target="_blank" rel="noopener">Questionario investitori</a>
     </div>
     <div>© 2025 RentPay — PWA — DEMO</div>
   </footer>
 
+  <!-- Calcolatore -->
   <script>
-    // Parametri demo (modifica qui per simulare prezzi reali)
+    // Parametri DEMO (puoi variarli qui)
     const COMM_PCT = 0.015;   // 1,5%
     const COMM_FIX = 0.25;    // €0,25 per incasso
     const PLAN_DISCOUNT = { none: 0, starter: 0.10, pro: 0.20 };
@@ -110,14 +160,13 @@
 
       const gross   = rent * months;
       const perTx   = rent * COMM_PCT + COMM_FIX;
-      const discount= PLAN_DISCOUNT[plan] || 0;
-      const perTxNet= perTx * (1 - discount);
+      const perTxNet= perTx * (1 - (PLAN_DISCOUNT[plan] || 0));
       const total   = perTxNet * months;
 
       document.getElementById('c-out').innerHTML = `
-        <div class="grid grid-2">
+        <div class="grid-2">
           <div><b>Incasso lordo</b><div>${euro(gross)}</div></div>
-          <div><b>Commissione per incasso</b><div>${euro(perTxNet)} (${(COMM_PCT*(1-discount)*100).toFixed(2)}% + €${(COMM_FIX*(1-discount)).toFixed(2)})</div></div>
+          <div><b>Commissione per incasso</b><div>${euro(perTxNet)} (${(COMM_PCT*100).toFixed(2)}% + €${COMM_FIX.toFixed(2)} ${plan!=='none'?`→ sconto ${(PLAN_DISCOUNT[plan]*100)}%`:''})</div></div>
           <div><b>Numero incassi</b><div>${months}</div></div>
           <div><b>Commissioni totali stimate</b><div>${euro(total)}</div></div>
         </div>
