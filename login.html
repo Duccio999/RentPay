@@ -8,22 +8,28 @@
   <link rel="icon" href="./icons/icon-192.png" sizes="192x192">
   <link rel="apple-touch-icon" href="./icons/icon-192.png">
   <link rel="manifest" href="./manifest.webmanifest">
-  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./styles.css?v=2">
+
   <style>
-    /* hardening locale per essere uguale ovunque */
+    /* hardening locale (nel caso styles.css sia cache-ato) */
     .page{max-width:1000px;margin:0 auto;padding:20px}
     .hero.card{margin-bottom:16px}
-    .notice{background:rgba(250,204,21,.12);border:1px solid rgba(250,204,21,.5);color:#eab308;padding:10px 12px;border-radius:12px;margin:8px 0 16px}
     .tabs{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 16px}
-    .tab{padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:transparent;cursor:pointer}
-    .tab.active{background:#2ea0ff;color:#04111f;border-color:transparent;font-weight:700}
+    .tab{padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,.15);cursor:pointer}
+    .tab.active{background:#2ea0ff;color:#04111f;border-color:transparent;font-weight:800}
     .grid{display:grid;gap:10px;grid-template-columns:repeat(2,minmax(0,1fr))}
     @media(max-width:760px){.grid{grid-template-columns:1fr}}
-    .form-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:14px}
     .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
     .btn{padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,.15);text-decoration:none}
     .btn.primary{background:#2ea0ff;color:#04111f;border-color:transparent;font-weight:700}
+    .notice{background:rgba(250,204,21,.12);border:1px solid rgba(250,204,21,.5);color:#eab308;padding:10px 12px;border-radius:12px;margin:8px 0 16px}
     .success{background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.45);color:#10b981;padding:10px 12px;border-radius:12px;margin-top:12px}
+    /* fallback form-card e input (se styles.css non si aggiorna) */
+    .form-card{background:#0e1b2b;color:#e8f1ff;border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:14px}
+    .form-card label{display:flex;flex-direction:column;gap:6px;font-weight:600}
+    .form-card input,.form-card select{background:#0a1622;color:#e8f1ff;border:1px solid rgba(255,255,255,.25);border-radius:10px;padding:10px 12px;outline:none}
+    .form-card input::placeholder{color:rgba(232,241,255,.6)}
+    .form-card input:focus,.form-card select:focus{border-color:#2ea0ff;box-shadow:0 0 0 3px rgba(46,160,255,.25)}
   </style>
 </head>
 <body>
@@ -43,8 +49,8 @@
   <main class="page">
     <section class="card hero">
       <h1>Accesso Demo</h1>
-      <p>Scegli se accedere come <b>Proprietario</b> o <b>Inquilino</b>. Questa è una simulazione: i dati non vengono salvati.</p>
-      <div class="notice">DEMO – nessuna registrazione reale, nessun salvataggio.</div>
+      <p>Scegli se accedere come <b>Proprietario</b> o <b>Inquilino</b>. Nessun dato viene salvato.</p>
+      <div class="notice">DEMO — simulazione senza registrazione o salvataggio dati.</div>
 
       <!-- Tabs -->
       <div class="tabs">
@@ -52,44 +58,48 @@
         <button id="tab-tenant" class="tab" data-target="tenant">🏠 Inquilino</button>
       </div>
 
-      <!-- FORM PROPRIETARIO -->
-      <form id="form-landlord" class="form-card">
+      <!-- PROPRIETARIO -->
+      <form id="form-landlord" class="form-card" autocomplete="off">
         <h3>Proprietario (DEMO)</h3>
         <div class="grid">
-          <label>Nome <input name="name" required placeholder="Mario"></label>
-          <label>Cognome <input name="surname" required placeholder="Rossi"></label>
-          <label>Email <input name="email" type="email" required placeholder="mario@example.com"></label>
-          <label>Telefono <input name="phone" required placeholder="+39..."></label>
-          <label>IBAN per incasso <input name="iban" required placeholder="IT00X0000..."></label>
-          <label>Indirizzo immobile <input name="address" required placeholder="Via Garibaldi 10, Torino"></label>
-          <label>Canone mensile (€) <input name="rent" type="number" min="1" required placeholder="800"></label>
-          <label>Giorno di addebito <input name="day" type="number" min="1" max="28" required placeholder="5"></label>
+          <label>Nome <input name="name" placeholder="Mario" required></label>
+          <label>Cognome <input name="surname" placeholder="Rossi" required></label>
+          <label>Email <input type="email" name="email" placeholder="mario@example.com" required></label>
+          <label>Telefono <input name="phone" placeholder="+39..." required></label>
+          <label>IBAN per incasso <input name="iban" placeholder="IT00X0000..." required></label>
+          <label>Indirizzo immobile <input name="address" placeholder="Via Garibaldi 10, Torino" required></label>
+          <label>Canone mensile (€) <input type="number" min="1" name="rent" placeholder="800" required></label>
+          <label>Giorno di addebito <input type="number" min="1" max="28" name="day" placeholder="5" required></label>
         </div>
         <div class="actions">
           <button class="btn primary" type="submit">Crea contratto (demo)</button>
           <a class="btn" href="./firma.html">Vai a firma (demo)</a>
         </div>
-        <div id="ok-landlord" class="success" style="display:none">✓ Dati ricevuti (demo). Prosegui alla <a href="./firma.html">firma</a> o vedi i <a href="./prezzi.html">prezzi</a>.</div>
+        <div id="ok-landlord" class="success" style="display:none">
+          ✓ Dati ricevuti (demo). Prosegui alla <a href="./firma.html">firma</a> o vedi i <a href="./prezzi.html">prezzi</a>.
+        </div>
       </form>
 
-      <!-- FORM INQUILINO -->
-      <form id="form-tenant" class="form-card" style="display:none">
+      <!-- INQUILINO -->
+      <form id="form-tenant" class="form-card" style="display:none" autocomplete="off">
         <h3>Inquilino (DEMO)</h3>
         <div class="grid">
-          <label>Nome <input name="name" required placeholder="Luca"></label>
-          <label>Cognome <input name="surname" required placeholder="Bianchi"></label>
-          <label>Email <input name="email" type="email" required placeholder="luca@example.com"></label>
-          <label>Telefono <input name="phone" required placeholder="+39..."></label>
-          <label>Documento (numero) <input name="doc" required placeholder="AA0000000"></label>
-          <label>IBAN / Carta per addebito <input name="pay" required placeholder="IT00X... / **** **** **** 1234"></label>
-          <label>Data inizio <input name="start" type="date" required></label>
-          <label>Durata (mesi) <input name="months" type="number" min="1" required placeholder="12"></label>
+          <label>Nome <input name="name" placeholder="Luca" required></label>
+          <label>Cognome <input name="surname" placeholder="Bianchi" required></label>
+          <label>Email <input type="email" name="email" placeholder="luca@example.com" required></label>
+          <label>Telefono <input name="phone" placeholder="+39..." required></label>
+          <label>Documento (numero) <input name="doc" placeholder="AA0000000" required></label>
+          <label>IBAN / Carta per addebito <input name="pay" placeholder="IT00X... / **** **** **** 1234" required></label>
+          <label>Data inizio <input type="date" name="start" required></label>
+          <label>Durata (mesi) <input type="number" min="1" name="months" placeholder="12" required></label>
         </div>
         <div class="actions">
           <button class="btn primary" type="submit">Invia richiesta (demo)</button>
           <a class="btn" href="./prezzi.html">Vedi prezzi</a>
         </div>
-        <div id="ok-tenant" class="success" style="display:none">✓ Richiesta inviata (demo). Il proprietario riceverà notifica per la firma.</div>
+        <div id="ok-tenant" class="success" style="display:none">
+          ✓ Richiesta inviata (demo). Il proprietario riceverà notifica per la firma.
+        </div>
       </form>
     </section>
   </main>
@@ -107,7 +117,6 @@
   </footer>
 
   <script>
-    // gestione tab + hash
     const tabLandlord = document.getElementById('tab-landlord');
     const tabTenant   = document.getElementById('tab-tenant');
     const fLandlord   = document.getElementById('form-landlord');
@@ -123,19 +132,16 @@
     }
     tabLandlord.addEventListener('click',()=>setTab('landlord'));
     tabTenant.addEventListener('click',()=>setTab('tenant'));
-    // inizializza da hash
+
+    // inizializza da hash, default landlord
     setTab(location.hash === '#tenant' ? 'tenant' : 'landlord');
 
-    // submit DEMO (solo messaggio)
-    fLandlord.addEventListener('submit', e=>{
-      e.preventDefault();
-      document.getElementById('ok-landlord').style.display='block';
-      window.scrollTo({top: fLandlord.offsetTop + fLandlord.offsetHeight - 80, behavior:'smooth'});
+    // submit DEMO
+    document.getElementById('form-landlord').addEventListener('submit', e=>{
+      e.preventDefault(); document.getElementById('ok-landlord').style.display='block';
     });
-    fTenant.addEventListener('submit', e=>{
-      e.preventDefault();
-      document.getElementById('ok-tenant').style.display='block';
-      window.scrollTo({top: fTenant.offsetTop + fTenant.offsetHeight - 80, behavior:'smooth'});
+    document.getElementById('form-tenant').addEventListener('submit', e=>{
+      e.preventDefault(); document.getElementById('ok-tenant').style.display='block';
     });
   </script>
 </body>
