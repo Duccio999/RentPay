@@ -194,3 +194,63 @@ input::placeholder{ color: rgba(255,255,255,.45); }
   border-radius:12px !important;
 }
 
+/* ===== NAV Responsive RentPay ===== */
+:root{
+  --rp-bg:#0b1220; --rp-panel:#0e1b2b; --rp-text:#e8f1ff;
+  --rp-primary:#2ea0ff; --rp-border:rgba(255,255,255,.14);
+}
+.rp-nav{
+  position:sticky; top:0; z-index:50;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 16px; background:var(--rp-bg);
+  border-bottom:1px solid var(--rp-border);
+}
+.rp-brand{display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--rp-text)}
+.rp-house{display:inline-grid; place-items:center; width:32px; height:32px;
+  border-radius:10px; background:linear-gradient(135deg,var(--rp-primary),#7cc4ff);}
+.rp-brand-text{font-weight:800; letter-spacing:.3px}
+
+.rp-menu-desktop{display:flex; gap:16px; align-items:center}
+.rp-menu-desktop a{color:var(--rp-text); text-decoration:none; opacity:.9}
+.rp-menu-desktop a:hover{opacity:1}
+.rp-menu-desktop .rp-accent{
+  padding:8px 12px; border-radius:10px; background:var(--rp-primary);
+  color:#061423; font-weight:800; border:0;
+}
+
+/* hamburger mobile */
+.rp-hamburger{
+  display:none; font-size:22px; line-height:1; padding:8px 10px;
+  border:1px solid var(--rp-border); border-radius:10px; background:transparent; color:var(--rp-text);
+}
+
+/* Drawer mobile */
+.rp-backdrop{
+  position:fixed; inset:0; background:rgba(0,0,0,.45); backdrop-filter:blur(2px);
+  z-index:49;
+}
+.rp-drawer{
+  position:fixed; top:0; right:-320px; width:300px; max-width:85vw; height:100dvh;
+  background:var(--rp-panel); border-left:1px solid var(--rp-border);
+  padding:16px; display:flex; flex-direction:column; gap:8px; z-index:50;
+  transition:right .25s ease;
+}
+.rp-drawer.open{ right:0 }
+.rp-drawer a{
+  color:var(--rp-text); text-decoration:none; padding:10px 8px; border-radius:10px;
+}
+.rp-drawer a:hover{ background:rgba(255,255,255,.06) }
+.rp-drawer .rp-accent{
+  background:var(--rp-primary); color:#061423; font-weight:800;
+}
+.rp-drawer-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:6px}
+.rp-close{
+  background:transparent; border:1px solid var(--rp-border); color:var(--rp-text);
+  font-size:22px; line-height:1; padding:4px 10px; border-radius:10px;
+}
+
+/* Breakpoint */
+@media (max-width: 860px){
+  .rp-menu-desktop{ display:none }
+  .rp-hamburger{ display:inline-block }
+}
