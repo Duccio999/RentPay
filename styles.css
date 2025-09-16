@@ -81,3 +81,48 @@ h3{margin:0 0 8px}
 /* Smooth anchors */
 html{scroll-behavior:smooth}
 section{scroll-margin-top:90px}
+
+/* --- Accesso DEMO --- */
+.demo-banner{
+  background: rgba(250, 204, 21, .12);
+  border: 1px solid rgba(250, 204, 21, .5);
+  color:#eab308;
+  padding:12px 14px;
+  border-radius:12px;
+  margin:16px auto 8px;
+}
+
+.tabs{
+  display:flex; gap:8px; margin:12px 0 8px;
+  flex-wrap:wrap;
+}
+.tab-btn{
+  padding:10px 14px; border-radius:10px; border:1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.04); color: var(--text);
+  cursor:pointer;
+}
+.tab-btn.active{ background: rgba(32, 121, 255, .18); border-color: rgba(32,121,255,.6); }
+
+.form{ margin-top:10px; }
+.form.hidden{ display:none; }
+
+.grid{
+  display:grid; gap:12px; grid-template-columns: repeat(2, minmax(0,1fr));
+}
+@media (max-width: 740px){ .grid{ grid-template-columns: 1fr; } }
+
+label{ display:flex; flex-direction:column; gap:6px; font-size:14px; }
+input, select{
+  padding:10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.04); color: var(--text);
+}
+input::placeholder{ color: rgba(255,255,255,.45); }
+
+.check{ margin:12px 0; display:flex; align-items:center; gap:8px; font-size:14px; }
+.check a{ text-decoration: underline; }
+
+.success{
+  border:1px solid rgba(34,197,94,.5);
+  background: rgba(34,197,94,.08);
+}
+
