@@ -221,3 +221,31 @@ function qa(q,a){ const d=el('div',{class:'tile'}); d.append(el('h3',{},document
 // Render
 function render(){ const view = routes[location.hash] || routes['#/']; app.innerHTML = ''; view().forEach(n=>app.append(n)); }
 if(!location.hash) location.hash = '#/'; render();
+
+<script>
+  (function(){
+    const btn = document.getElementById('rpHamburger');
+    const drawer = document.getElementById('rpDrawer');
+    const closeBtn = document.getElementById('rpDrawerClose');
+    const backdrop = document.getElementById('rpBackdrop');
+
+    function openDrawer(){
+      drawer.classList.add('open'); backdrop.hidden = false;
+      btn.setAttribute('aria-expanded','true'); drawer.setAttribute('aria-hidden','false');
+      document.body.style.overflow='hidden';
+    }
+    function closeDrawer(){
+      drawer.classList.remove('open'); backdrop.hidden = true;
+      btn.setAttribute('aria-expanded','false'); drawer.setAttribute('aria-hidden','true');
+      document.body.style.overflow='';
+    }
+
+    btn && btn.addEventListener('click', openDrawer);
+    closeBtn && closeBtn.addEventListener('click', closeDrawer);
+    backdrop && backdrop.addEventListener('click', closeDrawer);
+    window.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeDrawer(); });
+
+    // Chiudi il drawer quando clicchi un link del drawer
+    drawer.querySelectorAll('a').forEach(a=>a.addEventListener('click', closeDrawer));
+  })();
+</script>
