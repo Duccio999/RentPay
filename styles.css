@@ -126,3 +126,13 @@ input::placeholder{ color: rgba(255,255,255,.45); }
   background: rgba(34,197,94,.08);
 }
 
+.steps{ margin:10px 0 6px; line-height:1.8; opacity:.9; }
+.preview-box{ background: rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.12); padding:12px; border-radius:10px; }
+.grid-cards{ display:grid; gap:12px; grid-template-columns: repeat(3, minmax(0,1fr)); }
+@media (max-width: 900px){ .grid-cards{ grid-template-columns:1fr; } }
+.calc-out{ margin-top:12px; }
+.grid-2{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+@media (max-width:740px){ .grid-2{ grid-template-columns:1fr; } }
+.small{ font-size:.9rem; opacity:.8; }
+
+
