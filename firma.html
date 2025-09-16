@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>RentPay – Firma contratto (DEMO)</title>
+  <link rel="icon" href="./icons/icon-192.png" sizes="192x192">
+  <link rel="apple-touch-icon" href="./icons/icon-192.png">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="stylesheet" href="./styles.css">
+  <meta name="description" content="Dimostrazione di firma contratto di locazione con KYC e firma elettronica (simulata).">
+</head>
+<body>
+  <nav class="nav">
+    <a class="brand" href="./index.html"><span class="house">🏠</span><span class="brand-text">RentPay</span></a>
+    <div class="menu-desktop">
+      <a href="./index.html">Home</a>
+      <a href="./funzioni.html">Funzioni</a>
+      <a href="./garanzia.html">Garanzia Canone</a>
+      <a href="./prezzi.html">Prezzi</a>
+      <a href="./login.html">Accedi</a>
+    </div>
+  </nav>
+
+  <main class="container">
+    <div class="demo-banner"><strong>DEMO</strong> – Questa è una simulazione di firma. Non vengono eseguite verifiche reali né create scritture vincolanti.</div>
+
+    <section class="card hero">
+      <h1>Firma contratto (DEMO)</h1>
+      <p>Compila i dati essenziali, visualizza l’anteprima e conferma con “firma digitata”. Nel prodotto reale qui avvieremmo <b>KYC</b> e <b>firma elettronica</b> con provider certificato.</p>
+
+      <ol class="steps">
+        <li>Dati base contratto</li>
+        <li>Anteprima</li>
+        <li>Firma & Conferma</li>
+      </ol>
+
+      <!-- STEP 1 -->
+      <form id="form-contract" class="form">
+        <h3>Dati del contratto</h3>
+        <div class="grid">
+          <label>Proprietario
+            <input required name="landlord" placeholder="Mario Rossi">
+          </label>
+          <label>Inquilino
+            <input required name="tenant" placeholder="Luca Bianchi">
+          </label>
+          <label>Indirizzo immobile
+            <input required name="address" placeholder="Via Garibaldi 10, Torino">
+          </label>
+          <label>Canone mensile (€)
+            <input required type="number" min="1" step="1" name="rent" placeholder="750">
+          </label>
+          <label>Data inizio
+            <input required type="date" name="start">
+          </label>
+          <label>Durata (mesi)
+            <input required type="number" min="1" step="1" name="months" placeholder="12">
+          </label>
+        </div>
+        <div class="actions">
+          <button class="btn primary" type="submit">Genera anteprima</button>
+        </div>
+      </form>
+
+      <!-- STEP 2: PREVIEW -->
+      <div id="preview" class="card hidden">
+        <h3>Anteprima contratto (demo)</h3>
+        <div id="preview-body" class="preview-box"></div>
+        <div class="actions">
+          <button class="btn" id="btn-edit">Modifica</button>
+          <button class="btn primary" id="btn-continue">Continua alla firma</button>
+        </div>
+      </div>
+
+      <!-- STEP 3: SIGN -->
+      <form id="form-sign" class="form hidden">
+        <h3>Firma & conferma</h3>
+        <p>Nel prodotto reale qui faremmo KYC (documento + selfie) e <b>firma elettronica</b> (avanzata/qualificata).</p>
+        <div class="grid">
+          <label>Firma digitata (nome e cognome)
+            <input required name="typedSignature" placeholder="Scrivi il tuo nome e cognome">
+          </label>
+          <label>
+            <input type="checkbox" required name="accept">
+            Dichiaro di approvare e firmare il contratto (DEMO). Ho letto
+            <a href="./terms.html" target="_blank">Termini</a> e
+            <a href="./privacy.html" target="_blank">Privacy</a>.
+          </label>
+        </div>
+        <div class="actions">
+          <button class="btn" id="btn-back">Indietro</button>
+          <button class="btn primary" type="submit">Firma ora (DEMO)</button>
+        </div>
+      </form>
+
+      <!-- RESULT -->
+      <div id="signed" class="card success hidden" role="status">
+        <h3>Contratto firmato (DEMO)</h3>
+        <p>Abbiamo registrato la tua firma digitata e il riepilogo contratto. In produzione il PDF sarebbe firmato digitalmente e conservato a norma.</p>
+        <div class="actions">
+          <a class="btn" href="./index.html">Torna alla Home</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="links">
+      <a href="./terms.html">Termini di servizio</a>
+      <a href="./privacy.html">Privacy Policy</a>
+      <a href="./cookie.html">Cookie</a>
+      <a href="https://forms.gle" target="_blank" rel="noopener">Questionario investitori</a>
+    </div>
+    <div>© 2025 RentPay — PWA — DEMO</div>
+  </footer>
+
+  <script>
+    const f = document.getElementById('form-contract');
+    const prev = document.getElementById('preview');
+    const prevBody = document.getElementById('preview-body');
+    const signForm = document.getElementById('form-sign');
+    const signed = document.getElementById('signed');
+
+    f.addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(f).entries());
+      const end = new Date(data.start);
+      end.setMonth(end.getMonth() + Number(data.months || 0));
+      prevBody.innerHTML = `
+        <p><b>Proprietario:</b> ${data.landlord}</p>
+        <p><b>Inquilino:</b> ${data.tenant}</p>
+        <p><b>Immobile:</b> ${data.address}</p>
+        <p><b>Canone:</b> € ${Number(data.rent).toLocaleString('it-IT')}</p>
+        <p><b>Periodo:</b> dal ${new Date(data.start).toLocaleDateString('it-IT')}
+        al ${end.toLocaleDateString('it-IT')} (${data.months} mesi)</p>
+      `;
+      f.classList.add('hidden');
+      prev.classList.remove('hidden');
+    });
+
+    document.getElementById('btn-edit').addEventListener('click', ()=>{
+      prev.classList.add('hidden');
+      f.classList.remove('hidden');
+    });
+
+    document.getElementById('btn-continue').addEventListener('click', ()=>{
+      prev.classList.add('hidden');
+      signForm.classList.remove('hidden');
+    });
+
+    document.getElementById('btn-back').addEventListener('click', (e)=>{
+      e.preventDefault();
+      signForm.classList.add('hidden');
+      prev.classList.remove('hidden');
+    });
+
+    signForm.addEventListener('submit', (e)=>{
+      e.preventDefault();
+      // DEMO: qui in produzione invieresti a provider firma
+      signForm.classList.add('hidden');
+      signed.classList.remove('hidden');
+      window.scrollTo({top: signed.offsetTop - 80, behavior:'smooth'});
+    });
+  </script>
+</body>
+</html>
