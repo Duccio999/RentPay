@@ -2,42 +2,238 @@
 <html lang="it">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Accedi — RentPay</title>
-  <meta name="description" content="Accesso demo RentPay.">
-  <link rel="stylesheet" href="styles.css">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>RentPay – Accesso (DEMO)</title>
+  <link rel="icon" href="./icons/icon-192.png" sizes="192x192">
+  <link rel="apple-touch-icon" href="./icons/icon-192.png">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="stylesheet" href="./styles.css">
+  <meta name="description" content="Accesso demo per proprietari e inquilini. Inserisci i dati per provare il flusso di affitto automatizzato con KYC e pagamenti (solo dimostrativo).">
 </head>
 <body>
-  <header class="nav">
-    <a class="brand" href="index.html"><span class="logo">🏠</span><span>RentPay</span></a>
-    <nav class="nav-links always">
-      <a href="vision.html">Visione</a>
-      <a href="funzioni.html">Funzioni</a>
-      <a href="garanzia.html">Garanzia</a>
-      <a href="login.html" class="accent active">Accedi</a>
-    </nav>
-  </header>
+  <nav class="nav">
+    <a class="brand" href="./index.html"><span class="house">🏠</span><span class="brand-text">RentPay</span></a>
+    <div class="menu-desktop">
+      <a href="./index.html">Home</a>
+      <a href="./funzioni.html">Funzioni</a>
+      <a href="./garanzia.html">Garanzia Canone</a>
+      <a class="active" href="./login.html">Accedi</a>
+    </div>
+  </nav>
 
   <main class="container">
-    <div class="card center">
-      <h1>Accedi (demo)</h1>
-      <p>Questa è una versione dimostrativa. Le funzioni sono simulate.</p>
-      <div class="actions">
-        <a class="btn primary" href="#">Accedi come Proprietario</a>
-        <a class="btn ghost" href="#">Accedi come Inquilino</a>
-      </div>
+    <!-- Banner DEMO -->
+    <div class="demo-banner">
+      <strong>DEMO</strong> – Questa pagina è una simulazione. I dati inseriti non generano contratti reali né pagamenti. Nessun documento viene inviato a terzi.
     </div>
+
+    <section class="card hero">
+      <h1>Accedi alla demo</h1>
+      <p>Scegli se accedere come <strong>Proprietario</strong> o <strong>Inquilino</strong> e compila i campi richiesti.  
+      Al termine ti mostriamo un riepilogo (solo dimostrativo).</p>
+
+      <div class="tabs">
+        <button class="tab-btn" data-tab="landlord" id="tab-landlord">Proprietario</button>
+        <button class="tab-btn" data-tab="tenant" id="tab-tenant">Inquilino</button>
+      </div>
+
+      <!-- FORM PROPRIETARIO -->
+      <form id="form-landlord" class="form hidden" autocomplete="off">
+        <h2>Proprietario – Dati personali</h2>
+        <div class="grid">
+          <label>Nome e Cognome
+            <input required name="fullName" placeholder="Mario Rossi">
+          </label>
+          <label>Email
+            <input required type="email" name="email" placeholder="mario@rossi.it">
+          </label>
+          <label>Telefono
+            <input required name="phone" placeholder="+39 333 1234567">
+          </label>
+          <label>Codice Fiscale
+            <input required name="cf" placeholder="RSSMRA80A01H501Z">
+          </label>
+          <label>Indirizzo Residenza
+            <input required name="address" placeholder="Via Roma 1, Milano">
+          </label>
+        </div>
+
+        <h3>Immobile</h3>
+        <div class="grid">
+          <label>Indirizzo immobile
+            <input required name="prop_address" placeholder="Via Garibaldi 10, Torino">
+          </label>
+          <label>Canone mensile (€)
+            <input required type="number" min="1" step="1" name="rent_amount" placeholder="750">
+          </label>
+          <label>Giorno di addebito (1–28)
+            <input required type="number" min="1" max="28" step="1" name="day" placeholder="5">
+          </label>
+          <label>IBAN incasso
+            <input required name="iban" placeholder="IT60X0542811101000000123456">
+          </label>
+        </div>
+
+        <h3>KYC (demo)</h3>
+        <div class="grid">
+          <label>Documento identità (foto)
+            <input required type="file" accept="image/*,application/pdf" name="kyc_doc">
+          </label>
+          <label>Selfie/Liveness (foto)
+            <input required type="file" accept="image/*" name="kyc_selfie">
+          </label>
+        </div>
+
+        <label class="check">
+          <input type="checkbox" required>
+          Dichiaro di aver letto <a href="./privacy.html" target="_blank">Privacy Policy</a> e <a href="./terms.html" target="_blank">Termini di servizio</a>.
+        </label>
+
+        <div class="actions">
+          <button type="submit" class="btn primary">Procedi (DEMO)</button>
+        </div>
+      </form>
+
+      <!-- FORM INQUILINO -->
+      <form id="form-tenant" class="form hidden" autocomplete="off">
+        <h2>Inquilino – Dati personali</h2>
+        <div class="grid">
+          <label>Nome e Cognome
+            <input required name="fullName" placeholder="Luca Bianchi">
+          </label>
+          <label>Email
+            <input required type="email" name="email" placeholder="luca@bianchi.it">
+          </label>
+          <label>Telefono
+            <input required name="phone" placeholder="+39 340 9876543">
+          </label>
+          <label>Codice Fiscale
+            <input required name="cf" placeholder="BNCLCU90B12F205X">
+          </label>
+        </div>
+
+        <h3>Dettagli affitto</h3>
+        <div class="grid">
+          <label>Indirizzo immobile
+            <input required name="prop_address" placeholder="Via Garibaldi 10, Torino">
+          </label>
+          <label>Canone mensile (€)
+            <input required type="number" min="1" step="1" name="rent_amount" placeholder="750">
+          </label>
+          <label>Giorno di addebito (1–28)
+            <input required type="number" min="1" max="28" step="1" name="day" placeholder="5">
+          </label>
+        </div>
+
+        <h3>Metodo di pagamento (demo)</h3>
+        <div class="grid">
+          <label>Numero carta (demo)
+            <input required name="card" placeholder="4242 4242 4242 4242">
+          </label>
+          <label>Scadenza (MM/YY)
+            <input required name="exp" placeholder="12/27">
+          </label>
+          <label>CVC
+            <input required name="cvc" placeholder="123">
+          </label>
+        </div>
+
+        <h3>KYC (demo)</h3>
+        <div class="grid">
+          <label>Documento identità (foto)
+            <input required type="file" accept="image/*,application/pdf" name="kyc_doc">
+          </label>
+          <label>Selfie/Liveness (foto)
+            <input required type="file" accept="image/*" name="kyc_selfie">
+          </label>
+        </div>
+
+        <label class="check">
+          <input type="checkbox" required>
+          Accetto <a href="./privacy.html" target="_blank">Privacy Policy</a> e <a href="./terms.html" target="_blank">Termini di servizio</a>.
+        </label>
+
+        <div class="actions">
+          <button type="submit" class="btn primary">Procedi (DEMO)</button>
+        </div>
+      </form>
+
+      <!-- RIEPILOGO DEMO -->
+      <div id="demo-result" class="card success hidden" role="status" aria-live="polite"></div>
+    </section>
   </main>
 
-  <footer class="footer container">
-    <div class="f-links">
-      <a href="terms.html">Termini di servizio</a>
-      <a href="privacy.html">Privacy Policy</a>
-      <a href="cookie.html">Cookie Policy</a>
-      <a href="vision.html">Visione</a>
-      <a href="https://forms.gle/INSERISCI-LINK-FORM" target="_blank" rel="noopener">Questionario investitori</a>
+  <footer class="footer">
+    <div class="links">
+      <a href="./terms.html">Termini di servizio</a>
+      <a href="./privacy.html">Privacy Policy</a>
+      <a href="./cookie.html">Cookie</a>
+      <a href="https://forms.gle" target="_blank" rel="noopener">Questionario investitori</a>
     </div>
-    <div class="copy">© 2025 RentPay — PWA</div>
+    <div>© 2025 RentPay — PWA — DEMO</div>
   </footer>
+
+  <script>
+    // Helper: show/hide tab based on hash or click
+    const landlordForm = document.getElementById('form-landlord');
+    const tenantForm   = document.getElementById('form-tenant');
+    const demoResult   = document.getElementById('demo-result');
+
+    function showTab(tab){
+      // reset
+      landlordForm.classList.add('hidden');
+      tenantForm.classList.add('hidden');
+      document.getElementById('tab-landlord').classList.remove('active');
+      document.getElementById('tab-tenant').classList.remove('active');
+
+      if(tab === 'tenant'){
+        tenantForm.classList.remove('hidden');
+        document.getElementById('tab-tenant').classList.add('active');
+        location.hash = '#tenant';
+      } else {
+        landlordForm.classList.remove('hidden');
+        document.getElementById('tab-landlord').classList.add('active');
+        location.hash = '#landlord';
+      }
+      demoResult.classList.add('hidden');
+      demoResult.innerHTML = '';
+    }
+
+    // inizializza tab da hash
+    const initial = (location.hash || '#landlord').replace('#','');
+    showTab(initial === 'tenant' ? 'tenant' : 'landlord');
+
+    document.getElementById('tab-landlord').addEventListener('click', ()=>showTab('landlord'));
+    document.getElementById('tab-tenant').addEventListener('click', ()=>showTab('tenant'));
+
+    // DEMO submit handlers (salva in localStorage e mostra riepilogo)
+    function handleSubmit(form, role){
+      form.addEventListener('submit', (e)=>{
+        e.preventDefault();
+        const data = Object.fromEntries(new FormData(form).entries());
+        const key = `rentpay_demo_${role}`;
+        localStorage.setItem(key, JSON.stringify(data));
+
+        demoResult.classList.remove('hidden');
+        demoResult.innerHTML = `
+          <h3>Riepilogo ${role === 'landlord' ? 'Proprietario' : 'Inquilino'} (DEMO)</h3>
+          <p>Abbiamo ricevuto i tuoi dati. In una versione reale ora avvieremmo:</p>
+          <ul>
+            <li><b>KYC</b> (verifica documento + liveness)</li>
+            <li><b>Pagamenti ricorrenti</b> (SEPA/Card)</li>
+            <li><b>Contratto digitale</b> per firma</li>
+            ${role === 'landlord' ? '<li><b>Assicurazione mancato pagamento</b> (se richiesta)</li>' : ''}
+          </ul>
+          <p class="small">Nota: questa è una <b>dimostrazione</b>. Nessun pagamento né verifica reali vengono effettuati.</p>
+          <div class="actions">
+            <a class="btn" href="./index.html">Torna alla Home</a>
+          </div>
+        `;
+        window.scrollTo({top: demoResult.offsetTop - 80, behavior:'smooth'});
+      });
+    }
+    handleSubmit(landlordForm, 'landlord');
+    handleSubmit(tenantForm, 'tenant');
+  </script>
 </body>
 </html>
