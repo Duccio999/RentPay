@@ -1,95 +1,142 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Accesso Demo - RentPay</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Accesso Demo – RentPay</title>
+  <meta name="description" content="Demo accesso Proprietario o Inquilino. I dati non vengono salvati.">
+  <link rel="icon" href="./icons/icon-192.png" sizes="192x192">
+  <link rel="apple-touch-icon" href="./icons/icon-192.png">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="stylesheet" href="./styles.css">
+  <style>
+    /* hardening locale per essere uguale ovunque */
+    .page{max-width:1000px;margin:0 auto;padding:20px}
+    .hero.card{margin-bottom:16px}
+    .notice{background:rgba(250,204,21,.12);border:1px solid rgba(250,204,21,.5);color:#eab308;padding:10px 12px;border-radius:12px;margin:8px 0 16px}
+    .tabs{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 16px}
+    .tab{padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:transparent;cursor:pointer}
+    .tab.active{background:#2ea0ff;color:#04111f;border-color:transparent;font-weight:700}
+    .grid{display:grid;gap:10px;grid-template-columns:repeat(2,minmax(0,1fr))}
+    @media(max-width:760px){.grid{grid-template-columns:1fr}}
+    .form-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:14px}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+    .btn{padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,.15);text-decoration:none}
+    .btn.primary{background:#2ea0ff;color:#04111f;border-color:transparent;font-weight:700}
+    .success{background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.45);color:#10b981;padding:10px 12px;border-radius:12px;margin-top:12px}
+  </style>
 </head>
 <body>
-  <header>
-    <nav>
-      <a href="index.html" class="brand">🏠 RentPay</a>
-      <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="funzioni.html">Funzioni</a></li>
-        <li><a href="garanzia.html">Garanzia</a></li>
-        <a href="./prezzi.html">Prezzi</a>
-    <a href="./firma.html">Firma (demo)</a>
-        <li><a href="vision.html">Visione</a></li>
-      </ul>
-    </nav>
-  </header>
-
-  <main class="container">
-    <h1>Accesso Demo</h1>
-    <p>Scegli se accedere come <strong>Proprietario</strong> o <strong>Inquilino</strong>.<br>
-    Questa è una simulazione: i dati non vengono salvati.</p>
-
-    <div class="roles">
-      <button onclick="showForm('owner')">👤 Proprietario</button>
-      <button onclick="showForm('tenant')">🏡 Inquilino</button>
+  <!-- NAV -->
+  <nav class="nav">
+    <a class="brand" href="./index.html"><span class="house">🏠</span><span class="brand-text">RentPay</span></a>
+    <div class="menu-desktop">
+      <a href="./index.html">Home</a>
+      <a href="./funzioni.html">Funzioni</a>
+      <a href="./garanzia.html">Garanzia</a>
+      <a href="./prezzi.html">Prezzi</a>
+      <a href="./firma.html">Firma (demo)</a>
+      <a class="active" href="./login.html">Accedi</a>
     </div>
+  </nav>
 
-    <!-- Form Proprietario -->
-    <form id="ownerForm" class="hidden">
-      <h2>Proprietario (DEMO)</h2>
-      <label>Nome <input type="text" required></label>
-      <label>Cognome <input type="text" required></label>
-      <label>Email <input type="email" required></label>
-      <label>Documento Identità <input type="file"></label>
-      <label>Dati immobile <textarea></textarea></label>
-      <button type="submit">Simula Invio</button>
-    </form>
+  <main class="page">
+    <section class="card hero">
+      <h1>Accesso Demo</h1>
+      <p>Scegli se accedere come <b>Proprietario</b> o <b>Inquilino</b>. Questa è una simulazione: i dati non vengono salvati.</p>
+      <div class="notice">DEMO – nessuna registrazione reale, nessun salvataggio.</div>
 
-    <!-- Form Inquilino -->
-    <form id="tenantForm" class="hidden">
-      <h2>Inquilino (DEMO)</h2>
-      <label>Nome <input type="text" required></label>
-      <label>Cognome <input type="text" required></label>
-      <label>Email <input type="email" required></label>
-      <label>Documento Identità <input type="file"></label>
-      <label>Reddito / Garanzie <textarea></textarea></label>
-      <button type="submit">Simula Invio</button>
-    </form>
+      <!-- Tabs -->
+      <div class="tabs">
+        <button id="tab-landlord" class="tab" data-target="landlord">👤 Proprietario</button>
+        <button id="tab-tenant" class="tab" data-target="tenant">🏠 Inquilino</button>
+      </div>
 
-    <p id="demoMessage" class="hidden success">✅ Questa è una DEMO: i dati non vengono salvati.</p>
+      <!-- FORM PROPRIETARIO -->
+      <form id="form-landlord" class="form-card">
+        <h3>Proprietario (DEMO)</h3>
+        <div class="grid">
+          <label>Nome <input name="name" required placeholder="Mario"></label>
+          <label>Cognome <input name="surname" required placeholder="Rossi"></label>
+          <label>Email <input name="email" type="email" required placeholder="mario@example.com"></label>
+          <label>Telefono <input name="phone" required placeholder="+39..."></label>
+          <label>IBAN per incasso <input name="iban" required placeholder="IT00X0000..."></label>
+          <label>Indirizzo immobile <input name="address" required placeholder="Via Garibaldi 10, Torino"></label>
+          <label>Canone mensile (€) <input name="rent" type="number" min="1" required placeholder="800"></label>
+          <label>Giorno di addebito <input name="day" type="number" min="1" max="28" required placeholder="5"></label>
+        </div>
+        <div class="actions">
+          <button class="btn primary" type="submit">Crea contratto (demo)</button>
+          <a class="btn" href="./firma.html">Vai a firma (demo)</a>
+        </div>
+        <div id="ok-landlord" class="success" style="display:none">✓ Dati ricevuti (demo). Prosegui alla <a href="./firma.html">firma</a> o vedi i <a href="./prezzi.html">prezzi</a>.</div>
+      </form>
+
+      <!-- FORM INQUILINO -->
+      <form id="form-tenant" class="form-card" style="display:none">
+        <h3>Inquilino (DEMO)</h3>
+        <div class="grid">
+          <label>Nome <input name="name" required placeholder="Luca"></label>
+          <label>Cognome <input name="surname" required placeholder="Bianchi"></label>
+          <label>Email <input name="email" type="email" required placeholder="luca@example.com"></label>
+          <label>Telefono <input name="phone" required placeholder="+39..."></label>
+          <label>Documento (numero) <input name="doc" required placeholder="AA0000000"></label>
+          <label>IBAN / Carta per addebito <input name="pay" required placeholder="IT00X... / **** **** **** 1234"></label>
+          <label>Data inizio <input name="start" type="date" required></label>
+          <label>Durata (mesi) <input name="months" type="number" min="1" required placeholder="12"></label>
+        </div>
+        <div class="actions">
+          <button class="btn primary" type="submit">Invia richiesta (demo)</button>
+          <a class="btn" href="./prezzi.html">Vedi prezzi</a>
+        </div>
+        <div id="ok-tenant" class="success" style="display:none">✓ Richiesta inviata (demo). Il proprietario riceverà notifica per la firma.</div>
+      </form>
+    </section>
   </main>
 
-  <footer>
-    <p>© 2025 RentPay — PWA DEMO</p>
-    <a href="terms.html">Termini di servizio</a> ·
-    <a href="privacy.html">Privacy Policy</a> ·
-    <a href="cookie.html">Cookie Policy</a>
+  <footer class="footer">
+    <div class="links">
+      <a href="./terms.html">Termini di servizio</a>
+      <a href="./privacy.html">Privacy Policy</a>
+      <a href="./cookie.html">Cookie</a>
+      <a href="./prezzi.html">Prezzi</a>
+      <a href="./firma.html">Firma (demo)</a>
+      <a href="https://forms.gle" target="_blank" rel="noopener">Questionario investitori</a>
+    </div>
+    <div>© 2025 RentPay — PWA — DEMO</div>
   </footer>
 
   <script>
-    function showForm(role) {
-      document.getElementById('ownerForm').classList.add('hidden');
-      document.getElementById('tenantForm').classList.add('hidden');
-      if (role === 'owner') {
-        document.getElementById('ownerForm').classList.remove('hidden');
-      } else {
-        document.getElementById('tenantForm').classList.remove('hidden');
-      }
-    }
+    // gestione tab + hash
+    const tabLandlord = document.getElementById('tab-landlord');
+    const tabTenant   = document.getElementById('tab-tenant');
+    const fLandlord   = document.getElementById('form-landlord');
+    const fTenant     = document.getElementById('form-tenant');
 
-    document.querySelectorAll("form").forEach(form => {
-      form.addEventListener("submit", function(e) {
-        e.preventDefault();
-        document.getElementById("demoMessage").classList.remove("hidden");
-      });
+    function setTab(which){
+      const landlord = which === 'landlord';
+      tabLandlord.classList.toggle('active', landlord);
+      tabTenant.classList.toggle('active', !landlord);
+      fLandlord.style.display = landlord ? 'block' : 'none';
+      fTenant.style.display   = landlord ? 'none'  : 'block';
+      history.replaceState(null,'', landlord ? '#landlord' : '#tenant');
+    }
+    tabLandlord.addEventListener('click',()=>setTab('landlord'));
+    tabTenant.addEventListener('click',()=>setTab('tenant'));
+    // inizializza da hash
+    setTab(location.hash === '#tenant' ? 'tenant' : 'landlord');
+
+    // submit DEMO (solo messaggio)
+    fLandlord.addEventListener('submit', e=>{
+      e.preventDefault();
+      document.getElementById('ok-landlord').style.display='block';
+      window.scrollTo({top: fLandlord.offsetTop + fLandlord.offsetHeight - 80, behavior:'smooth'});
+    });
+    fTenant.addEventListener('submit', e=>{
+      e.preventDefault();
+      document.getElementById('ok-tenant').style.display='block';
+      window.scrollTo({top: fTenant.offsetTop + fTenant.offsetHeight - 80, behavior:'smooth'});
     });
   </script>
-
-  <style>
-    .hidden { display: none; }
-    .container { max-width: 600px; margin: auto; padding: 20px; }
-    form { margin: 20px 0; padding: 15px; border: 1px solid #ccc; border-radius: 8px; background: #f9f9f9; }
-    label { display: block; margin-bottom: 10px; }
-    input, textarea { width: 100%; padding: 8px; margin-top: 4px; }
-    button { margin-top: 10px; padding: 10px 15px; }
-    .success { color: green; font-weight: bold; }
-  </style>
 </body>
 </html>
