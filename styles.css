@@ -323,3 +323,19 @@ input::placeholder{ color: rgba(255,255,255,.45); }
 @media (min-width: 861px){
   #rpDrawer.rp-drawer{ transform:translateX(110%) !important; }
 }
+
+/* Moduli scuri leggibili */
+.form input, .form select, .form textarea {
+  background:#0e1b2b; color:#e8f1ff;
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:10px; padding:10px 12px;
+  width:100%; outline:none;
+}
+.form input::placeholder, .form textarea::placeholder { color:rgba(232,241,255,.6); }
+.form label { color:#e8f1ff; display:flex; flex-direction:column; gap:6px; font-weight:500; }
+.preview-box {
+  min-height:120px; background:#0e1b2b; border:1px solid rgba(255,255,255,.18);
+  border-radius:12px; padding:14px; color:#e8f1ff;
+}
+.card.success { border:1px solid rgba(46,160,255,.35); background:#0b1a2a; }
+.actions .btn { margin-right:8px; }
