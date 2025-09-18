@@ -8,7 +8,44 @@
 </head>
 <body>
   <header class="nav">
-    <a class="brand" href="index.html">🏠 RentPay</a>
+    <!-- NAVBAR GLOBALE -->
+<nav class="rp-nav">
+  <a class="rp-brand" href="./index.html" aria-label="RentPay Home">
+    <span class="rp-house" aria-hidden="true">🏠</span>
+    <span class="rp-brand-text">RentPay</span>
+  </a>
+
+  <!-- Desktop -->
+  <div class="rp-menu-desktop">
+    <a href="./index.html">Home</a>
+    <a href="./vision.html">Visione</a>
+    <a href="./funzioni.html">Funzioni</a>
+    <a href="./garanzia.html">Garanzia</a>
+    <a href="./prezzi.html">Prezzi</a>
+    <a href="./firma.html">Firma (demo)</a>
+    <a class="rp-accent" href="./login.html">Accedi</a>
+  </div>
+
+  <!-- Mobile -->
+  <button id="rpHamburger" class="rp-hamburger" aria-label="Apri menu" aria-expanded="false">☰</button>
+</nav>
+
+<!-- Drawer mobile -->
+<aside id="rpDrawer" class="rp-drawer" aria-hidden="true">
+  <div class="rp-drawer-head">
+    <span class="rp-drawer-title">Menù</span>
+    <button id="rpDrawerClose" class="rp-close" aria-label="Chiudi menu">×</button>
+  </div>
+  <a href="./index.html">Home</a>
+  <a href="./vision.html">Visione</a>
+  <a href="./funzioni.html">Funzioni</a>
+  <a href="./garanzia.html">Garanzia</a>
+  <a href="./prezzi.html">Prezzi</a>
+  <a href="./firma.html">Firma (demo)</a>
+  <a class="rp-accent" href="./login.html">Accedi</a>
+</aside>
+<div id="rpBackdrop" class="rp-backdrop" hidden></div>
+<!-- /NAVBAR GLOBALE -->
   </header>
 
   <main class="section card">
@@ -47,5 +84,32 @@
     <a href="index.html">Home</a> ·
     <a href="privacy.html">Privacy Policy</a>
   </footer>
+  <script>
+(function(){
+  const btn = document.getElementById('rpHamburger');
+  const drawer = document.getElementById('rpDrawer');
+  const closeBtn = document.getElementById('rpDrawerClose');
+  const backdrop = document.getElementById('rpBackdrop');
+
+  function openDrawer(){
+    drawer.classList.add('open'); backdrop.hidden = false;
+    btn && btn.setAttribute('aria-expanded','true');
+    drawer.setAttribute('aria-hidden','false');
+    document.body.style.overflow='hidden';
+  }
+  function closeDrawer(){
+    drawer.classList.remove('open'); backdrop.hidden = true;
+    btn && btn.setAttribute('aria-expanded','false');
+    drawer.setAttribute('aria-hidden','true');
+    document.body.style.overflow='';
+  }
+
+  btn && btn.addEventListener('click', openDrawer);
+  closeBtn && closeBtn.addEventListener('click', closeDrawer);
+  backdrop && backdrop.addEventListener('click', closeDrawer);
+  window.addEventListener('keydown', e => { if(e.key === 'Escape') closeDrawer(); });
+  drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', closeDrawer));
+})();
+</script>
 </body>
 </html>
