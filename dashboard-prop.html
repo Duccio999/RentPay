@@ -3,117 +3,150 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Dashboard Proprietario - RentPay</title>
+  <title>Dashboard Proprietario — RentPay</title>
+  <meta name="description" content="Panoramica contratti, incassi e garanzia per il proprietario.">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
+<!-- NAVBAR -->
 <nav class="rp-nav">
-  <a class="rp-brand" href="./index.html"><span class="rp-house">🏠</span><span class="rp-brand-text">RentPay</span></a>
+  <a class="rp-brand" href="./index.html" aria-label="RentPay Home">
+    <span class="rp-house" aria-hidden="true">🏠</span><span class="rp-brand-text">RentPay</span>
+  </a>
   <div class="rp-menu-desktop">
     <a href="./index.html">Home</a>
+    <a href="./vision.html">Visione</a>
     <a href="./funzioni.html">Funzioni</a>
+    <a href="./garanzia.html">Garanzia</a>
     <a href="./prezzi.html">Prezzi</a>
     <a href="./firma.html">Firma (demo)</a>
     <a class="rp-accent" href="./login.html">Cambia account</a>
   </div>
-  <button id="rpHamburger" class="rp-hamburger" aria-label="Apri menu">☰</button>
+  <button id="rpHamburger" class="rp-hamburger" aria-label="Apri menu" aria-expanded="false">☰</button>
 </nav>
+
+<!-- Drawer mobile -->
 <aside id="rpDrawer" class="rp-drawer" aria-hidden="true">
-  <div class="rp-drawer-head"><span>Menù</span><button id="rpDrawerClose" class="rp-close">×</button></div>
-  <a href="./index.html">Home</a><a href="./funzioni.html">Funzioni</a><a href="./prezzi.html">Prezzi</a><a href="./firma.html">Firma (demo)</a>
+  <div class="rp-drawer-head">
+    <span class="rp-drawer-title">Menù</span>
+    <button id="rpDrawerClose" class="rp-close" aria-label="Chiudi menu">×</button>
+  </div>
+  <a href="./index.html">Home</a>
+  <a href="./vision.html">Visione</a>
+  <a href="./funzioni.html">Funzioni</a>
+  <a href="./garanzia.html">Garanzia</a>
+  <a href="./prezzi.html">Prezzi</a>
+  <a href="./firma.html">Firma (demo)</a>
   <a class="rp-accent" href="./login.html">Cambia account</a>
 </aside>
 <div id="rpBackdrop" class="rp-backdrop" hidden></div>
 
 <main class="container">
-  <section class="hero card">
-    <h1>Benvenuto, <span id="who">Proprietario</span></h1>
-    <p class="lead">Panoramica demo di immobili, contratti e incassi.</p>
+  <section class="hero card" style="margin-bottom:18px">
+    <h1 id="welcome">Benvenuto</h1>
+    <p class="lead">Panoramica dei tuoi immobili, contratti e incassi (DEMO).</p>
   </section>
 
-  <div class="section kpis">
-    <div class="kpi">
-      <h3>🏘️ Contratti attivi</h3>
-      <p style="opacity:.9;margin:.3rem 0">2 contratti</p>
-      <a class="btn ghost" href="firma.html" style="margin-top:6px">Crea nuovo contratto</a>
-    </div>
-    <div class="kpi">
-      <h3>💶 Ultimi incassi</h3>
-      <ul style="margin:.4rem 0 0 1rem">
-        <li>01/09 — € 850 — <span class="badge ok">Completato</span></li>
-        <li>01/09 — € 720 — <span class="badge ok">Completato</span></li>
-      </ul>
-    </div>
-    <div class="kpi">
-      <h3>🛡️ Garanzia</h3>
-      <p style="opacity:.9;margin:.3rem 0">Attiva su 2 contratti</p>
-      <a class="btn ghost" href="garanzia.html" style="margin-top:6px">Dettagli garanzia</a>
-    </div>
-  </div>
+  <!-- Garanzia -->
+  <section class="card" style="margin-bottom:16px">
+    <h2>🛡️ Garanzia</h2>
+    <p id="garanziaInfo">Attiva su 0 contratti.</p>
+    <div class="actions"><a class="btn" href="./garanzia.html">Dettagli garanzia</a></div>
+  </section>
 
-  <div class="section">
-    <div class="section-head">
-      <h2>Contratti</h2>
-    </div>
+  <!-- Contratti -->
+  <section class="card" style="margin-bottom:16px">
+    <h2>📄 Contratti</h2>
     <div class="table-wrap">
-      <table class="table">
-        <thead>
-          <tr><th>Immobile</th><th>Inquilino</th><th>Canone</th><th>Stato</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>Via Roma 12</td><td>Luca Bianchi</td><td>€ 850/mese</td><td><span class="badge ok">Attivo</span></td></tr>
-          <tr><td>Via Po 8</td><td>Giulia Neri</td><td>€ 720/mese</td><td><span class="badge ok">Attivo</span></td></tr>
-        </tbody>
+      <table class="rp-table" id="tblContratti">
+        <thead><tr><th>Immobile</th><th>Inquilino</th></tr></thead>
+        <tbody></tbody>
       </table>
     </div>
-  </div>
+    <div class="actions" style="margin-top:10px">
+      <a class="btn" href="./firma.html">Crea nuovo contratto (demo)</a>
+    </div>
+  </section>
 
-  <div class="section">
-    <div class="section-head"><h2>Incassi recenti</h2></div>
+  <!-- Incassi recenti -->
+  <section class="card">
+    <h2>💳 Incassi recenti</h2>
     <div class="table-wrap">
-      <table class="table">
-        <thead><tr><th>Data</th><th>Contratto</th><th>Importo</th><th>Esito</th></tr></thead>
-        <tbody>
-          <tr><td>01/09</td><td>Via Roma 12</td><td>€ 850</td><td><span class="badge ok">Completato</span></td></tr>
-          <tr><td>01/09</td><td>Via Po 8</td><td>€ 720</td><td><span class="badge ok">Completato</span></td></tr>
-          <tr><td>01/08</td><td>Via Roma 12</td><td>€ 850</td><td><span class="badge ok">Completato</span></td></tr>
-        </tbody>
+      <table class="rp-table" id="tblIncassi">
+        <thead><tr><th>Data</th><th>Contratto</th><th>Importo</th><th>Stato</th></tr></thead>
+        <tbody></tbody>
       </table>
     </div>
-  </div>
+  </section>
 </main>
-
-<script>
-// opzionale: mostra il nome profilo passato da login (?demo=proprietario&i=0)
-(function(){
-  const params=new URLSearchParams(location.search);
-  if(params.get('demo')==='proprietario'){
-    const idx=+params.get('i')||0;
-    const names=['Sara Verdi','Marco Neri'];
-    document.getElementById('who').textContent=names[idx]||'Proprietario';
-  }
-})();
-</script>
 
 <footer class="footer container">
   <div class="f-links">
-    <a href="terms.html">Termini</a><a href="privacy.html">Privacy</a><a href="cookie.html">Cookie</a>
+    <a href="terms.html">Termini di servizio</a>
+    <a href="privacy.html">Privacy Policy</a>
+    <a href="cookie.html">Cookie Policy</a>
   </div>
-  <div class="copy">© 2025 RentPay</div>
+  <div class="copy">© 2025 RentPay — PWA</div>
 </footer>
 
+<!-- NAV JS -->
 <script type="text/javascript">
-(function(){const b=document.getElementById('rpHamburger'),d=document.getElementById('rpDrawer'),c=document.getElementById('rpDrawerClose'),k=document.getElementById('rpBackdrop');function o(){d.classList.add('open');k.hidden=false;k.classList.add('show');document.body.style.overflow='hidden'}function x(){d.classList.remove('open');k.classList.remove('show');k.hidden=true;document.body.style.overflow=''}b&&b.addEventListener('click',o);c&&c.addEventListener('click',x);k&&k.addEventListener('click',x);window.addEventListener('keydown',e=>{if(e.key==='Escape')x()})})();
+(function(){
+  const btn=document.getElementById('rpHamburger'),
+        drawer=document.getElementById('rpDrawer'),
+        closeBtn=document.getElementById('rpDrawerClose'),
+        backdrop=document.getElementById('rpBackdrop');
+  function openD(){drawer.classList.add('open');backdrop.hidden=false;backdrop.classList.add('show');document.body.style.overflow='hidden'}
+  function closeD(){drawer.classList.remove('open');backdrop.classList.remove('show');backdrop.hidden=true;document.body.style.overflow=''}
+  btn&&btn.addEventListener('click',openD);
+  closeBtn&&closeBtn.addEventListener('click',closeD);
+  backdrop&&backdrop.addEventListener('click',closeD);
+  window.addEventListener('keydown',e=>{if(e.key==='Escape')closeD()});
+  drawer.querySelectorAll('a').forEach(a=>a.addEventListener('click',closeD));
+})();
 </script>
+
+<!-- DATA + RENDER -->
 <script>
 (function(){
-  const raw = localStorage.getItem('rpCurrentUser');
-  if(!raw){
-    window.location.href = './login.html';
-    return;
-  }
-  const user = JSON.parse(raw);
-  document.getElementById('hello').textContent = `Benvenuto, ${user.name}`;
+  // Utente corrente (o fallback demo)
+  const current = JSON.parse(localStorage.getItem('rpCurrentUser')||'{}');
+  const name = current?.name || 'Proprietario demo';
+  document.getElementById('welcome').textContent = `Benvenuto, ${name}`;
+
+  // Dati demo legati ai contratti del proprietario
+  const contratti = [
+    { immobile:'Via Roma 12', inquilino:'Luca Bianchi', garantito:true },
+    { immobile:'Via Po 8',   inquilino:'Giulia Neri',  garantito:true }
+  ];
+  const incassi = [
+    { data:'01/09', contratto:'Via Roma 12', importo:850, stato:'Completato' },
+    { data:'01/09', contratto:'Via Po 8',   importo:720, stato:'Completato' },
+    { data:'01/08', contratto:'Via Roma 12', importo:850, stato:'Completato' }
+  ];
+
+  // Garanzia: quante righe marcate garantito
+  const garantiti = contratti.filter(c=>c.garantito).length;
+  document.getElementById('garanziaInfo').textContent = `Attiva su ${garantiti} contratti.`;
+
+  // Render contratti
+  const tbC = document.querySelector('#tblContratti tbody');
+  tbC.innerHTML = contratti.map(c=>(
+    `<tr><td>${c.immobile}</td><td>${c.inquilino}</td></tr>`
+  )).join('');
+
+  // Render incassi
+  const nf = new Intl.NumberFormat('it-IT',{style:'currency',currency:'EUR',maximumFractionDigits:0});
+  const tbI = document.querySelector('#tblIncassi tbody');
+  tbI.innerHTML = incassi.map(r=>(
+    `<tr>
+      <td>${r.data}</td>
+      <td>${r.contratto}</td>
+      <td class="rp-amount">${nf.format(r.importo)}</td>
+      <td>${r.stato}</td>
+    </tr>`
+  )).join('');
 })();
 </script>
 </body>
