@@ -34,7 +34,7 @@
 <!-- NAVBAR -->
 <nav class="rp-nav">
   <a class="rp-brand" href="./index.html" aria-label="RentPay Home">
-    <span class="rp-house">🏠</span>
+    <span class="rp-house" aria-hidden="true">🏠</span>
     <span class="rp-brand-text">RentPay</span>
   </a>
   <div class="rp-menu-desktop">
@@ -71,22 +71,25 @@
     Contratti digitali, KYC e addebiti ricorrenti in un’unica app.<br>
     Pagamenti puntuali e garanzie contro i mancati affitti.
   </p>
+  <div class="actions" style="justify-content:center;">
+    <a class="btn primary" href="./login.html">Prova la demo</a>
+  </div>
 </section>
 
 <!-- SEZIONE RUOLI (tab stile login) -->
 <section class="container center">
   <div class="tabs">
-    <button id="tab-landlord" class="tab active" data-target="landlord">👤 Proprietario</button>
-    <button id="tab-tenant" class="tab" data-target="tenant">🏠 Inquilino</button>
+    <button id="tab-landlord" class="tab-btn active" data-target="landlord">👨‍💼 Proprietario</button>
+    <button id="tab-tenant" class="tab-btn" data-target="tenant">🏡 Inquilino</button>
   </div>
 
   <div id="roleContent" class="card role-box" style="margin-top:20px;">
-    <h2>👤 Vantaggi per Proprietari</h2>
-    <ul class="role-list">
-      <li>✅ Incassi puntuali con addebiti automatici.</li>
-      <li>✅ Contratti digitali firmati online.</li>
-      <li>✅ Garanzie contro i mancati pagamenti.</li>
-      <li>✅ Dashboard chiara per gestire più immobili.</li>
+    <h2>👨‍💼 Vantaggi per Proprietari</h2>
+    <ul class="role-list" style="list-style:none;padding:0;margin:0;line-height:1.8">
+      <li>💸 Incassi puntuali con addebiti automatici.</li>
+      <li>🖊️ Contratti digitali firmati online.</li>
+      <li>🛡️ Garanzie contro i mancati pagamenti.</li>
+      <li>📊 Dashboard per gestire più immobili.</li>
     </ul>
   </div>
 </section>
@@ -122,26 +125,26 @@
 
 <!-- SCRIPT TABS -->
 <script>
-const tabs = document.querySelectorAll('.tab');
+const tabs = document.querySelectorAll('.tab-btn');
 const roleContent = document.getElementById('roleContent');
 
 const contents = {
   landlord: `
-    <h2>👤 Vantaggi per Proprietari</h2>
-    <ul class="role-list">
-      <li>✅ Incassi puntuali con addebiti automatici.</li>
-      <li>✅ Contratti digitali firmati online.</li>
-      <li>✅ Garanzie contro i mancati pagamenti.</li>
-      <li>✅ Dashboard chiara per gestire più immobili.</li>
+    <h2>👨‍💼 Vantaggi per Proprietari</h2>
+    <ul class="role-list" style="list-style:none;padding:0;margin:0;line-height:1.8">
+      <li>💸 Incassi puntuali con addebiti automatici.</li>
+      <li>🖊️ Contratti digitali firmati online.</li>
+      <li>🛡️ Garanzie contro i mancati pagamenti.</li>
+      <li>📊 Dashboard per gestire più immobili.</li>
     </ul>
   `,
   tenant: `
-    <h2>🏠 Vantaggi per Inquilini</h2>
-    <ul class="role-list">
-      <li>✅ Pagamenti automatici, senza pensieri e ritardi.</li>
-      <li>✅ Contratto digitale sicuro e sempre accessibile.</li>
-      <li>✅ Storico dei pagamenti consultabile h24.</li>
-      <li>✅ Possibilità di garanzie e assicurazioni dedicate.</li>
+    <h2>🏡 Vantaggi per Inquilini</h2>
+    <ul class="role-list" style="list-style:none;padding:0;margin:0;line-height:1.8">
+      <li>💸 Pagamenti automatici, senza ritardi.</li>
+      <li>🖊️ Contratto digitale sicuro e sempre accessibile.</li>
+      <li>📊 Storico dei pagamenti consultabile h24.</li>
+      <li>🛡️ Garanzie e assicurazioni dedicate.</li>
     </ul>
   `
 };
