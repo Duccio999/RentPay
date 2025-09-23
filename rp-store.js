@@ -1,5 +1,3 @@
-<!-- rp-store.js -->
-<script>
 // ===== Mini store DEMO — persistenza su localStorage =====
 const RP = (() => {
   const DB_KEY  = 'rp_demo_store';
@@ -105,11 +103,5 @@ const RP = (() => {
     return u ? u.name : '—';
   }
 
-  // export
-  return {
-    me, setMe, loginById,
-    users, contracts, payments,
-    util:{ userName },
-  };
+  return { me, setMe, loginById, users, contracts, payments, util:{ userName } };
 })();
-</script>
