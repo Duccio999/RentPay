@@ -236,3 +236,14 @@ label{display:flex;flex-direction:column;gap:6px;font-size:14px}
 
 /* (Opzionale) Nav sticky sempre in cima anche con altri z-index in pagina */
 .rp-nav { z-index: 10000; }
+
+#rpBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.45);
+  backdrop-filter: blur(2px);
+  z-index: 9998;
+  display: none;
+}
+#rpBackdrop.show { display:block }
+#rpBackdrop[hidden] { display:none !important; }
