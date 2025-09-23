@@ -37,6 +37,7 @@ section{ scroll-margin-top:90px }
 
 /* ===== Layout helpers ===== */
 .container{ max-width:1000px; margin:0 auto; padding:20px }
+.container.narrow{ max-width:900px }
 .grid{ display:grid; gap:16px; grid-template-columns:repeat(2,minmax(0,1fr)) }
 @media (max-width:740px){ .grid{ grid-template-columns:1fr } }
 .grid-3{ display:grid; gap:16px; grid-template-columns:repeat(3,minmax(0,1fr)) }
@@ -145,7 +146,8 @@ section{ scroll-margin-top:90px }
   background:var(--card);
   border:1px solid var(--border);
   border-radius:16px;
-  padding:18px;
+  padding:22px 20px;           /* più aria */
+  margin-bottom:16px;          /* separazione verticale su mobile */
 }
 
 h2{ margin:0 0 10px; font-size:clamp(22px,3.6vw,28px) }
@@ -154,10 +156,10 @@ h3{ margin:0 0 8px }
 /* Footer */
 .footer{ margin:36px auto 24px; opacity:.9; text-align:center }
 .footer .f-links{
-  display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin-bottom:8px;
+  display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-bottom:8px;
 }
-.footer a{ opacity:.9 }
-.footer a:hover{ opacity:1 }
+.footer .f-links a{ opacity:.85; font-size:14px }
+.footer .f-links a:hover{ opacity:1 }
 
 /* ===== Demo / moduli scuri ===== */
 .demo-banner{
@@ -192,9 +194,7 @@ label{ display:flex; flex-direction:column; gap:6px; font-size:14px }
 }
 
 /* Tabs stile login */
-.tabs{
-  display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin-top:20px;
-}
+.tabs{ display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin-top:20px }
 .tab{
   padding:10px 16px; border-radius:10px;
   border:1px solid rgba(255,255,255,.18);
@@ -206,69 +206,13 @@ label{ display:flex; flex-direction:column; gap:6px; font-size:14px }
   font-weight:800;
 }
 
-/* Box ruoli */
-.role-box{
-  text-align:left;
-  margin-top:20px;
-  padding:24px;
-}
-.role-box h2{
-  margin-top:0; margin-bottom:14px;
-  font-size:1.3rem;
-}
-.role-list{ list-style:none; padding:0; margin:0 }
-.role-list li{ margin-bottom:8px }
-
-.tab-btn {
-  padding:10px 16px;
-  border-radius:10px;
-  border:1px solid var(--border);
-  background:rgba(255,255,255,.05);
-  color:var(--text);
-  font-weight:600;
-  cursor:pointer;
-}
-.tab-btn.active {
-  background:var(--accent);
-  color:var(--accentText);
-  border:1px solid var(--accent);
-}
-
-.card {
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:16px;
-  padding:22px 20px; /* più aria */
-  margin-bottom:16px; /* separazione verticale su mobile */
-}
-.card h2 {
-  margin-bottom:10px;
-  display:flex;
-  align-items:center;
-  gap:8px;
-}
-
-.footer .f-links {
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-  gap:12px;
-  margin-bottom:8px;
-}
-.footer .f-links a {
-  opacity:.85;
-  font-size:14px;
-}
-.footer .f-links a:hover {
-  opacity:1;
-}
-
-/* --- LOGIN: input moderni --- */
+/* Pill toggle (login) */
 .role-toggle{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 18px}
 .pill{padding:10px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.18);
       background:rgba(255,255,255,.04);color:var(--text);cursor:pointer;font-weight:700}
 .pill.active{background:var(--accent);color:var(--accentText);border-color:transparent}
 
+/* Form-card moderni */
 .form-card{background:#0f1b37;border:1px solid var(--border);border-radius:16px;padding:18px}
 .field{display:flex;flex-direction:column;gap:6px}
 .input{
@@ -281,7 +225,7 @@ label{ display:flex; flex-direction:column; gap:6px; font-size:14px }
 }
 .input:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px rgba(46,160,255,.22)}
 
-/* --- DASHBOARD: spaziatura e sezioni --- */
+/* --- Dashboard: sezioni & kpi --- */
 .section{margin:18px 0}
 .section .section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
 .section h2{margin:0}
@@ -290,76 +234,66 @@ label{ display:flex; flex-direction:column; gap:6px; font-size:14px }
 @media (max-width:980px){.kpis{grid-template-columns:1fr}}
 .kpi{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px}
 
-/* --- Tabelle pulite e responsive --- */
-.table-wrap{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:0;overflow:auto}
-.table{width:100%;border-collapse:collapse;min-width:600px}
-.table th,.table td{padding:12px 14px;text-align:left;border-bottom:1px solid rgba(255,255,255,.08)}
-.table th{font-weight:800;opacity:.95;background:rgba(255,255,255,.04)}
-.table tr:hover{background:rgba(255,255,255,.03)}
-.badge{display:inline-block;padding:4px 8px;border-radius:999px;font-size:.85rem}
-.badge.ok{background:rgba(34,197,94,.18);color:#86efac}
-.badge.warn{background:rgba(234,179,8,.18);color:#fde68a}
-.badge.err{background:rgba(239,68,68,.18);color:#fecaca}
-
-/* un po' più aria generale */
-.container.narrow{max-width:900px}
-
-/* --- Tabelle RentPay --- */
 /* ===== Tabelle full-width senza scroll/gradiente ===== */
 .table-wrap{
-  /* niente overlay, niente scroll orizzontale */
-  overflow: visible;
+  overflow: hidden;                 /* niente scroll orizzontale */
   padding: 0;
   border-radius: 14px;
   border: 1px solid rgba(255,255,255,.14);
   background: rgba(255,255,255,.04);
 }
 
-.rp-table{
+.rp-table,
+.table{                               /* .table alias per retrocompatibilità */
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  table-layout: fixed;          /* forza l’adattamento alla larghezza */
+  table-layout: fixed;               /* adatta le colonne alla larghezza */
 }
 
-.rp-table thead th{
+.rp-table thead th,
+.table thead th{
   text-align: left;
   padding: 12px 14px;
-  font-weight: 700;
+  font-weight: 800;
   background: rgba(255,255,255,.10);
   color: #eaf2ff;
   border-bottom: 1px solid rgba(255,255,255,.18);
 }
 
-.rp-table tbody td{
+.rp-table tbody td,
+.table tbody td{
   padding: 12px 14px;
   color: #eaf2ff;
   border-bottom: 1px solid rgba(255,255,255,.14);
   background: transparent;
 }
 
-/* zebra leggera per leggibilità */
-.rp-table tbody tr:nth-child(even) td{
+/* zebra leggera */
+.rp-table tbody tr:nth-child(even) td,
+.table tbody tr:nth-child(even) td{
   background: rgba(255,255,255,.05);
 }
 
-/* bordi arrotondati alla tabella intera */
-.table-wrap { overflow: hidden; border-radius: 14px; }
-.rp-table thead th:first-child,
-.rp-table tbody td:first-child { border-left: 0; }
-
-/* testi lunghi: vanno a capo, niente “tagli” */
-.rp-table th, .rp-table td{
+/* testi lunghi: vanno a capo */
+.rp-table th, .rp-table td,
+.table th, .table td{
   min-width: 0;
   white-space: normal;
   word-break: break-word;
 }
 
-/* mobile: carattere e padding un filo più compatti, ma sempre intero */
-@media (max-width: 560px){
-  .rp-table thead th,
-  .rp-table tbody td{
+/* mobile: compattiamo leggermente */
+@media (max-width:560px){
+  .rp-table thead th, .rp-table tbody td,
+  .table thead th,    .table tbody td{
     padding: 10px 12px;
-    font-size: 0.95rem;
+    font-size: .95rem;
   }
 }
+
+/* Badge di stato */
+.badge{display:inline-block;padding:4px 8px;border-radius:999px;font-size:.85rem}
+.badge.ok{background:rgba(34,197,94,.18);color:#86efac}
+.badge.warn{background:rgba(234,179,8,.18);color:#fde68a}
+.badge.err{background:rgba(239,68,68,.18);color:#fecaca}
