@@ -184,3 +184,6 @@ label{display:flex;flex-direction:column;gap:6px;font-size:14px}
 .success{
   background:rgba(16,185,129,.12);color:#10b981;border:1px solid rgba(16,185,129,.45);border-radius:12px;
 }
+
+#rpBackdrop[hidden] { display: none !important; }
+
