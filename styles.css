@@ -218,3 +218,18 @@ label{ display:flex; flex-direction:column; gap:6px; font-size:14px }
 }
 .role-list{ list-style:none; padding:0; margin:0 }
 .role-list li{ margin-bottom:8px }
+
+.tab-btn {
+  padding:10px 16px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.05);
+  color:var(--text);
+  font-weight:600;
+  cursor:pointer;
+}
+.tab-btn.active {
+  background:var(--accent);
+  color:var(--accentText);
+  border:1px solid var(--accent);
+}
