@@ -1,5 +1,5 @@
 // ===== Mini store DEMO — persistenza su localStorage =====
-const RP = (() => {
+window.RP = (() => {
   const DB_KEY = 'rp_demo_store';
   const CUR_KEY = 'rpCurrentUser';
 
