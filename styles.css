@@ -226,3 +226,17 @@ h3{margin:0 0 8px}
   color:var(--accentText);
   border-color:transparent;
 }
+
+/* Badge notifiche menu */
+.rp-badge{
+  display:inline-grid;
+  place-items:center;
+  min-width:18px; height:18px;
+  padding:0 6px;
+  margin-left:6px;
+  border-radius:999px;
+  background:#ff4757; /* rosso-notifica */
+  color:#fff;
+  font-size:12px; font-weight:800; line-height:1;
+  vertical-align:middle;
+}
