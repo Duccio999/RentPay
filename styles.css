@@ -108,6 +108,3 @@ section{scroll-margin-top:90px}
 
 .rp-menu-desktop a.active { opacity:1; text-decoration: underline; }
 
-/* .btn { display:inline-block; padding:10px 16px; border-radius:12px; font-weight:700 }
-.btn.primary { background:var(--accent); color:var(--accentText) }
-.btn.ghost { border:1px solid var(--border); background:transparent }*/
