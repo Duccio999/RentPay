@@ -60,10 +60,10 @@
   <div class="copy">© 2025 RentPay — PWA</div>
 </footer>
 
-<!-- 1) Store condiviso: deve essere PRIMA della login logic -->
+<!-- Store condiviso -->
 <script src="rp-store.js"></script>
 
-<!-- 2) Nav mobile -->
+<!-- Nav mobile -->
 <script>
 (function(){
   const b=document.getElementById('rpHamburger'),d=document.getElementById('rpDrawer'),x=document.getElementById('rpDrawerClose'),o=document.getElementById('rpBackdrop');
@@ -73,18 +73,11 @@
 })();
 </script>
 
-<!-- 3) Login logic -->
+<!-- Login logic -->
 <script>
-/* verifica che lo store sia caricato
-   (non usare window.RP: con const non diventa proprietà di window) */
-if (typeof RP === 'undefined') {
-  alert('Errore di caricamento rp-store.js');
-}
+if (typeof RP === 'undefined') { alert('Errore di caricamento rp-store.js'); }
 
-/* stato ruolo */
 let ruolo = 'landlord';
-
-/* riferimenti UI */
 const sel   = document.getElementById('profileSel');
 const nameI = document.getElementById('name');
 const emailI= document.getElementById('email');
@@ -93,74 +86,49 @@ const ex2   = document.getElementById('extra2');
 const l1    = document.getElementById('lbl1');
 const l2    = document.getElementById('lbl2');
 
-/* popola la tendina in base al ruolo */
-function fillOptions(){
-  sel.innerHTML = '';
-  const list = (ruolo === 'landlord') ? RP.users.landlords() : RP.users.tenants();
+function list(){ return ruolo==='landlord' ? RP.users.landlords() : RP.users.tenants(); }
 
-  list.forEach(u => {
-    const opt = document.createElement('option');
-    // NB: nel db i campi sono 'nome' ed 'email'
-    opt.value = u.id;
-    opt.textContent = `${u.nome} — ${u.email}`;
+function fillOptions(){
+  sel.innerHTML='';
+  list().forEach(u=>{
+    const opt=document.createElement('option');
+    opt.value=u.id;
+    opt.textContent=`${u.name} — ${u.email}`;
     sel.appendChild(opt);
   });
-
-  sel.selectedIndex = 0;
+  sel.selectedIndex=0;
   showDetail();
 }
 
-/* mostra i dettagli del profilo selezionato */
 function showDetail(){
   const id = sel.value;
-  const list = (ruolo === 'landlord') ? RP.users.landlords() : RP.users.tenants();
-  const u = list.find(x => x.id === id);
-  if (!u) return;
-
-  // campi comuni
-  nameI.value  = u.nome || '';
-  emailI.value = u.email || '';
-
-  if (ruolo === 'landlord') {
-    // proprietario: iban + immobili gestiti (props)
-    l1.textContent = 'IBAN (accredito)';
-    l2.textContent = 'Immobili gestiti';
-    ex1.value = u.iban  || '';
-    ex2.value = (u.props ?? '') + '';
-  } else {
-    // inquilino: indirizzo + canone (affitto)
-    l1.textContent = 'Indirizzo';
-    l2.textContent = 'Canone mensile (€)';
-    ex1.value = u.indirizzo || '';
-    ex2.value = (u.affitto ?? '') + '';
+  const u = list().find(x=>x.id===id);
+  if(!u) return;
+  nameI.value = u.name;
+  emailI.value = u.email;
+  if(ruolo==='landlord'){
+    l1.textContent='IBAN (accredito)';
+    l2.textContent='Immobili gestiti';
+    ex1.value=u.iban || '';
+    ex2.value=String(u.props ?? '');
+  }else{
+    l1.textContent='Indirizzo';
+    l2.textContent='Canone mensile (€)';
+    ex1.value=u.address || '';
+    ex2.value=String(u.rent ?? '');
   }
 }
 
-/* toggle ruolo */
-document.getElementById('btnProp').onclick = () => {
-  document.getElementById('btnProp').classList.add('active');
-  document.getElementById('btnInq').classList.remove('active');
-  ruolo = 'landlord';
-  fillOptions();
-};
-document.getElementById('btnInq').onclick = () => {
-  document.getElementById('btnInq').classList.add('active');
-  document.getElementById('btnProp').classList.remove('active');
-  ruolo = 'tenant';
-  fillOptions();
-};
-
-/* cambio selezione */
+document.getElementById('btnProp').onclick = ()=>{ ruolo='landlord'; document.getElementById('btnProp').classList.add('active'); document.getElementById('btnInq').classList.remove('active'); fillOptions(); };
+document.getElementById('btnInq').onclick  = ()=>{ ruolo='tenant';   document.getElementById('btnInq').classList.add('active');  document.getElementById('btnProp').classList.remove('active'); fillOptions(); };
 sel.onchange = showDetail;
 
-/* login demo -> salva utente e vai alla dashboard corretta */
-document.getElementById('btnLogin').onclick = () => {
-  const ok = RP.loginById(ruolo, sel.value);
-  if (!ok) return;
-  location.href = (ruolo === 'landlord') ? 'dashboard-prop.html' : 'dashboard-inq.html';
+document.getElementById('btnLogin').onclick = ()=>{
+  if(RP.loginById(ruolo, sel.value)){
+    location.href = (ruolo==='landlord') ? 'dashboard-prop.html' : 'dashboard-inq.html';
+  }
 };
 
-/* init */
 fillOptions();
 </script>
 </body>
