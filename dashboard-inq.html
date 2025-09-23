@@ -4,11 +4,17 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Dashboard Inquilino - RentPay</title>
+  <meta name="description" content="Panoramica demo del contratto e dei pagamenti per l'inquilino.">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
+<!-- NAVBAR -->
 <nav class="rp-nav">
-  <a class="rp-brand" href="./index.html"><span class="rp-house">🏠</span><span class="rp-brand-text">RentPay</span></a>
+  <a class="rp-brand" href="./index.html" aria-label="RentPay Home">
+    <span class="rp-house" aria-hidden="true">🏠</span>
+    <span class="rp-brand-text">RentPay</span>
+  </a>
   <div class="rp-menu-desktop">
     <a href="./index.html">Home</a>
     <a href="./funzioni.html">Funzioni</a>
@@ -16,70 +22,156 @@
     <a href="./firma.html">Firma (demo)</a>
     <a class="rp-accent" href="./login.html">Cambia account</a>
   </div>
-  <button id="rpHamburger" class="rp-hamburger" aria-label="Apri menu">☰</button>
+  <button id="rpHamburger" class="rp-hamburger" aria-label="Apri menu" aria-expanded="false">☰</button>
 </nav>
+
+<!-- Drawer mobile -->
 <aside id="rpDrawer" class="rp-drawer" aria-hidden="true">
-  <div class="rp-drawer-head"><span>Menù</span><button id="rpDrawerClose" class="rp-close">×</button></div>
-  <a href="./index.html">Home</a><a href="./funzioni.html">Funzioni</a><a href="./prezzi.html">Prezzi</a><a href="./firma.html">Firma (demo)</a>
+  <div class="rp-drawer-head">
+    <span class="rp-drawer-title">Menù</span>
+    <button id="rpDrawerClose" class="rp-close" aria-label="Chiudi menu">×</button>
+  </div>
+  <a href="./index.html">Home</a>
+  <a href="./funzioni.html">Funzioni</a>
+  <a href="./prezzi.html">Prezzi</a>
+  <a href="./firma.html">Firma (demo)</a>
   <a class="rp-accent" href="./login.html">Cambia account</a>
 </aside>
 <div id="rpBackdrop" class="rp-backdrop" hidden></div>
 
 <main class="container">
-  <section class="hero">
-    <h1 id="hello">Benvenuto, Inquilino</h1>
-    <p class="lead">Qui vedi una panoramica demo del tuo contratto e dei prossimi pagamenti.</p>
+  <!-- HERO -->
+  <section class="hero card">
+    <h1>Benvenuto, <span id="who">Inquilino</span></h1>
+    <p class="lead">Panoramica demo del tuo contratto, dei prossimi pagamenti e delle garanzie.</p>
   </section>
 
-  <section class="grid-3">
-    <div class="card">
-      <h2>📑 Contratto</h2>
-      <p id="addr">Indirizzo: —</p>
-      <p id="rent">Canone: —</p>
-      <a class="btn ghost" href="./firma.html">Visualizza contratto (demo)</a>
+  <!-- KPI CARDS -->
+  <div class="section kpis">
+    <div class="kpi">
+      <h3>📑 Contratto</h3>
+      <p id="kpiAddress" style="opacity:.9;margin:.35rem 0">Indirizzo —</p>
+      <a class="btn ghost" href="firma.html" style="margin-top:6px">Visualizza contratto (demo)</a>
     </div>
+    <div class="kpi">
+      <h3>💳 Prossimo pagamento</h3>
+      <p id="kpiNextDate" style="opacity:.9;margin:.35rem 0">Scadenza —</p>
+      <p id="kpiNextAmount" style="opacity:.9;margin:.35rem 0">Importo —</p>
+      <button class="btn primary" type="button" disabled>Simula pagamento (coming soon)</button>
+    </div>
+    <div class="kpi">
+      <h3>🛡️ Garanzia</h3>
+      <p style="opacity:.9;margin:.35rem 0">Copertura attiva contro mancati pagamenti.</p>
+      <a class="btn ghost" href="garanzia.html" style="margin-top:6px">Dettagli</a>
+    </div>
+  </div>
 
-    <div class="card">
-      <h2>💳 Prossimo pagamento</h2>
-      <p>Scadenza: 01/10</p>
-      <p id="amount">Importo: —</p>
-      <button class="btn primary" disabled>Simula pagamento (coming soon)</button>
+  <!-- DETTAGLI CONTRATTO -->
+  <div class="section">
+    <div class="section-head">
+      <h2>Dettagli contratto</h2>
     </div>
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+          <tr><th>Campo</th><th>Valore</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Indirizzo</td><td id="tblAddr">—</td></tr>
+          <tr><td>Canone mensile</td><td id="tblRent">—</td></tr>
+          <tr><td>Metodo pagamento</td><td id="tblCard">—</td></tr>
+          <tr><td>Stato</td><td><span class="badge ok">Attivo</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
-    <div class="card">
-      <h2>🛡️ Garanzia</h2>
-      <p>Copertura attiva per mancati pagamenti.</p>
-      <a class="btn ghost" href="./garanzia.html">Dettagli</a>
+  <!-- STORICO PAGAMENTI -->
+  <div class="section">
+    <div class="section-head"><h2>Storico pagamenti</h2></div>
+    <div class="table-wrap">
+      <table class="table" id="tblHistory">
+        <thead><tr><th>Data</th><th>Riferimento</th><th>Importo</th><th>Esito</th></tr></thead>
+        <tbody>
+          <!-- popolato via JS -->
+        </tbody>
+      </table>
     </div>
-  </section>
+  </div>
 </main>
 
+<!-- FOOTER -->
 <footer class="footer container">
   <div class="f-links">
-    <a href="terms.html">Termini</a><a href="privacy.html">Privacy</a><a href="cookie.html">Cookie</a>
+    <a href="terms.html">Termini</a>
+    <a href="privacy.html">Privacy</a>
+    <a href="cookie.html">Cookie</a>
   </div>
   <div class="copy">© 2025 RentPay</div>
 </footer>
 
+<!-- SCRIPT NAV (uguale alle altre pagine) -->
 <script type="text/javascript">
-(function(){const b=document.getElementById('rpHamburger'),d=document.getElementById('rpDrawer'),c=document.getElementById('rpDrawerClose'),k=document.getElementById('rpBackdrop');function o(){d.classList.add('open');k.hidden=false;k.classList.add('show');document.body.style.overflow='hidden'}function x(){d.classList.remove('open');k.classList.remove('show');k.hidden=true;document.body.style.overflow=''}b&&b.addEventListener('click',o);c&&c.addEventListener('click',x);k&&k.addEventListener('click',x);window.addEventListener('keydown',e=>{if(e.key==='Escape')x()})})();
-</script>
-<script>
 (function(){
-  const raw = localStorage.getItem('rpCurrentUser');
-  if(!raw){
-    window.location.href = './login.html';
-    return;
-  }
-  const user = JSON.parse(raw);
-  document.getElementById('hello').textContent = `Ciao, ${user.name}`;
-  document.getElementById('addr').textContent = `Indirizzo: ${user.address ?? '—'}`;
-  if(typeof user.rent === 'number'){
-    const euro = new Intl.NumberFormat('it-IT', {style:'currency', currency:'EUR'}).format(user.rent);
-    document.getElementById('rent').textContent = `Canone: ${euro}/mese`;
-    document.getElementById('amount').textContent = `Importo: ${euro}`;
-  }
+  const btn=document.getElementById('rpHamburger'),
+        drawer=document.getElementById('rpDrawer'),
+        closeBtn=document.getElementById('rpDrawerClose'),
+        backdrop=document.getElementById('rpBackdrop');
+  function openD(){drawer.classList.add('open');backdrop.hidden=false;backdrop.classList.add('show');document.body.style.overflow='hidden'}
+  function closeD(){drawer.classList.remove('open');backdrop.classList.remove('show');backdrop.hidden=true;document.body.style.overflow=''}
+  btn&&btn.addEventListener('click',openD);
+  closeBtn&&closeBtn.addEventListener('click',closeD);
+  backdrop&&backdrop.addEventListener('click',closeD);
+  window.addEventListener('keydown',e=>{if(e.key==='Escape')closeD()});
+  drawer.querySelectorAll('a').forEach(a=>a.addEventListener('click',closeD));
 })();
 </script>
+
+<!-- SCRIPT DATI DEMO & PERSONALIZZAZIONE -->
+<script>
+(function(){
+  // Dati demo allineati al login
+  const demoTenants = [
+    { name:'Luca Bianchi',  address:'Via Roma 12, Milano',  rent: 750, card:'Visa **** 4242'   },
+    { name:'Giulia Neri',   address:'Via Po 8, Torino',     rent: 720, card:'Mastercard **** 9911' }
+  ];
+
+  // Legge ?demo=inquilino&i=0/1 (fallback a 0)
+  const params = new URLSearchParams(location.search);
+  const i = Math.max(0, Math.min(1, parseInt(params.get('i') || '0', 10)));
+  const t = demoTenants[i];
+
+  // Personalizza header/KPI
+  document.getElementById('who').textContent = t.name;
+  document.getElementById('kpiAddress').textContent = t.address;
+  document.getElementById('kpiNextDate').textContent = 'Scadenza: 01/10';
+  const euro = new Intl.NumberFormat('it-IT', { style:'currency', currency:'EUR' }).format(t.rent);
+  document.getElementById('kpiNextAmount').textContent = `Importo: ${euro}`;
+
+  // Tabella Dettagli contratto
+  document.getElementById('tblAddr').textContent = t.address;
+  document.getElementById('tblRent').textContent = `${euro}/mese`;
+  document.getElementById('tblCard').textContent = t.card;
+
+  // Storico pagamenti (demo statico coerente col canone)
+  const tbody = document.querySelector('#tblHistory tbody');
+  const rows = [
+    { date:'01/09', ref:'Canone settembre', amount:euro, status:'ok' },
+    { date:'01/08', ref:'Canone agosto',    amount:euro, status:'ok' },
+    { date:'01/07', ref:'Canone luglio',    amount:euro, status:'ok' }
+  ];
+  rows.forEach(r=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${r.date}</td>
+      <td>${r.ref}</td>
+      <td>${r.amount}</td>
+      <td><span class="badge ${r.status==='ok'?'ok':r.status==='warn'?'warn':'err'}">${r.status==='ok'?'Completato':r.status}</span></td>
+    `;
+    tbody.appendChild(tr);
+  });
+})();
+</script>
+
 </body>
 </html>
