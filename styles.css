@@ -206,3 +206,23 @@ h3{margin:0 0 8px}
 @media (max-width:560px){
   .rp-table th,.rp-table td{padding:10px 12px; font-size:.95rem}
 }
+
+/* Uniforma tab (home) e pill (login) */
+.tab,
+.pill {
+  border:1px solid rgba(255,255,255,.18);
+  background:rgba(255,255,255,.06);
+  color:var(--text);
+  padding:10px 16px;
+  min-height:40px;
+  border-radius:999px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.tab.active,
+.pill.active {
+  background:var(--accent);
+  color:var(--accentText);
+  border-color:transparent;
+}
