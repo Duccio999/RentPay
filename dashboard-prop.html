@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard Proprietario - RentPay</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<nav class="rp-nav">
+  <a class="rp-brand" href="./index.html"><span class="rp-house">🏠</span><span class="rp-brand-text">RentPay</span></a>
+  <div class="rp-menu-desktop">
+    <a href="./index.html">Home</a>
+    <a href="./funzioni.html">Funzioni</a>
+    <a href="./prezzi.html">Prezzi</a>
+    <a href="./firma.html">Firma (demo)</a>
+    <a class="rp-accent" href="./login.html">Cambia account</a>
+  </div>
+  <button id="rpHamburger" class="rp-hamburger" aria-label="Apri menu">☰</button>
+</nav>
+<aside id="rpDrawer" class="rp-drawer" aria-hidden="true">
+  <div class="rp-drawer-head"><span>Menù</span><button id="rpDrawerClose" class="rp-close">×</button></div>
+  <a href="./index.html">Home</a><a href="./funzioni.html">Funzioni</a><a href="./prezzi.html">Prezzi</a><a href="./firma.html">Firma (demo)</a>
+  <a class="rp-accent" href="./login.html">Cambia account</a>
+</aside>
+<div id="rpBackdrop" class="rp-backdrop" hidden></div>
+
+<main class="container">
+  <section class="hero">
+    <h1 id="hello">Benvenuto, Proprietario</h1>
+    <p class="lead">Qui vedi una panoramica demo dei tuoi immobili, contratti e incassi.</p>
+  </section>
+
+  <section class="grid-3">
+    <div class="card">
+      <h2>📑 Contratti attivi</h2>
+      <ul style="margin:8px 0 0; padding-left:18px">
+        <li>Via Roma 12 — Inquilino: <strong>Luca Bianchi</strong> — € 850/mese</li>
+        <li>Via Po 8 — Inquilino: <strong>Giulia Neri</strong> — € 720/mese</li>
+      </ul>
+      <div class="actions" style="margin-top:10px">
+        <a class="btn ghost" href="./firma.html">Crea nuovo contratto</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>💳 Ultimi incassi</h2>
+      <ul style="margin:8px 0 0; padding-left:18px">
+        <li>01/09 — € 850 — ✔️ Completato</li>
+        <li>01/09 — € 720 — ✔️ Completato</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>🛡️ Garanzia</h2>
+      <p>Garanzia attiva su 2 contratti.</p>
+      <a class="btn ghost" href="./garanzia.html">Dettagli garanzia</a>
+    </div>
+  </section>
+</main>
+
+<footer class="footer container">
+  <div class="f-links">
+    <a href="terms.html">Termini</a><a href="privacy.html">Privacy</a><a href="cookie.html">Cookie</a>
+  </div>
+  <div class="copy">© 2025 RentPay</div>
+</footer>
+
+<script type="text/javascript">
+(function(){const b=document.getElementById('rpHamburger'),d=document.getElementById('rpDrawer'),c=document.getElementById('rpDrawerClose'),k=document.getElementById('rpBackdrop');function o(){d.classList.add('open');k.hidden=false;k.classList.add('show');document.body.style.overflow='hidden'}function x(){d.classList.remove('open');k.classList.remove('show');k.hidden=true;document.body.style.overflow=''}b&&b.addEventListener('click',o);c&&c.addEventListener('click',x);k&&k.addEventListener('click',x);window.addEventListener('keydown',e=>{if(e.key==='Escape')x()})})();
+</script>
+<script>
+(function(){
+  const raw = localStorage.getItem('rpCurrentUser');
+  if(!raw){
+    window.location.href = './login.html';
+    return;
+  }
+  const user = JSON.parse(raw);
+  document.getElementById('hello').textContent = `Benvenuto, ${user.name}`;
+})();
+</script>
+</body>
+</html>
