@@ -2,47 +2,21 @@
 <html lang="it">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Accesso Demo – RentPay</title>
-  <meta name="description" content="Demo accesso Proprietario o Inquilino. I dati non vengono salvati.">
-  <link rel="icon" href="./icons/icon-192.png" sizes="192x192">
-  <link rel="apple-touch-icon" href="./icons/icon-192.png">
-  <link rel="manifest" href="./manifest.webmanifest">
-  <link rel="stylesheet" href="./styles.css?v=2">
-
-  <style>
-    /* hardening locale (nel caso styles.css sia cache-ato) */
-    .page{max-width:1000px;margin:0 auto;padding:20px}
-    .hero.card{margin-bottom:16px}
-    .tabs{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 16px}
-    .tab{padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,.15);cursor:pointer}
-    .tab.active{background:#2ea0ff;color:#04111f;border-color:transparent;font-weight:800}
-    .grid{display:grid;gap:10px;grid-template-columns:repeat(2,minmax(0,1fr))}
-    @media(max-width:760px){.grid{grid-template-columns:1fr}}
-    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
-    .btn{padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,.15);text-decoration:none}
-    .btn.primary{background:#2ea0ff;color:#04111f;border-color:transparent;font-weight:700}
-    .notice{background:rgba(250,204,21,.12);border:1px solid rgba(250,204,21,.5);color:#eab308;padding:10px 12px;border-radius:12px;margin:8px 0 16px}
-    .success{background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.45);color:#10b981;padding:10px 12px;border-radius:12px;margin-top:12px}
-    /* fallback form-card e input (se styles.css non si aggiorna) */
-    .form-card{background:#0e1b2b;color:#e8f1ff;border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:14px}
-    .form-card label{display:flex;flex-direction:column;gap:6px;font-weight:600}
-    .form-card input,.form-card select{background:#0a1622;color:#e8f1ff;border:1px solid rgba(255,255,255,.25);border-radius:10px;padding:10px 12px;outline:none}
-    .form-card input::placeholder{color:rgba(232,241,255,.6)}
-    .form-card input:focus,.form-card select:focus{border-color:#2ea0ff;box-shadow:0 0 0 3px rgba(46,160,255,.25)}
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RentPay</title>
+  <meta name="description" content="Affitti automatici, contratti digitali, KYC e garanzie.">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<!-- NAVBAR GLOBALE -->
+
+<!-- NAVBAR -->
 <nav class="rp-nav">
   <a class="rp-brand" href="./index.html" aria-label="RentPay Home">
-    <span class="rp-house" aria-hidden="true">🏠</span>
+    <span class="rp-house">🏠</span>
     <span class="rp-brand-text">RentPay</span>
   </a>
-
-  <!-- Desktop -->
   <div class="rp-menu-desktop">
-    <a href="./index.html">Home</a>
+    <a href="./index.html" class="active">Home</a>
     <a href="./vision.html">Visione</a>
     <a href="./funzioni.html">Funzioni</a>
     <a href="./garanzia.html">Garanzia</a>
@@ -50,18 +24,14 @@
     <a href="./firma.html">Firma (demo)</a>
     <a class="rp-accent" href="./login.html">Accedi</a>
   </div>
-
-  <!-- Mobile -->
   <button id="rpHamburger" class="rp-hamburger" aria-label="Apri menu" aria-expanded="false">☰</button>
 </nav>
-
-<!-- Drawer mobile -->
 <aside id="rpDrawer" class="rp-drawer" aria-hidden="true">
   <div class="rp-drawer-head">
     <span class="rp-drawer-title">Menù</span>
     <button id="rpDrawerClose" class="rp-close" aria-label="Chiudi menu">×</button>
   </div>
-  <a href="./index.html">Home</a>
+  <a href="./index.html" class="active">Home</a>
   <a href="./vision.html">Visione</a>
   <a href="./funzioni.html">Funzioni</a>
   <a href="./garanzia.html">Garanzia</a>
@@ -70,139 +40,99 @@
   <a class="rp-accent" href="./login.html">Accedi</a>
 </aside>
 <div id="rpBackdrop" class="rp-backdrop" hidden></div>
-<!-- /NAVBAR GLOBALE -->
 
-  <main class="page">
-    <section class="card hero">
-      <h1>Accesso Demo</h1>
-      <p>Scegli se accedere come <b>Proprietario</b> o <b>Inquilino</b>. Nessun dato viene salvato.</p>
-      <div class="notice">DEMO — simulazione senza registrazione o salvataggio dati.</div>
+<!-- HERO -->
+<section class="hero container center">
+  <h1>Affitti automatici, zero pensieri</h1>
+  <p class="lead">
+    Contratti digitali, KYC e addebiti ricorrenti in un’unica app.<br>
+    Pagamenti puntuali e garanzie contro i mancati affitti.
+  </p>
+</section>
 
-      <!-- Tabs -->
-      <div class="tabs">
-        <button id="tab-landlord" class="tab" data-target="landlord">👤 Proprietario</button>
-        <button id="tab-tenant" class="tab" data-target="tenant">🏠 Inquilino</button>
-      </div>
+<!-- SEZIONE RUOLI -->
+<section class="container center">
+  <div class="tabs">
+    <button id="tab-landlord" class="tab active" data-target="landlord">👤 Proprietario</button>
+    <button id="tab-tenant" class="tab" data-target="tenant">🏠 Inquilino</button>
+  </div>
 
-      <!-- PROPRIETARIO -->
-      <form id="form-landlord" class="form-card" autocomplete="off">
-        <h3>Proprietario (DEMO)</h3>
-        <div class="grid">
-          <label>Nome <input name="name" placeholder="Mario" required></label>
-          <label>Cognome <input name="surname" placeholder="Rossi" required></label>
-          <label>Email <input type="email" name="email" placeholder="mario@example.com" required></label>
-          <label>Telefono <input name="phone" placeholder="+39..." required></label>
-          <label>IBAN per incasso <input name="iban" placeholder="IT00X0000..." required></label>
-          <label>Indirizzo immobile <input name="address" placeholder="Via Garibaldi 10, Torino" required></label>
-          <label>Canone mensile (€) <input type="number" min="1" name="rent" placeholder="800" required></label>
-          <label>Giorno di addebito <input type="number" min="1" max="28" name="day" placeholder="5" required></label>
-        </div>
-        <div class="actions">
-          <button class="btn primary" type="submit">Crea contratto (demo)</button>
-          <a class="btn" href="./firma.html">Vai a firma (demo)</a>
-        </div>
-        <div id="ok-landlord" class="success" style="display:none">
-          ✓ Dati ricevuti (demo). Prosegui alla <a href="./firma.html">firma</a> o vedi i <a href="./prezzi.html">prezzi</a>.
-        </div>
-      </form>
+  <!-- Contenuti dinamici -->
+  <div id="roleContent" class="card role-box" style="margin-top:20px;">
+    <h2>👤 Vantaggi per Proprietari</h2>
+    <ul class="role-list">
+      <li>✅ Incassi puntuali con addebiti automatici.</li>
+      <li>✅ Contratti digitali firmati online.</li>
+      <li>✅ Garanzie contro i mancati pagamenti.</li>
+      <li>✅ Dashboard chiara per gestire più immobili.</li>
+    </ul>
+  </div>
+</section>
 
-      <!-- INQUILINO -->
-      <form id="form-tenant" class="form-card" style="display:none" autocomplete="off">
-        <h3>Inquilino (DEMO)</h3>
-        <div class="grid">
-          <label>Nome <input name="name" placeholder="Luca" required></label>
-          <label>Cognome <input name="surname" placeholder="Bianchi" required></label>
-          <label>Email <input type="email" name="email" placeholder="luca@example.com" required></label>
-          <label>Telefono <input name="phone" placeholder="+39..." required></label>
-          <label>Documento (numero) <input name="doc" placeholder="AA0000000" required></label>
-          <label>IBAN / Carta per addebito <input name="pay" placeholder="IT00X... / **** **** **** 1234" required></label>
-          <label>Data inizio <input type="date" name="start" required></label>
-          <label>Durata (mesi) <input type="number" min="1" name="months" placeholder="12" required></label>
-        </div>
-        <div class="actions">
-          <button class="btn primary" type="submit">Invia richiesta (demo)</button>
-          <a class="btn" href="./prezzi.html">Vedi prezzi</a>
-        </div>
-        <div id="ok-tenant" class="success" style="display:none">
-          ✓ Richiesta inviata (demo). Il proprietario riceverà notifica per la firma.
-        </div>
-      </form>
-    </section>
-  </main>
+<!-- FOOTER -->
+<footer class="footer container">
+  <div class="f-links">
+    <a href="terms.html">Termini di servizio</a>
+    <a href="privacy.html">Privacy Policy</a>
+    <a href="cookie.html">Cookie Policy</a>
+    <a href="vision.html">Visione</a>
+    <a href="https://forms.gle/INSERISCI-LINK-FORM" target="_blank" rel="noopener">Questionario investitori</a>
+  </div>
+  <div class="copy">© 2025 RentPay — PWA</div>
+</footer>
 
-  <footer class="footer">
-    <div class="links">
-      <a href="./terms.html">Termini di servizio</a>
-      <a href="./privacy.html">Privacy Policy</a>
-      <a href="./cookie.html">Cookie</a>
-      <a href="./prezzi.html">Prezzi</a>
-      <a href="./firma.html">Firma (demo)</a>
-      <a href="https://forms.gle" target="_blank" rel="noopener">Questionario investitori</a>
-    </div>
-    <div>© 2025 RentPay — PWA — DEMO</div>
-  </footer>
-
-  <script>
-    const tabLandlord = document.getElementById('tab-landlord');
-    const tabTenant   = document.getElementById('tab-tenant');
-    const fLandlord   = document.getElementById('form-landlord');
-    const fTenant     = document.getElementById('form-tenant');
-
-    function setTab(which){
-      const landlord = which === 'landlord';
-      tabLandlord.classList.toggle('active', landlord);
-      tabTenant.classList.toggle('active', !landlord);
-      fLandlord.style.display = landlord ? 'block' : 'none';
-      fTenant.style.display   = landlord ? 'none'  : 'block';
-      history.replaceState(null,'', landlord ? '#landlord' : '#tenant');
-    }
-    tabLandlord.addEventListener('click',()=>setTab('landlord'));
-    tabTenant.addEventListener('click',()=>setTab('tenant'));
-
-    // inizializza da hash, default landlord
-    setTab(location.hash === '#tenant' ? 'tenant' : 'landlord');
-
-    // submit DEMO
-    document.getElementById('form-landlord').addEventListener('submit', e=>{
-      e.preventDefault(); document.getElementById('ok-landlord').style.display='block';
-    });
-    document.getElementById('form-tenant').addEventListener('submit', e=>{
-      e.preventDefault(); document.getElementById('ok-tenant').style.display='block';
-    });
-  </script>
- <script type="text/javascript" data-cookieconsent="ignore">
+<!-- SCRIPT NAV -->
+<script type="text/javascript" data-cookieconsent="ignore">
 (function(){
-  const btn      = document.getElementById('rpHamburger');
-  const drawer   = document.getElementById('rpDrawer');
-  const closeBtn = document.getElementById('rpDrawerClose');
-  const backdrop = document.getElementById('rpBackdrop');
-
-  if(!drawer || !backdrop) return;
-
-  function openDrawer(){
-    drawer.classList.add('open');
-    drawer.setAttribute('aria-hidden','false');
-    backdrop.classList.add('show');
-    backdrop.hidden = false;
-    document.body.style.overflow='hidden';
-    if(btn) btn.setAttribute('aria-expanded','true');
-  }
-
-  function closeDrawer(){
-    drawer.classList.remove('open');
-    drawer.setAttribute('aria-hidden','true');
-    backdrop.classList.remove('show');
-    backdrop.hidden = true;
-    document.body.style.overflow='';
-    if(btn) btn.setAttribute('aria-expanded','false');
-  }
-
-  btn    && btn.addEventListener('click', openDrawer);
-  closeBtn&& closeBtn.addEventListener('click', closeDrawer);
-  backdrop.addEventListener('click', closeDrawer);
-  window.addEventListener('keydown', e => { if(e.key === 'Escape') closeDrawer(); });
-  drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', closeDrawer));
+  const btn=document.getElementById('rpHamburger'),
+        drawer=document.getElementById('rpDrawer'),
+        closeBtn=document.getElementById('rpDrawerClose'),
+        backdrop=document.getElementById('rpBackdrop');
+  function openD(){drawer.classList.add('open');backdrop.hidden=false;backdrop.classList.add('show');document.body.style.overflow='hidden'}
+  function closeD(){drawer.classList.remove('open');backdrop.classList.remove('show');backdrop.hidden=true;document.body.style.overflow=''}
+  btn&&btn.addEventListener('click',openD);
+  closeBtn&&closeBtn.addEventListener('click',closeD);
+  backdrop&&backdrop.addEventListener('click',closeD);
+  window.addEventListener('keydown',e=>{if(e.key==='Escape')closeD()});
+  drawer.querySelectorAll('a').forEach(a=>a.addEventListener('click',closeD));
 })();
 </script>
+
+<!-- SCRIPT TABS -->
+<script>
+const tabs = document.querySelectorAll('.tab');
+const roleContent = document.getElementById('roleContent');
+
+const contents = {
+  landlord: `
+    <h2>👤 Vantaggi per Proprietari</h2>
+    <ul class="role-list">
+      <li>✅ Incassi puntuali con addebiti automatici.</li>
+      <li>✅ Contratti digitali firmati online.</li>
+      <li>✅ Garanzie contro i mancati pagamenti.</li>
+      <li>✅ Dashboard chiara per gestire più immobili.</li>
+    </ul>
+  `,
+  tenant: `
+    <h2>🏠 Vantaggi per Inquilini</h2>
+    <ul class="role-list">
+      <li>✅ Pagamenti automatici, senza pensieri e ritardi.</li>
+      <li>✅ Contratto digitale sicuro e sempre accessibile.</li>
+      <li>✅ Storico dei pagamenti consultabile h24.</li>
+      <li>✅ Possibilità di garanzie e assicurazioni dedicate.</li>
+    </ul>
+  `
+};
+
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    tabs.forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    const target = tab.dataset.target;
+    roleContent.innerHTML = contents[target];
+  });
+});
+</script>
+
 </body>
 </html>
