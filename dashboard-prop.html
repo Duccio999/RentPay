@@ -4,119 +4,52 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Dashboard Proprietario — RentPay</title>
-  <meta name="description" content="Panoramica contratti, incassi e garanzia per il proprietario (demo).">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<!-- NAVBAR -->
 <nav class="rp-nav">
-  <a class="rp-brand" href="./index.html" aria-label="RentPay Home">
-    <span class="rp-house" aria-hidden="true">🏠</span>
-    <span class="rp-brand-text">RentPay</span>
-  </a>
+  <a class="rp-brand" href="./index.html"><span class="rp-house">🏠</span><span class="rp-brand-text">RentPay</span></a>
   <div class="rp-menu-desktop">
     <a href="./index.html">Home</a>
+    <a href="./vision.html">Visione</a>
     <a href="./funzioni.html">Funzioni</a>
+    <a href="./garanzia.html">Garanzia</a>
     <a href="./prezzi.html">Prezzi</a>
     <a href="./firma.html">Firma (demo)</a>
-    <a class="rp-accent" href="./login.html">Cambia account</a>
+    <a class="rp-accent" href="./login.html">Accedi</a>
   </div>
   <button id="rpHamburger" class="rp-hamburger" aria-label="Apri menu" aria-expanded="false">☰</button>
 </nav>
-
-<!-- Drawer mobile -->
 <aside id="rpDrawer" class="rp-drawer" aria-hidden="true">
-  <div class="rp-drawer-head">
-    <span class="rp-drawer-title">Menù</span>
-    <button id="rpDrawerClose" class="rp-close" aria-label="Chiudi menu">×</button>
-  </div>
+  <div class="rp-drawer-head"><span class="rp-drawer-title">Menù</span><button id="rpDrawerClose" class="rp-close">×</button></div>
   <a href="./index.html">Home</a>
+  <a href="./vision.html">Visione</a>
   <a href="./funzioni.html">Funzioni</a>
+  <a href="./garanzia.html">Garanzia</a>
   <a href="./prezzi.html">Prezzi</a>
   <a href="./firma.html">Firma (demo)</a>
-  <a class="rp-accent" href="./login.html">Cambia account</a>
+  <a class="rp-accent" href="./login.html">Accedi</a>
 </aside>
 <div id="rpBackdrop" class="rp-backdrop" hidden></div>
 
 <main class="container">
   <section class="hero card">
-    <h1 id="hello">Benvenuto</h1>
-    <p class="lead">Qui trovi una panoramica demo dei tuoi immobili, contratti e incassi.</p>
+    <h1>Dashboard Proprietario</h1>
+    <p class="lead">Gestisci i contratti e monitora lo stato. Questa è una <b>DEMO</b>: dati e firme non sono vincolanti.</p>
   </section>
 
-  <!-- Garanzia → proprietario -->
   <section class="card">
-    <h2>🛡️ Garanzia</h2>
-    <p>Attiva su <strong>2 contratti</strong>.</p>
-    <div class="actions">
-      <a class="btn" href="./garanzia.html">Dettagli garanzia</a>
+    <div class="section-head">
+      <h2>📑 Contratti in attesa di firma dell’inquilino</h2>
+      <a class="btn primary" href="create-contract.html">Crea nuovo contratto (demo)</a>
     </div>
+    <div id="tblPending" class="table-wrap" style="margin-top:8px"></div>
   </section>
 
-  <!-- Contratti (tabella) -->
   <section class="card">
     <h2>📄 Contratti attivi</h2>
-    <div class="table-wrap">
-      <table class="rp-table">
-        <thead>
-          <tr>
-            <th>Immobile</th>
-            <th>Inquilino</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Via Roma 12</td>
-            <td>Luca Bianchi</td>
-          </tr>
-          <tr>
-            <td>Via Po 8</td>
-            <td>Giulia Neri</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="actions" style="margin-top:12px">
-      <a class="btn" href="./firma.html">Crea nuovo contratto (demo)</a>
-    </div>
-  </section>
-
-  <!-- Incassi (tabella) -->
-  <section class="card">
-    <h2>💳 Incassi recenti</h2>
-    <div class="table-wrap">
-      <table class="rp-table">
-        <thead>
-          <tr>
-            <th>Data</th>
-            <th>Contratto</th>
-            <th>Importo</th>
-            <th>Stato</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>01/09</td>
-            <td>Via Roma 12</td>
-            <td class="rp-amount">€ 850</td>
-            <td>Completato</td>
-          </tr>
-          <tr>
-            <td>01/09</td>
-            <td>Via Po 8</td>
-            <td class="rp-amount">€ 720</td>
-            <td>Completato</td>
-          </tr>
-          <tr>
-            <td>01/08</td>
-            <td>Via Roma 12</td>
-            <td class="rp-amount">€ 850</td>
-            <td>Completato</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <div id="tblActive" class="table-wrap" style="margin-top:8px"></div>
   </section>
 </main>
 
@@ -126,35 +59,62 @@
     <a href="privacy.html">Privacy Policy</a>
     <a href="cookie.html">Cookie Policy</a>
   </div>
-  <div class="copy">© 2025 RentPay — PWA</div>
+  <div class="copy">© <span id="year"></span> RentPay — PWA</div>
 </footer>
 
-<!-- NAV script -->
-<script type="text/javascript">
+<script src="app.js"></script>
+<script src="rp-store.js"></script>
+<script type="text/javascript" data-cookieconsent="ignore">
 (function(){
-  const btn=document.getElementById('rpHamburger'),
-        drawer=document.getElementById('rpDrawer'),
-        closeBtn=document.getElementById('rpDrawerClose'),
-        backdrop=document.getElementById('rpBackdrop');
-  function openD(){drawer.classList.add('open');backdrop.hidden=false;backdrop.classList.add('show');document.body.style.overflow='hidden'}
-  function closeD(){drawer.classList.remove('open');backdrop.classList.remove('show');backdrop.hidden=true;document.body.style.overflow=''}
-  btn&&btn.addEventListener('click',openD);
-  closeBtn&&closeBtn.addEventListener('click',closeD);
-  backdrop&&backdrop.addEventListener('click',closeD);
-  window.addEventListener('keydown',e=>{if(e.key==='Escape')closeD()});
-  drawer.querySelectorAll('a').forEach(a=>a.addEventListener('click',closeD));
+  const btn=document.getElementById('rpHamburger'), d=document.getElementById('rpDrawer'), x=document.getElementById('rpDrawerClose'), b=document.getElementById('rpBackdrop');
+  function openD(){d.classList.add('open');b.hidden=false;b.classList.add('show');document.body.style.overflow='hidden'}
+  function closeD(){d.classList.remove('open');b.classList.remove('show');b.hidden=true;document.body.style.overflow=''}
+  btn&&btn.addEventListener('click',openD); x&&x.addEventListener('click',closeD); b&&b.addEventListener('click',closeD);
+  d.querySelectorAll('a').forEach(a=>a.addEventListener('click',closeD));
 })();
 </script>
 
-<!-- Saluto da localStorage -->
 <script>
-(function(){
-  try{
-    const u = JSON.parse(localStorage.getItem('rpCurrentUser')||'{}');
-    if(u && u.name){
-      document.getElementById('hello').textContent = `Benvenuto, ${u.name}`;
-    }
-  }catch(e){}
+(function renderProp(){
+  const me = RP.me();
+  if(!me || !/^l/.test(me.id)){ location.href='login.html'; return; }
+
+  const pending = RP.listContracts({landlordId:me.id, status:'pending_tenant'});
+  const active  = RP.listContracts({landlordId:me.id, status:'active'});
+
+  function rows(list){
+    if(!list.length) return '<div class="small" style="padding:12px">Nessun contratto.</div>';
+    return `
+      <table class="rp-table">
+        <thead><tr>
+          <th>Immobile</th><th>Inquilino</th><th>Canone</th><th>Periodo</th><th>Stato</th>
+        </tr></thead>
+        <tbody>
+        ${list.map(c=>{
+          const t = RP.userById(c.tenantId)||{};
+          const per = \`${new Date(c.start).toLocaleDateString('it-IT')} · ${c.months} mesi\`;
+          const can = new Intl.NumberFormat('it-IT',{style:'currency',currency:'EUR'}).format(c.rent);
+          const st  = (c.status==='active'?'Attivo':'In attesa firma inquilino');
+          return `<tr>
+            <td>${c.address||'-'}</td>
+            <td>${t.name||'-'}</td>
+            <td>${can}</td>
+            <td>${per}</td>
+            <td>${st}</td>
+          </tr>`;
+        }).join('')}
+        </tbody>
+      </table>
+    `;
+  }
+
+  document.getElementById('tblPending').innerHTML = rows(pending);
+  document.getElementById('tblActive').innerHTML  = rows(active);
+
+  // toast semplice quando torni da creazione
+  if(new URLSearchParams(location.search).get('sent')==='1'){
+    setTimeout(()=>alert('Contratto inviato all’inquilino (demo).'), 300);
+  }
 })();
 </script>
 </body>
