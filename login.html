@@ -43,49 +43,55 @@
 <div id="rpBackdrop" class="rp-backdrop" hidden></div>
 
 <!-- CONTENUTO -->
-<main class="container">
-  <section class="hero">
+<main class="container narrow">
+  <section class="hero card">
     <h1>Accesso demo con profili registrati</h1>
-    <p class="lead">Seleziona il ruolo, scegli un profilo demo: i dati sono già compilati. Alla conferma entrerai nella tua pagina personale.</p>
+    <p class="lead">Seleziona il ruolo e poi un profilo demo: i dati sono già compilati. Alla conferma entrerai nella tua pagina personale.</p>
   </section>
 
-  <div class="tabs" role="tablist" aria-label="Seleziona il ruolo">
-    <button class="tab-btn active" data-tab="landlord" role="tab" aria-selected="true">👨‍💼 Proprietario</button>
-    <button class="tab-btn" data-tab="tenant" role="tab" aria-selected="false">🏡 Inquilino</button>
+  <!-- Toggle ruolo -->
+  <div class="role-toggle">
+    <button class="pill active" id="btnProp">👤 Proprietario</button>
+    <button class="pill" id="btnInq">🏡 Inquilino</button>
   </div>
 
-  <!-- Selettore account + riepilogo -->
-  <section class="card form-card" aria-live="polite">
-    <h3 id="formTitle">Proprietario — profili disponibili</h3>
-
-    <label>
-      Scegli profilo demo
-      <select id="accountSelect"></select>
-    </label>
-
-    <div class="grid" style="margin-top:10px">
-      <label>Nome e Cognome
-        <input id="fldName" readonly>
-      </label>
-      <label>Email
-        <input id="fldEmail" readonly>
-      </label>
-      <label id="lblExtra1">IBAN (accredito)
-        <input id="fldExtra1" readonly>
-      </label>
-      <label id="lblExtra2">Immobili gestiti
-        <input id="fldExtra2" readonly>
-      </label>
+  <!-- Scheda form -->
+  <div class="form-card" id="cardForm">
+    <div class="field">
+      <label><strong>Seleziona profilo demo</strong></label>
+      <div class="input">
+        <span>📁</span>
+        <select id="profileSel"></select>
+      </div>
     </div>
 
-    <div class="notice" style="margin-top:12px">
-      <small>DEMO: i dati sono statici e non vengono salvati. Al click su “Accedi” verrai indirizzato alla dashboard del profilo scelto.</small>
+    <div class="grid" style="margin-top:12px">
+      <div class="field">
+        <label>Nome e Cognome</label>
+        <div class="input"><span>🧑</span><input id="name" placeholder="Nome Cognome"></div>
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <div class="input"><span>✉️</span><input id="email" placeholder="email@example.com"></div>
+      </div>
+      <div class="field">
+        <label id="lblExtra1">IBAN (accredito)</label>
+        <div class="input"><span>🏦</span><input id="extra1" placeholder="IT.."></div>
+      </div>
+      <div class="field">
+        <label id="lblExtra2">Immobili gestiti</label>
+        <div class="input"><span>🏢</span><input id="extra2" placeholder="1"></div>
+      </div>
     </div>
 
-    <div class="actions" style="margin-top:12px">
-      <button class="btn primary" id="btnLogin">Accedi</button>
+    <p class="notice" style="margin-top:12px;padding:10px 12px;border-radius:10px">
+      <strong>DEMO:</strong> i dati sono statici e non vengono salvati.
+    </p>
+
+    <div class="actions" style="margin-top:10px">
+      <a class="btn primary" id="btnLogin">Accedi</a>
     </div>
-  </section>
+  </div>
 </main>
 
 <!-- FOOTER -->
@@ -218,6 +224,80 @@ btnLogin.addEventListener('click', ()=>{
 
 // init
 populate('landlord');
+</script>
+  <script>
+const demo = {
+  proprietario: [
+    {name:'Sara Verdi', email:'sara.verdi@rentpay.demo', iban:'IT85U0300203280764839234567', units:1},
+    {name:'Marco Neri', email:'marco.neri@rentpay.demo', iban:'IT60X0542811101000000123456', units:3}
+  ],
+  inquilino: [
+    {name:'Luca Bianchi', email:'luca.bianchi@rentpay.demo', card:'Visa **** 4242', rent:'€ 750/mese'},
+    {name:'Giulia Neri', email:'giulia.neri@rentpay.demo', card:'Mastercard **** 9911', rent:'€ 720/mese'}
+  ]
+};
+
+let ruolo = 'proprietario';
+const sel   = document.getElementById('profileSel');
+const name  = document.getElementById('name');
+const email = document.getElementById('email');
+const extra1= document.getElementById('extra1');
+const extra2= document.getElementById('extra2');
+const lbl1  = document.getElementById('lblExtra1');
+const lbl2  = document.getElementById('lblExtra2');
+
+function fillOptions(){
+  sel.innerHTML='';
+  (demo[ruolo]).forEach((p,i)=>{
+    const opt=document.createElement('option');
+    opt.value=i;
+    opt.textContent = ruolo==='proprietario'
+      ? `${p.name} — ${p.email}`
+      : `${p.name} — ${p.email}`;
+    sel.appendChild(opt);
+  });
+  sel.selectedIndex=0;
+  applyProfile();
+}
+
+function applyProfile(){
+  const p = demo[ruolo][sel.value||0];
+  name.value  = p.name;
+  email.value = p.email;
+  if(ruolo==='proprietario'){
+    lbl1.textContent='IBAN (accredito)';
+    lbl2.textContent='Immobili gestiti';
+    extra1.value = p.iban || '';
+    extra2.value = p.units ?? '';
+  }else{
+    lbl1.textContent='Metodo pagamento';
+    lbl2.textContent='Canone';
+    extra1.value = p.card || '';
+    extra2.value = p.rent || '';
+  }
+}
+
+document.getElementById('btnProp').onclick = e=>{
+  document.getElementById('btnProp').classList.add('active');
+  document.getElementById('btnInq').classList.remove('active');
+  ruolo='proprietario'; fillOptions();
+};
+document.getElementById('btnInq').onclick = e=>{
+  document.getElementById('btnInq').classList.add('active');
+  document.getElementById('btnProp').classList.remove('active');
+  ruolo='inquilino'; fillOptions();
+};
+sel.onchange = applyProfile;
+
+// “Login” → vai alla dashboard corretta con querystring (solo demo)
+document.getElementById('btnLogin').onclick = ()=>{
+  const i = sel.value||0;
+  const target = ruolo==='proprietario' ? 'dashboard-prop.html' : 'dashboard-inq.html';
+  window.location.href = `${target}?demo=${encodeURIComponent(ruolo)}&i=${i}`;
+};
+
+// init
+fillOptions();
 </script>
 </body>
 </html>
