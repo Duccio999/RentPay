@@ -27,6 +27,7 @@
   <button id="rpHamburger" class="rp-hamburger" aria-label="Apri menu" aria-expanded="false">☰</button>
 </nav>
 
+<!-- Drawer mobile -->
 <aside id="rpDrawer" class="rp-drawer" aria-hidden="true">
   <div class="rp-drawer-head">
     <span class="rp-drawer-title">Menù</span>
@@ -50,13 +51,13 @@
   </section>
 
   <!-- Toggle ruolo -->
-  <div class="role-toggle">
+  <div class="role-toggle" style="display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 14px">
     <button class="pill active" id="btnProp">👤 Proprietario</button>
     <button class="pill" id="btnInq">🏡 Inquilino</button>
   </div>
 
   <!-- Scheda form -->
-  <div class="form-card" id="cardForm">
+  <div class="form-card" id="cardForm" style="padding:16px">
     <div class="field">
       <label><strong>Seleziona profilo demo</strong></label>
       <div class="input">
@@ -68,19 +69,19 @@
     <div class="grid" style="margin-top:12px">
       <div class="field">
         <label>Nome e Cognome</label>
-        <div class="input"><span>🧑</span><input id="name" placeholder="Nome Cognome"></div>
+        <div class="input"><span>🧑</span><input id="name" placeholder="Nome Cognome" readonly></div>
       </div>
       <div class="field">
         <label>Email</label>
-        <div class="input"><span>✉️</span><input id="email" placeholder="email@example.com"></div>
+        <div class="input"><span>✉️</span><input id="email" placeholder="email@example.com" readonly></div>
       </div>
       <div class="field">
         <label id="lblExtra1">IBAN (accredito)</label>
-        <div class="input"><span>🏦</span><input id="extra1" placeholder="IT.."></div>
+        <div class="input"><span>🏦</span><input id="extra1" placeholder="IT.." readonly></div>
       </div>
       <div class="field">
         <label id="lblExtra2">Immobili gestiti</label>
-        <div class="input"><span>🏢</span><input id="extra2" placeholder="1"></div>
+        <div class="input"><span>🏢</span><input id="extra2" placeholder="1" readonly></div>
       </div>
     </div>
 
@@ -89,7 +90,7 @@
     </p>
 
     <div class="actions" style="margin-top:10px">
-      <a class="btn primary" id="btnLogin">Accedi</a>
+      <button type="button" class="btn primary" id="btnLogin">Accedi</button>
     </div>
   </div>
 </main>
@@ -106,195 +107,98 @@
   <div class="copy">© 2025 RentPay — PWA</div>
 </footer>
 
-<!-- SCRIPT NAV -->
-<script type="text/javascript" data-cookieconsent="ignore">
+<!-- SCRIPT NAV (stesso di index) -->
+<script type="text/javascript">
 (function(){
   const btn=document.getElementById('rpHamburger'),
         drawer=document.getElementById('rpDrawer'),
         closeBtn=document.getElementById('rpDrawerClose'),
         backdrop=document.getElementById('rpBackdrop');
-  function openD(){drawer.classList.add('open');backdrop.hidden=false;backdrop.classList.add('show');document.body.style.overflow='hidden'}
-  function closeD(){drawer.classList.remove('open');backdrop.classList.remove('show');backdrop.hidden=true;document.body.style.overflow=''}
-  btn&&btn.addEventListener('click',openD);
-  closeBtn&&closeBtn.addEventListener('click',closeD);
-  backdrop&&backdrop.addEventListener('click',closeD);
-  window.addEventListener('keydown',e=>{if(e.key==='Escape')closeD()});
-  drawer.querySelectorAll('a').forEach(a=>a.addEventListener('click',closeD));
+
+  function openD(){ drawer.classList.add('open'); backdrop.hidden=false; backdrop.classList.add('show'); document.body.style.overflow='hidden'; }
+  function closeD(){ drawer.classList.remove('open'); backdrop.classList.remove('show'); backdrop.hidden=true; document.body.style.overflow=''; }
+
+  btn && btn.addEventListener('click', openD);
+  closeBtn && closeBtn.addEventListener('click', closeD);
+  backdrop && backdrop.addEventListener('click', closeD);
+  window.addEventListener('keydown', e => { if(e.key === 'Escape') closeD(); });
+  drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', closeD));
 })();
 </script>
 
-<!-- SCRIPT LOGIN DEMO -->
+<!-- SCRIPT LOGIN DEMO (unico e corretto) -->
 <script>
-/**
- * "Database" demo in memoria
- */
-const DEMO_USERS = {
-  landlord: [
-    { id:'l1', role:'landlord', name:'Mario Rossi', email:'mario.rossi@rentpay.demo', iban:'IT60X0542811101000000123456', props:3 },
-    { id:'l2', role:'landlord', name:'Sara Verdi',  email:'sara.verdi@rentpay.demo',  iban:'IT85U0300203280764839234567', props:1 }
-  ],
-  tenant: [
-    { id:'t1', role:'tenant', name:'Luca Bianchi',  email:'luca.bianchi@rentpay.demo',  address:'Via Roma 12, Milano',  rent:850 },
-    { id:'t2', role:'tenant', name:'Giulia Neri',   email:'giulia.neri@rentpay.demo',   address:'Via Po 8, Torino',     rent:720 }
-  ]
-};
-
-const state = { role:'landlord', selectedId:null };
-
-const accountSelect = document.getElementById('accountSelect');
-const fldName = document.getElementById('fldName');
-const fldEmail = document.getElementById('fldEmail');
-const fldExtra1 = document.getElementById('fldExtra1');
-const fldExtra2 = document.getElementById('fldExtra2');
-const lblExtra1 = document.getElementById('lblExtra1');
-const lblExtra2 = document.getElementById('lblExtra2');
-const btnLogin = document.getElementById('btnLogin');
-const formTitle = document.getElementById('formTitle');
-
-/** Popola la tendina in base al ruolo */
-function populate(role){
-  state.role = role;
-  formTitle.textContent = (role==='landlord' ? 'Proprietario — profili disponibili' : 'Inquilino — profili disponibili');
-
-  accountSelect.innerHTML = '';
-  DEMO_USERS[role].forEach(u=>{
-    const opt = document.createElement('option');
-    opt.value = u.id;
-    opt.textContent = `${u.name} — ${u.email}`;
-    accountSelect.appendChild(opt);
-  });
-  state.selectedId = DEMO_USERS[role][0]?.id || null;
-  accountSelect.value = state.selectedId;
-  fillDetails();
-}
-
-/** Riempie i campi con i dati del profilo selezionato */
-function fillDetails(){
-  const list = DEMO_USERS[state.role] || [];
-  const user = list.find(u=>u.id===state.selectedId);
-  if(!user){ fldName.value=fldEmail.value=fldExtra1.value=fldExtra2.value=''; return; }
-
-  fldName.value = user.name;
-  fldEmail.value = user.email;
-
-  if(state.role==='landlord'){
-    lblExtra1.firstChild.textContent = 'IBAN (accredito)';
-    lblExtra2.firstChild.textContent = 'Immobili gestiti';
-    fldExtra1.value = user.iban || '';
-    fldExtra2.value = String(user.props ?? '');
-  }else{
-    lblExtra1.firstChild.textContent = 'Indirizzo immobile';
-    lblExtra2.firstChild.textContent = 'Canone mensile (€)';
-    fldExtra1.value = user.address || '';
-    fldExtra2.value = user.rent!=null ? new Intl.NumberFormat('it-IT').format(user.rent) : '';
-  }
-}
-
-/** Gestione UI tabs */
-document.querySelectorAll('.tab-btn').forEach(btn=>{
-  btn.addEventListener('click', ()=>{
-    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    populate(btn.dataset.tab);
-  });
-});
-
-/** Cambio selezione profilo */
-accountSelect.addEventListener('change', ()=>{
-  state.selectedId = accountSelect.value;
-  fillDetails();
-});
-
-/** Login demo → salva su localStorage e reindirizza */
-btnLogin.addEventListener('click', ()=>{
-  const list = DEMO_USERS[state.role] || [];
-  const user = list.find(u=>u.id===state.selectedId);
-  if(!user) return;
-
-  // Salva utente corrente per le dashboard
-  localStorage.setItem('rpCurrentUser', JSON.stringify(user));
-
-  // Vai alla dashboard corretta
-  if(state.role==='landlord'){
-    window.location.href = './dashboard-prop.html';
-  }else{
-    window.location.href = './dashboard-inq.html';
-  }
-});
-
-// init
-populate('landlord');
-</script>
-  <script>
 const demo = {
   proprietario: [
-    {name:'Sara Verdi', email:'sara.verdi@rentpay.demo', iban:'IT85U0300203280764839234567', units:1},
-    {name:'Marco Neri', email:'marco.neri@rentpay.demo', iban:'IT60X0542811101000000123456', units:3}
+    {name:'Sara Verdi',  email:'sara.verdi@rentpay.demo',  iban:'IT85U0300203280764839234567', units:1},
+    {name:'Marco Neri',  email:'marco.neri@rentpay.demo',  iban:'IT60X0542811101000000123456', units:3}
   ],
   inquilino: [
-    {name:'Luca Bianchi', email:'luca.bianchi@rentpay.demo', card:'Visa **** 4242', rent:'€ 750/mese'},
-    {name:'Giulia Neri', email:'giulia.neri@rentpay.demo', card:'Mastercard **** 9911', rent:'€ 720/mese'}
+    {name:'Luca Bianchi',  email:'luca.bianchi@rentpay.demo',  card:'Visa **** 4242',       rent:'€ 750/mese'},
+    {name:'Giulia Neri',   email:'giulia.neri@rentpay.demo',   card:'Mastercard **** 9911', rent:'€ 720/mese'}
   ]
 };
 
 let ruolo = 'proprietario';
-const sel   = document.getElementById('profileSel');
-const name  = document.getElementById('name');
-const email = document.getElementById('email');
-const extra1= document.getElementById('extra1');
-const extra2= document.getElementById('extra2');
-const lbl1  = document.getElementById('lblExtra1');
-const lbl2  = document.getElementById('lblExtra2');
+const sel    = document.getElementById('profileSel');
+const nameEl = document.getElementById('name');
+const mailEl = document.getElementById('email');
+const ext1   = document.getElementById('extra1');
+const ext2   = document.getElementById('extra2');
+const lbl1   = document.getElementById('lblExtra1');
+const lbl2   = document.getElementById('lblExtra2');
 
 function fillOptions(){
-  sel.innerHTML='';
-  (demo[ruolo]).forEach((p,i)=>{
-    const opt=document.createElement('option');
-    opt.value=i;
-    opt.textContent = ruolo==='proprietario'
-      ? `${p.name} — ${p.email}`
-      : `${p.name} — ${p.email}`;
+  sel.innerHTML = '';
+  demo[ruolo].forEach((p,i)=>{
+    const opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = `${p.name} — ${p.email}`;
     sel.appendChild(opt);
   });
-  sel.selectedIndex=0;
+  sel.selectedIndex = 0;
   applyProfile();
 }
 
 function applyProfile(){
   const p = demo[ruolo][sel.value||0];
-  name.value  = p.name;
-  email.value = p.email;
-  if(ruolo==='proprietario'){
-    lbl1.textContent='IBAN (accredito)';
-    lbl2.textContent='Immobili gestiti';
-    extra1.value = p.iban || '';
-    extra2.value = p.units ?? '';
+  nameEl.value = p.name;
+  mailEl.value = p.email;
+  if(ruolo === 'proprietario'){
+    lbl1.textContent = 'IBAN (accredito)';
+    lbl2.textContent = 'Immobili gestiti';
+    ext1.value = p.iban || '';
+    ext2.value = p.units ?? '';
   }else{
-    lbl1.textContent='Metodo pagamento';
-    lbl2.textContent='Canone';
-    extra1.value = p.card || '';
-    extra2.value = p.rent || '';
+    lbl1.textContent = 'Metodo pagamento';
+    lbl2.textContent = 'Canone';
+    ext1.value = p.card || '';
+    ext2.value = p.rent || '';
   }
 }
 
-document.getElementById('btnProp').onclick = e=>{
+document.getElementById('btnProp').addEventListener('click', ()=>{
   document.getElementById('btnProp').classList.add('active');
   document.getElementById('btnInq').classList.remove('active');
-  ruolo='proprietario'; fillOptions();
-};
-document.getElementById('btnInq').onclick = e=>{
+  ruolo = 'proprietario';
+  fillOptions();
+});
+
+document.getElementById('btnInq').addEventListener('click', ()=>{
   document.getElementById('btnInq').classList.add('active');
   document.getElementById('btnProp').classList.remove('active');
-  ruolo='inquilino'; fillOptions();
-};
-sel.onchange = applyProfile;
+  ruolo = 'inquilino';
+  fillOptions();
+});
 
-// “Login” → vai alla dashboard corretta con querystring (solo demo)
-document.getElementById('btnLogin').onclick = ()=>{
-  const i = sel.value||0;
-  const target = ruolo==='proprietario' ? 'dashboard-prop.html' : 'dashboard-inq.html';
+sel.addEventListener('change', applyProfile);
+
+// CLICK ACCEDI → redirect alla dashboard giusta
+document.getElementById('btnLogin').addEventListener('click', ()=>{
+  const i = sel.value || 0;
+  const target = (ruolo === 'proprietario') ? 'dashboard-prop.html' : 'dashboard-inq.html';
   window.location.href = `${target}?demo=${encodeURIComponent(ruolo)}&i=${i}`;
-};
+});
 
 // init
 fillOptions();
