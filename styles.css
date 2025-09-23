@@ -234,9 +234,10 @@ label{ display:flex; flex-direction:column; gap:6px; font-size:14px }
 @media (max-width:980px){.kpis{grid-template-columns:1fr}}
 .kpi{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px}
 
-/* ===== Tabelle full-width senza scroll/gradiente ===== */
-.table-wrap{
-  overflow: hidden;                 /* niente scroll orizzontale */
+/* --- Tabelle scrollabili senza effetti spezzati --- */
+.table-wrap {
+  overflow-x: auto;           /* abilita lo scroll orizzontale */
+  -webkit-overflow-scrolling: touch;
   padding: 0;
   border-radius: 14px;
   border: 1px solid rgba(255,255,255,.14);
@@ -244,56 +245,37 @@ label{ display:flex; flex-direction:column; gap:6px; font-size:14px }
 }
 
 .rp-table,
-.table{                               /* .table alias per retrocompatibilità */
+.table {
+  border-collapse: collapse;
+  min-width: 500px;           /* evita che la tabella collassi */
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  table-layout: fixed;               /* adatta le colonne alla larghezza */
+}
+
+.rp-table th, .rp-table td,
+.table th, .table td {
+  padding: 12px 14px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255,255,255,.12);
+  color: #eaf2ff;
+  white-space: nowrap;        /* mantieni tutto su una riga */
 }
 
 .rp-table thead th,
-.table thead th{
-  text-align: left;
-  padding: 12px 14px;
+.table thead th {
   font-weight: 800;
-  background: rgba(255,255,255,.10);
-  color: #eaf2ff;
-  border-bottom: 1px solid rgba(255,255,255,.18);
+  background: rgba(255,255,255,.08);
 }
 
-.rp-table tbody td,
-.table tbody td{
-  padding: 12px 14px;
-  color: #eaf2ff;
-  border-bottom: 1px solid rgba(255,255,255,.14);
-  background: transparent;
-}
-
-/* zebra leggera */
 .rp-table tbody tr:nth-child(even) td,
-.table tbody tr:nth-child(even) td{
-  background: rgba(255,255,255,.05);
+.table tbody tr:nth-child(even) td {
+  background: rgba(255,255,255,.03);
 }
 
-/* testi lunghi: vanno a capo */
-.rp-table th, .rp-table td,
-.table th, .table td{
-  min-width: 0;
-  white-space: normal;
-  word-break: break-word;
-}
-
-/* mobile: compattiamo leggermente */
-@media (max-width:560px){
-  .rp-table thead th, .rp-table tbody td,
-  .table thead th,    .table tbody td{
+/* mobile: riduciamo il padding */
+@media (max-width: 560px){
+  .rp-table th, .rp-table td,
+  .table th, .table td {
     padding: 10px 12px;
     font-size: .95rem;
   }
 }
-
-/* Badge di stato */
-.badge{display:inline-block;padding:4px 8px;border-radius:999px;font-size:.85rem}
-.badge.ok{background:rgba(34,197,94,.18);color:#86efac}
-.badge.warn{background:rgba(234,179,8,.18);color:#fde68a}
-.badge.err{background:rgba(239,68,68,.18);color:#fecaca}
