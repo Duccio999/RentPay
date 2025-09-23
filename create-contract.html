@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Crea contratto (DEMO) — RentPay</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="rp-nav">
+  <a class="rp-brand" href="./index.html" aria-label="RentPay Home">
+    <span class="rp-house">🏠</span><span class="rp-brand-text">RentPay</span>
+  </a>
+  <div class="rp-menu-desktop">
+    <a href="./index.html">Home</a>
+    <a href="./vision.html">Visione</a>
+    <a href="./funzioni.html">Funzioni</a>
+    <a href="./garanzia.html">Garanzia</a>
+    <a href="./prezzi.html">Prezzi</a>
+    <a href="./firma.html">Firma (demo)</a>
+    <a class="rp-accent" href="./login.html">Accedi</a>
+  </div>
+  <button id="rpHamburger" class="rp-hamburger" aria-label="Apri menu" aria-expanded="false">☰</button>
+</nav>
+<aside id="rpDrawer" class="rp-drawer" aria-hidden="true">
+  <div class="rp-drawer-head"><span class="rp-drawer-title">Menù</span><button id="rpDrawerClose" class="rp-close">×</button></div>
+  <a href="./index.html">Home</a>
+  <a href="./vision.html">Visione</a>
+  <a href="./funzioni.html">Funzioni</a>
+  <a href="./garanzia.html">Garanzia</a>
+  <a href="./prezzi.html">Prezzi</a>
+  <a href="./firma.html">Firma (demo)</a>
+  <a class="rp-accent" href="./login.html">Accedi</a>
+</aside>
+<div id="rpBackdrop" class="rp-backdrop" hidden></div>
+
+<main class="container">
+  <section class="hero card">
+    <h1>Crea contratto (DEMO)</h1>
+    <p class="lead">Il proprietario compila e firma (demo), poi il contratto viene inviato all’inquilino per la firma digitale.</p>
+  </section>
+
+  <section class="card">
+    <form id="f" class="form">
+      <div class="grid">
+        <label>Proprietario
+          <input id="landlordName" disabled>
+        </label>
+        <label>Inquilino
+          <select id="tenantSel"></select>
+        </label>
+        <label>Indirizzo immobile
+          <input id="address" required placeholder="Via…">
+        </label>
+        <label>Canone mensile (€)
+          <input id="rent" type="number" required min="1" step="1" placeholder="750">
+        </label>
+        <label>Data inizio
+          <input id="start" type="date" required>
+        </label>
+        <label>Durata (mesi)
+          <input id="months" type="number" required min="1" step="1" placeholder="12">
+        </label>
+      </div>
+      <p class="notice" style="margin-top:12px">DEMO: la firma del proprietario è registrata automaticamente.</p>
+      <div class="actions" style="margin-top:10px">
+        <a class="btn" href="dashboard-prop.html">Annulla</a>
+        <button class="btn primary" type="submit">Firma & Invia all’inquilino</button>
+      </div>
+    </form>
+  </section>
+</main>
+
+<footer class="footer container">
+  <div class="f-links">
+    <a href="terms.html">Termini di servizio</a>
+    <a href="privacy.html">Privacy Policy</a>
+    <a href="cookie.html">Cookie Policy</a>
+  </div>
+  <div class="copy">© <span id="year"></span> RentPay — PWA</div>
+</footer>
+
+<script src="app.js"></script>
+<script src="rp-store.js"></script>
+<script type="text/javascript" data-cookieconsent="ignore">
+(function(){
+  // Drawer mobile
+  const btn=document.getElementById('rpHamburger'), d=document.getElementById('rpDrawer'), x=document.getElementById('rpDrawerClose'), b=document.getElementById('rpBackdrop');
+  function openD(){d.classList.add('open');b.hidden=false;b.classList.add('show');document.body.style.overflow='hidden'}
+  function closeD(){d.classList.remove('open');b.classList.remove('show');b.hidden=true;document.body.style.overflow=''}
+  btn&&btn.addEventListener('click',openD); x&&x.addEventListener('click',closeD); b&&b.addEventListener('click',closeD);
+  d.querySelectorAll('a').forEach(a=>a.addEventListener('click',closeD));
+})();
+</script>
+
+<script>
+(function(){
+  const me = RP.me();
+  if(!me || !/^l/.test(me.id)){ location.href='login.html'; return; }
+
+  document.getElementById('landlordName').value = `${me.name} — ${me.email}`;
+
+  const sel = document.getElementById('tenantSel');
+  RP.tenants().forEach(t=>{
+    const o=document.createElement('option');
+    o.value=t.id; o.textContent = `${t.name} — ${t.email}`;
+    sel.appendChild(o);
+  });
+  // Prefill address/rent dal profilo tenant
+  sel.addEventListener('change', ()=>{
+    const t = RP.userById(sel.value);
+    if(t){ document.getElementById('address').value=t.address||''; document.getElementById('rent').value=t.rent||''; }
+  });
+  sel.dispatchEvent(new Event('change'));
+
+  document.getElementById('f').addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const c = RP.createContract({
+      landlordId: me.id,
+      tenantId: sel.value,
+      address: document.getElementById('address').value.trim(),
+      rent: document.getElementById('rent').value,
+      start: document.getElementById('start').value,
+      months: document.getElementById('months').value
+    });
+    location.href='dashboard-prop.html?sent=1';
+  });
+})();
+</script>
+</body>
+</html>
