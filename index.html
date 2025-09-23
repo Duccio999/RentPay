@@ -50,16 +50,23 @@
   </p>
 </section>
 
-<!-- SCELTA UTENTE -->
+<!-- SEZIONE RUOLI -->
 <section class="container center">
-  <h2>Sei un...</h2>
-  <div class="actions">
-    <button class="btn primary" id="btnTenant">Inquilino</button>
-    <button class="btn ghost" id="btnLandlord">Proprietario</button>
+  <div class="tabs">
+    <button id="tab-landlord" class="tab active" data-target="landlord">👤 Proprietario</button>
+    <button id="tab-tenant" class="tab" data-target="tenant">🏠 Inquilino</button>
   </div>
 
-  <!-- BOX contenuti dinamici -->
-  <div id="roleContent" class="card" style="margin-top:20px; display:none;"></div>
+  <!-- Contenuti dinamici -->
+  <div id="roleContent" class="card role-box" style="margin-top:20px;">
+    <h2>👤 Vantaggi per Proprietari</h2>
+    <ul class="role-list">
+      <li>✅ Incassi puntuali con addebiti automatici.</li>
+      <li>✅ Contratti digitali firmati online.</li>
+      <li>✅ Garanzie contro i mancati pagamenti.</li>
+      <li>✅ Dashboard chiara per gestire più immobili.</li>
+    </ul>
+  </div>
 </section>
 
 <!-- FOOTER -->
@@ -91,37 +98,41 @@
 })();
 </script>
 
-<!-- SCRIPT RUOLI -->
+<!-- SCRIPT TABS -->
 <script>
-const btnTenant = document.getElementById('btnTenant');
-const btnLandlord = document.getElementById('btnLandlord');
+const tabs = document.querySelectorAll('.tab');
 const roleContent = document.getElementById('roleContent');
 
-btnTenant.addEventListener('click', () => {
-  roleContent.style.display = 'block';
-  roleContent.innerHTML = `
-    <h3>Vantaggi per Inquilini</h3>
-    <ul style="text-align:left; line-height:1.6;">
-      <li>Pagamenti automatici, senza pensieri e senza ritardi.</li>
-      <li>Contratto digitale sicuro e sempre accessibile.</li>
-      <li>Storico dei pagamenti sempre consultabile.</li>
-      <li>Possibilità di aggiungere garanzie e assicurazioni dedicate.</li>
+const contents = {
+  landlord: `
+    <h2>👤 Vantaggi per Proprietari</h2>
+    <ul class="role-list">
+      <li>✅ Incassi puntuali con addebiti automatici.</li>
+      <li>✅ Contratti digitali firmati online.</li>
+      <li>✅ Garanzie contro i mancati pagamenti.</li>
+      <li>✅ Dashboard chiara per gestire più immobili.</li>
     </ul>
-  `;
-});
+  `,
+  tenant: `
+    <h2>🏠 Vantaggi per Inquilini</h2>
+    <ul class="role-list">
+      <li>✅ Pagamenti automatici, senza pensieri e ritardi.</li>
+      <li>✅ Contratto digitale sicuro e sempre accessibile.</li>
+      <li>✅ Storico dei pagamenti consultabile h24.</li>
+      <li>✅ Possibilità di garanzie e assicurazioni dedicate.</li>
+    </ul>
+  `
+};
 
-btnLandlord.addEventListener('click', () => {
-  roleContent.style.display = 'block';
-  roleContent.innerHTML = `
-    <h3>Vantaggi per Proprietari</h3>
-    <ul style="text-align:left; line-height:1.6;">
-      <li>Incassi puntuali grazie ad addebiti automatici.</li>
-      <li>Contratti digitali legalmente validi e firmati online.</li>
-      <li>Garanzie contro i mancati pagamenti.</li>
-      <li>Dashboard chiara per controllare più immobili.</li>
-    </ul>
-  `;
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    tabs.forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    const target = tab.dataset.target;
+    roleContent.innerHTML = contents[target];
+  });
 });
 </script>
+
 </body>
 </html>
