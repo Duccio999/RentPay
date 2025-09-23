@@ -7,8 +7,6 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
-<!-- NAV -->
 <nav class="rp-nav">
   <a class="rp-brand" href="./index.html"><span class="rp-house">🏠</span><span class="rp-brand-text">RentPay</span></a>
   <div class="rp-menu-desktop">
@@ -43,12 +41,8 @@
     <div class="grid" style="margin-top:12px">
       <div class="field"><label>Nome e Cognome</label><div class="input"><span>🧑</span><input id="name" readonly></div></div>
       <div class="field"><label>Email</label><div class="input"><span>✉️</span><input id="email" readonly></div></div>
-      <div class="field">
-        <label id="lbl1">IBAN (accredito)</label><div class="input"><span>🏦</span><input id="extra1" readonly></div>
-      </div>
-      <div class="field">
-        <label id="lbl2">Immobili gestiti</label><div class="input"><span>🏢</span><input id="extra2" readonly></div>
-      </div>
+      <div class="field"><label id="lbl1">IBAN (accredito)</label><div class="input"><span>🏦</span><input id="extra1" readonly></div></div>
+      <div class="field"><label id="lbl2">Immobili gestiti</label><div class="input"><span>🏢</span><input id="extra2" readonly></div></div>
     </div>
 
     <p class="notice" style="margin-top:12px;padding:10px 12px;border-radius:10px">
@@ -66,10 +60,10 @@
   <div class="copy">© 2025 RentPay — PWA</div>
 </footer>
 
-<!-- Store condiviso -->
+<!-- 1) Store condiviso: deve essere PRIMA della login logic -->
 <script src="rp-store.js"></script>
 
-<!-- Nav mobile -->
+<!-- 2) Nav mobile -->
 <script>
 (function(){
   const b=document.getElementById('rpHamburger'),d=document.getElementById('rpDrawer'),x=document.getElementById('rpDrawerClose'),o=document.getElementById('rpBackdrop');
@@ -79,8 +73,10 @@
 })();
 </script>
 
-<!-- Login logic -->
+<!-- 3) Login logic -->
 <script>
+if(!window.RP){ alert('Errore di caricamento rp-store.js'); }
+
 let ruolo = 'landlord';
 const sel=document.getElementById('profileSel'), nameI=document.getElementById('name'), emailI=document.getElementById('email'),
       ex1=document.getElementById('extra1'), ex2=document.getElementById('extra2'), l1=document.getElementById('lbl1'), l2=document.getElementById('lbl2');
