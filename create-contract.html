@@ -3,91 +3,123 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Nuovo contratto (DEMO) — RentPay</title>
+  <title>Crea nuovo contratto (DEMO) — RentPay</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <nav class="rp-nav">
-  <a class="rp-brand" href="index.html"><span class="rp-house">🏠</span><span class="rp-brand-text">RentPay</span></a>
-  <div class="rp-menu-desktop"><a href="dashboard-prop.html">Dashboard</a><a class="rp-accent" href="login.html">Cambia account</a></div>
-  <button id="rpHamburger" class="rp-hamburger">☰</button>
+  <a class="rp-brand" href="./index.html"><span class="rp-house">🏠</span><span class="rp-brand-text">RentPay</span></a>
+  <div class="rp-menu-desktop">
+    <a href="dashboard-prop.html">Dashboard</a>
+    <a class="rp-accent" href="login.html">Cambia account</a>
+  </div>
+  <button id="rpHamburger" class="rp-hamburger" aria-label="Apri menu">☰</button>
 </nav>
-<aside id="rpDrawer" class="rp-drawer" aria-hidden="true"><div class="rp-drawer-head"><span>Menù</span><button id="rpDrawerClose" class="rp-close">×</button></div><a href="dashboard-prop.html">Dashboard</a></aside><div id="rpBackdrop" class="rp-backdrop" hidden></div>
+<aside id="rpDrawer" class="rp-drawer" aria-hidden="true">
+  <div class="rp-drawer-head"><span>Menù</span><button id="rpDrawerClose" class="rp-close">×</button></div>
+  <a href="dashboard-prop.html">Dashboard</a>
+  <a class="rp-accent" href="login.html">Cambia account</a>
+</aside><div id="rpBackdrop" class="rp-backdrop" hidden></div>
 
 <main class="container narrow">
-  <section class="hero card"><h1>Crea nuovo contratto</h1><p class="lead">Compila e invia all’inquilino per la firma digitale. (DEMO)</p></section>
-
-  <section class="card">
-    <form id="f" class="form">
-      <div class="grid">
-        <div class="field"><label>Proprietario</label><div class="input"><span>🧑‍💼</span><input id="landlord" readonly></div></div>
-        <div class="field"><label>Inquilino</label><div class="input"><span>🏡</span><select id="tenant"></select></div></div>
-        <div class="field"><label>Indirizzo immobile</label><div class="input"><span>📍</span><input id="address" required></div></div>
-        <div class="field"><label>Canone mensile (€)</label><div class="input"><span>💶</span><input id="rent" type="number" min="1" step="1" required></div></div>
-        <div class="field"><label>Data inizio</label><div class="input"><span>📅</span><input id="start" type="date" required></div></div>
-        <div class="field"><label>Durata (mesi)</label><div class="input"><span>⏳</span><input id="months" type="number" min="1" step="1" value="12" required></div></div>
-      </div>
-      <div class="actions" style="margin-top:12px">
-        <button type="submit" class="btn primary">Firma & invia (DEMO)</button>
-      </div>
-    </form>
+  <section class="hero card">
+    <h1>Crea nuovo contratto</h1>
+    <p class="lead">Compila e invia all’inquilino per la firma digitale. (DEMO)</p>
   </section>
+
+  <div class="form-card">
+    <div class="field">
+      <label>Proprietario</label>
+      <div class="input"><span>👤</span><input id="owner" readonly></div>
+    </div>
+
+    <div class="field" style="margin-top:10px">
+      <label>Inquilino</label>
+      <div class="input"><span>🏡</span>
+        <select id="tenantSel"></select>
+      </div>
+    </div>
+
+    <div class="field" style="margin-top:10px">
+      <label>Indirizzo immobile</label>
+      <div class="input"><span>📍</span><input id="address" placeholder="Via..."></div>
+    </div>
+
+    <div class="grid" style="margin-top:10px">
+      <div class="field">
+        <label>Canone mensile (€)</label>
+        <div class="input"><span>💶</span><input id="rent" type="number" min="0" step="1"></div>
+      </div>
+      <div class="field">
+        <label>Data inizio</label>
+        <div class="input"><span>📅</span><input id="start" type="date"></div>
+      </div>
+      <div class="field">
+        <label>Durata (mesi)</label>
+        <div class="input"><span>🕒</span><input id="months" type="number" min="1" step="1" value="12"></div>
+      </div>
+    </div>
+
+    <div class="actions" style="margin-top:14px">
+      <button class="btn primary" id="btnSend">Firma & invia (DEMO)</button>
+    </div>
+  </div>
 </main>
 
-<footer class="footer container"><div class="copy">© 2025 RentPay — PWA</div></footer>
+<footer class="footer container">
+  <div class="f-links"><a href="terms.html">Termini</a><a href="privacy.html">Privacy</a><a href="cookie.html">Cookie</a></div>
+  <div class="copy">© 2025 RentPay — PWA</div>
+</footer>
 
 <script src="rp-store.js"></script>
 <script>
-/* nav */
-(function(){
-  const b=rpHamburger,d=rpDrawer,x=rpDrawerClose,o=rpBackdrop;
-  function open(){d.classList.add('open');o.hidden=false;o.classList.add('show');document.body.style.overflow='hidden'}
-  function close(){d.classList.remove('open');o.classList.remove('show');o.hidden=true;document.body.style.overflow=''}
-  b&&b.addEventListener('click',open);x&&x.addEventListener('click',close);o&&o.addEventListener('click',close);
-  window.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
+// nav mobile
+(function(){const b=rpHamburger,d=rpDrawer,x=rpDrawerClose,o=rpBackdrop;function open(){d.classList.add('open');o.hidden=false;o.classList.add('show');document.body.style.overflow='hidden'}function close(){d.classList.remove('open');o.classList.remove('show');o.hidden=true;document.body.style.overflow=''}b&&b.addEventListener('click',open);x&&x.addEventListener('click',close);o&&o.addEventListener('click',close);window.addEventListener('keydown',e=>{if(e.key==='Escape')close()});})();
+
+const me = RP.me();
+if(!me || me.role!=='landlord'){ location.href='login.html'; }
+
+// UI refs
+owner.value = `${me.name} — ${me.email}`;
+const tenants = RP.users.tenants();
+tenants.forEach(t=>{
+  const opt = document.createElement('option');
+  opt.value = t.id;
+  opt.textContent = `${t.name} — ${t.email}`;
+  tenantSel.appendChild(opt);
+});
+
+// precompila con primo inquilino
+(function preset(){
+  const t = tenants[0];
+  tenantSel.value = t?.id || '';
+  address.value = t?.address || '';
+  rent.value    = t?.rent ?? '';
+  start.value   = new Date().toISOString().slice(0,10);
 })();
 
-/* === Logica create-contract === */
-const me = RP.me();
-if(!me || me.role!=='landlord'){ location.replace('login.html'); }
-
-document.getElementById('landlord').value = me.name;
-
-// Popola select inquilini
-const sel = document.getElementById('tenant');
-RP.users.tenants().forEach(t=>{
-  const o=document.createElement('option');
-  o.value=t.id;
-  o.textContent=`${t.name} — ${t.email}`;
-  sel.appendChild(o);
+tenantSel.addEventListener('change', ()=>{
+  const t = tenants.find(x=>x.id===tenantSel.value);
+  if(!t) return;
+  address.value = t.address || '';
+  rent.value    = t.rent ?? '';
 });
 
-// Prefill con primo inquilino
-function prefill(t){
-  document.getElementById('address').value = t.address;
-  document.getElementById('rent').value    = t.rent;
-  const dt=new Date(), y=dt.getFullYear(), m=dt.getMonth();
-  document.getElementById('start').value = RP.contracts.ymd(new Date(y,m,1));
-}
-prefill(RP.users.tenants()[0]);
-
-sel.addEventListener('change', ()=>{
-  const t = RP.users.tenants().find(x=>x.id===sel.value);
-  if(t) prefill(t);
-});
-
-document.getElementById('f').addEventListener('submit', e=>{
-  e.preventDefault();
-  const tId = sel.value;
-  const newId = RP.contracts.create({
+btnSend.addEventListener('click', ()=>{
+  const payload = {
     landlordId: me.id,
-    tenantId: tId,
-    address: document.getElementById('address').value,
-    rent: Number(document.getElementById('rent').value||0),
-    start: document.getElementById('start').value,
-    months: Number(document.getElementById('months').value||0)
-  });
-  alert('Contratto creato (DEMO). Inviato all’inquilino per la firma.');
+    tenantId: tenantSel.value,
+    address: address.value.trim(),
+    rent: Number(rent.value||0),
+    start: start.value || new Date().toISOString().slice(0,10),
+    months: Number(months.value||12)
+  };
+  if(!payload.tenantId || !payload.address || !payload.rent){
+    alert('Compila inquilino, indirizzo e canone.');
+    return;
+  }
+  RP.contracts.add(payload);
+  // torna alla dashboard proprietario
   location.href = 'dashboard-prop.html';
 });
 </script>
