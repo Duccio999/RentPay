@@ -1,9 +1,9 @@
 /* =========================
-   RentPay — styles.css
-   (nav responsive, home hero, tabelle pulite)
+   RentPay – styles.css
+   Nav responsive + UI base
    ========================= */
 
-/* ========== Variabili ========== */
+/* ===== Variabili ===== */
 :root{
   --bg:#0b1220;
   --bg2:#0e1630;
@@ -23,7 +23,7 @@
   --rp-border:rgba(255,255,255,.14);
 }
 
-/* ========== Base ========== */
+/* ===== Base ===== */
 *{ box-sizing:border-box }
 html,body{
   margin:0; padding:0;
@@ -35,12 +35,16 @@ a{ color:inherit; text-decoration:none }
 html{ scroll-behavior:smooth }
 section{ scroll-margin-top:90px }
 
-/* ========== Layout helpers ========== */
+/* ===== Layout helpers ===== */
 .container{ max-width:1000px; margin:0 auto; padding:20px }
 .container.narrow{ max-width:900px }
+.grid{ display:grid; gap:16px; grid-template-columns:repeat(2,minmax(0,1fr)) }
+@media (max-width:740px){ .grid{ grid-template-columns:1fr } }
+.grid-3{ display:grid; gap:16px; grid-template-columns:repeat(3,minmax(0,1fr)) }
+@media (max-width:900px){ .grid-3{ grid-template-columns:1fr } }
 .center{ text-align:center }
 
-/* ========== NAV responsive unificato ========== */
+/* ===== NAV responsive unificato ===== */
 .rp-nav{
   position:sticky; top:0; z-index:900;
   display:flex; align-items:center; justify-content:space-between;
@@ -53,6 +57,7 @@ section{ scroll-margin-top:90px }
   border-radius:10px; background:linear-gradient(135deg,var(--rp-primary),#7cc4ff);
 }
 .rp-brand-text{ font-weight:800; letter-spacing:.3px }
+
 .rp-menu-desktop{ display:flex; gap:16px; align-items:center }
 .rp-menu-desktop a{ color:var(--rp-text); opacity:.9 }
 .rp-menu-desktop a:hover, .rp-menu-desktop a.active{ opacity:1; text-decoration:underline }
@@ -71,7 +76,7 @@ section{ scroll-margin-top:90px }
   .rp-menu-desktop{ display:none }
 }
 
-/* Backdrop + Drawer */
+/* Backdrop */
 #rpBackdrop{
   position:fixed; inset:0;
   background:rgba(0,0,0,.45); backdrop-filter:blur(2px);
@@ -80,24 +85,27 @@ section{ scroll-margin-top:90px }
 #rpBackdrop.show{ display:block !important }
 #rpBackdrop[hidden]{ display:none !important; pointer-events:none !important }
 
+/* Drawer */
 #rpDrawer{
   position:fixed; top:0; right:0;
   width:300px; max-width:85vw; height:100dvh;
   background:var(--rp-panel); border-left:1px solid var(--rp-border);
   padding:16px; display:flex; flex-direction:column; gap:8px;
   transform:translateX(110%); transition:transform .25s ease;
-  z-index:9999;
+  z-index:9999; box-shadow:-14px 0 30px rgba(0,0,0,.35);
 }
 #rpDrawer.open{ transform:translateX(0) !important }
 @media (min-width:861px){ #rpDrawer{ transform:translateX(110%) !important } }
+
 #rpDrawer a{ color:var(--rp-text); padding:10px 8px; border-radius:10px }
 #rpDrawer a:hover{ background:rgba(255,255,255,.06) }
 #rpDrawer .rp-accent{ background:var(--rp-primary); color:#061423; font-weight:800 }
+
 .rp-drawer-head{
   position:sticky; top:0;
   display:flex; align-items:center; justify-content:space-between;
   background:var(--rp-panel); padding:12px 16px; margin:-16px -16px 8px;
-  border-bottom:1px solid var(--rp-border);
+  border-bottom:1px solid var(--rp-border); z-index:1;
 }
 .rp-close{
   background:transparent; color:var(--rp-text);
@@ -113,11 +121,9 @@ section{ scroll-margin-top:90px }
   outline:2px solid var(--accent); outline-offset:3px; border-radius:8px;
 }
 
-/* ========== UI base (hero / card / bottoni / footer) ========== */
+/* ===== UI base (hero, bottoni, card, footer) ===== */
 .hero{
-  /* centrata e un filo più compatta per la home */
-  max-width:860px;
-  margin:24px auto 18px;
+  margin-top:18px;
   border:1px solid var(--border);
   border-radius:var(--radius);
   padding:28px 22px;
@@ -125,10 +131,13 @@ section{ scroll-margin-top:90px }
     radial-gradient(80% 120% at 0% 0%, rgba(46,160,255,.18), transparent 60%),
     linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
 }
-.hero h1{ font-size:clamp(30px,5.2vw,46px); line-height:1.1; margin:0 0 12px }
-.lead{ opacity:.92; margin:0 0 16px }
+.hero h1{
+  font-size:clamp(28px,5.2vw,44px);
+  line-height:1.1; margin:0 0 12px;
+}
+.lead{ opacity:.92; margin:0 0 18px }
 
-.actions{ display:flex; gap:12px; flex-wrap:wrap; justify-content:center }
+.actions{ display:flex; gap:12px; flex-wrap:wrap }
 .btn{ display:inline-block; padding:10px 16px; border-radius:12px; font-weight:700 }
 .btn.primary{ background:var(--accent); color:var(--accentText) }
 .btn.ghost{ border:1px solid var(--border); background:transparent }
@@ -137,26 +146,57 @@ section{ scroll-margin-top:90px }
   background:var(--card);
   border:1px solid var(--border);
   border-radius:16px;
-  padding:22px 20px;
-  margin:0 auto 16px;
-  max-width:900px;            /* fa rientrare la card sotto l’hero */
+  padding:22px 20px;           /* più aria */
+  margin-bottom:16px;          /* separazione verticale su mobile */
 }
 
 h2{ margin:0 0 10px; font-size:clamp(22px,3.6vw,28px) }
 h3{ margin:0 0 8px }
 
 /* Footer */
-.footer{ margin:36px auto 24px; opacity:.9; text-align:center; max-width:900px }
+.footer{ margin:36px auto 24px; opacity:.9; text-align:center }
 .footer .f-links{
   display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-bottom:8px;
 }
 .footer .f-links a{ opacity:.85; font-size:14px }
 .footer .f-links a:hover{ opacity:1 }
 
-/* ========== Tabs ruoli (Home) ========== */
-.tabs{ display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin-top:14px }
+/* ===== Demo / moduli scuri ===== */
+.demo-banner{
+  background:rgba(250,204,21,.12);
+  border:1px solid rgba(250,204,21,.5);
+  color:#eab308; padding:12px 14px; border-radius:12px; margin:16px auto 8px;
+}
+
+.form{ margin-top:10px }
+.form.hidden{ display:none }
+label{ display:flex; flex-direction:column; gap:6px; font-size:14px }
+.form input,.form select,.form textarea{
+  background:#0e1b2b; color:#e8f1ff;
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:10px; padding:10px 12px; width:100%; outline:none;
+}
+.form input::placeholder,.form textarea::placeholder{ color:rgba(232,241,255,.6) }
+.preview-box{
+  min-height:120px; background:#0e1b2b; border:1px solid rgba(255,255,255,.18);
+  border-radius:12px; padding:14px; color:#e8f1ff;
+}
+.card.success{ border:1px solid rgba(46,160,255,.35); background:#0b1a2a }
+
+/* Messaggi */
+.notice{
+  background:rgba(250,204,21,.12); color:#eab308;
+  border:1px solid rgba(250,204,21,.5); border-radius:12px;
+}
+.success{
+  background:rgba(16,185,129,.12); color:#10b981;
+  border:1px solid rgba(16,185,129,.45); border-radius:12px;
+}
+
+/* Tabs stile login */
+.tabs{ display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin-top:20px }
 .tab{
-  padding:8px 14px; border-radius:999px;
+  padding:10px 16px; border-radius:10px;
   border:1px solid rgba(255,255,255,.18);
   background:rgba(255,255,255,.05);
   color:var(--text); font-weight:600; cursor:pointer;
@@ -166,18 +206,13 @@ h3{ margin:0 0 8px }
   font-weight:800;
 }
 
-/* Box “Vantaggi” */
-.role-box{ text-align:left; margin-top:14px }
-.role-box h2{ margin:0 0 10px }
-.role-list{ list-style:none; padding:0; margin:0 }
-.role-list li{ margin-bottom:8px }
-
-/* ========== Form-card moderni (login) ========== */
-.role-toggle{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 18px; justify-content:center}
+/* Pill toggle (login) */
+.role-toggle{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 18px}
 .pill{padding:10px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.18);
       background:rgba(255,255,255,.04);color:var(--text);cursor:pointer;font-weight:700}
 .pill.active{background:var(--accent);color:var(--accentText);border-color:transparent}
 
+/* Form-card moderni */
 .form-card{background:#0f1b37;border:1px solid var(--border);border-radius:16px;padding:18px}
 .field{display:flex;flex-direction:column;gap:6px}
 .input{
@@ -185,50 +220,62 @@ h3{ margin:0 0 8px }
   background:#0e1b2b;border:1px solid rgba(255,255,255,.18);
   border-radius:12px;padding:10px 12px
 }
-.input input,.input select{ background:transparent;border:0;color:var(--text);width:100%;outline:none }
+.input input,.input select{
+  background:transparent;border:0;color:var(--text);width:100%;outline:none
+}
 .input:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px rgba(46,160,255,.22)}
 
-/* ========== Dashboard: sezioni/KPI ========== */
+/* --- Dashboard: sezioni & kpi --- */
 .section{margin:18px 0}
 .section .section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
 .section h2{margin:0}
 
-/* ========== Tabelle (una riga + scroll pulito) ========== */
-.table-wrap{
-  overflow-x:auto;                      /* scroll orizzontale se serve */
-  -webkit-overflow-scrolling:touch;
-  padding:0;
-  border-radius:14px;
-  border:1px solid rgba(255,255,255,.14);
-  background:rgba(255,255,255,.04);     /* nessuna ombra */
-}
-.rp-table,.table{
-  border-collapse:collapse;
-  min-width:560px;                      /* evita la “rottura” delle righe */
-  width:100%;
-}
-.rp-table th,.rp-table td,
-.table th,.table td{
-  padding:12px 14px;
-  text-align:left;
-  border-bottom:1px solid rgba(255,255,255,.12);
-  color:#eaf2ff;
-  white-space:nowrap;                   /* tutto su una riga */
-}
-.rp-table thead th,.table thead th{
-  font-weight:800;
-  background:rgba(255,255,255,.08);
-}
-.rp-table tbody tr:nth-child(even) td,
-.table tbody tr:nth-child(even) td{
-  background:rgba(255,255,255,.03);
+.kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+@media (max-width:980px){.kpis{grid-template-columns:1fr}}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px}
+
+/* --- Tabelle scrollabili senza effetti spezzati --- */
+.table-wrap {
+  overflow-x: auto;           /* abilita lo scroll orizzontale */
+  -webkit-overflow-scrolling: touch;
+  padding: 0;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.04);
 }
 
-/* mobile: padding un filo più compatto */
-@media (max-width:560px){
-  .rp-table th,.rp-table td,
-  .table th,.table td{
-    padding:10px 12px;
-    font-size:.95rem;
+.rp-table,
+.table {
+  border-collapse: collapse;
+  min-width: 500px;           /* evita che la tabella collassi */
+  width: 100%;
+}
+
+.rp-table th, .rp-table td,
+.table th, .table td {
+  padding: 12px 14px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255,255,255,.12);
+  color: #eaf2ff;
+  white-space: nowrap;        /* mantieni tutto su una riga */
+}
+
+.rp-table thead th,
+.table thead th {
+  font-weight: 800;
+  background: rgba(255,255,255,.08);
+}
+
+.rp-table tbody tr:nth-child(even) td,
+.table tbody tr:nth-child(even) td {
+  background: rgba(255,255,255,.03);
+}
+
+/* mobile: riduciamo il padding */
+@media (max-width: 560px){
+  .rp-table th, .rp-table td,
+  .table th, .table td {
+    padding: 10px 12px;
+    font-size: .95rem;
   }
 }
