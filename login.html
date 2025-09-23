@@ -3,82 +3,221 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Dashboard Proprietario - RentPay</title>
+  <title>Accesso Demo - RentPay</title>
+  <meta name="description" content="Demo accesso con profili già registrati.">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
+<!-- NAVBAR -->
 <nav class="rp-nav">
-  <a class="rp-brand" href="./index.html"><span class="rp-house">🏠</span><span class="rp-brand-text">RentPay</span></a>
+  <a class="rp-brand" href="./index.html" aria-label="RentPay Home">
+    <span class="rp-house" aria-hidden="true">🏠</span>
+    <span class="rp-brand-text">RentPay</span>
+  </a>
   <div class="rp-menu-desktop">
     <a href="./index.html">Home</a>
+    <a href="./vision.html">Visione</a>
     <a href="./funzioni.html">Funzioni</a>
+    <a href="./garanzia.html">Garanzia</a>
     <a href="./prezzi.html">Prezzi</a>
     <a href="./firma.html">Firma (demo)</a>
-    <a class="rp-accent" href="./login.html">Cambia account</a>
+    <a class="rp-accent" href="./login.html" aria-current="page">Accedi</a>
   </div>
-  <button id="rpHamburger" class="rp-hamburger" aria-label="Apri menu">☰</button>
+  <button id="rpHamburger" class="rp-hamburger" aria-label="Apri menu" aria-expanded="false">☰</button>
 </nav>
+
 <aside id="rpDrawer" class="rp-drawer" aria-hidden="true">
-  <div class="rp-drawer-head"><span>Menù</span><button id="rpDrawerClose" class="rp-close">×</button></div>
-  <a href="./index.html">Home</a><a href="./funzioni.html">Funzioni</a><a href="./prezzi.html">Prezzi</a><a href="./firma.html">Firma (demo)</a>
-  <a class="rp-accent" href="./login.html">Cambia account</a>
+  <div class="rp-drawer-head">
+    <span class="rp-drawer-title">Menù</span>
+    <button id="rpDrawerClose" class="rp-close" aria-label="Chiudi menu">×</button>
+  </div>
+  <a href="./index.html">Home</a>
+  <a href="./vision.html">Visione</a>
+  <a href="./funzioni.html">Funzioni</a>
+  <a href="./garanzia.html">Garanzia</a>
+  <a href="./prezzi.html">Prezzi</a>
+  <a href="./firma.html">Firma (demo)</a>
+  <a class="rp-accent" href="./login.html" aria-current="page">Accedi</a>
 </aside>
 <div id="rpBackdrop" class="rp-backdrop" hidden></div>
 
+<!-- CONTENUTO -->
 <main class="container">
   <section class="hero">
-    <h1 id="hello">Benvenuto, Proprietario</h1>
-    <p class="lead">Qui vedi una panoramica demo dei tuoi immobili, contratti e incassi.</p>
+    <h1>Accesso demo con profili registrati</h1>
+    <p class="lead">Seleziona il ruolo, scegli un profilo demo: i dati sono già compilati. Alla conferma entrerai nella tua pagina personale.</p>
   </section>
 
-  <section class="grid-3">
-    <div class="card">
-      <h2>📑 Contratti attivi</h2>
-      <ul style="margin:8px 0 0; padding-left:18px">
-        <li>Via Roma 12 — Inquilino: <strong>Luca Bianchi</strong> — € 850/mese</li>
-        <li>Via Po 8 — Inquilino: <strong>Giulia Neri</strong> — € 720/mese</li>
-      </ul>
-      <div class="actions" style="margin-top:10px">
-        <a class="btn ghost" href="./firma.html">Crea nuovo contratto</a>
-      </div>
+  <div class="tabs" role="tablist" aria-label="Seleziona il ruolo">
+    <button class="tab-btn active" data-tab="landlord" role="tab" aria-selected="true">👨‍💼 Proprietario</button>
+    <button class="tab-btn" data-tab="tenant" role="tab" aria-selected="false">🏡 Inquilino</button>
+  </div>
+
+  <!-- Selettore account + riepilogo -->
+  <section class="card form-card" aria-live="polite">
+    <h3 id="formTitle">Proprietario — profili disponibili</h3>
+
+    <label>
+      Scegli profilo demo
+      <select id="accountSelect"></select>
+    </label>
+
+    <div class="grid" style="margin-top:10px">
+      <label>Nome e Cognome
+        <input id="fldName" readonly>
+      </label>
+      <label>Email
+        <input id="fldEmail" readonly>
+      </label>
+      <label id="lblExtra1">IBAN (accredito)
+        <input id="fldExtra1" readonly>
+      </label>
+      <label id="lblExtra2">Immobili gestiti
+        <input id="fldExtra2" readonly>
+      </label>
     </div>
 
-    <div class="card">
-      <h2>💳 Ultimi incassi</h2>
-      <ul style="margin:8px 0 0; padding-left:18px">
-        <li>01/09 — € 850 — ✔️ Completato</li>
-        <li>01/09 — € 720 — ✔️ Completato</li>
-      </ul>
+    <div class="notice" style="margin-top:12px">
+      <small>DEMO: i dati sono statici e non vengono salvati. Al click su “Accedi” verrai indirizzato alla dashboard del profilo scelto.</small>
     </div>
 
-    <div class="card">
-      <h2>🛡️ Garanzia</h2>
-      <p>Garanzia attiva su 2 contratti.</p>
-      <a class="btn ghost" href="./garanzia.html">Dettagli garanzia</a>
+    <div class="actions" style="margin-top:12px">
+      <button class="btn primary" id="btnLogin">Accedi</button>
     </div>
   </section>
 </main>
 
+<!-- FOOTER -->
 <footer class="footer container">
   <div class="f-links">
-    <a href="terms.html">Termini</a><a href="privacy.html">Privacy</a><a href="cookie.html">Cookie</a>
+    <a href="terms.html">Termini di servizio</a>
+    <a href="privacy.html">Privacy Policy</a>
+    <a href="cookie.html">Cookie Policy</a>
+    <a href="vision.html">Visione</a>
+    <a href="https://forms.gle/INSERISCI-LINK-FORM" target="_blank" rel="noopener">Questionario investitori</a>
   </div>
-  <div class="copy">© 2025 RentPay</div>
+  <div class="copy">© 2025 RentPay — PWA</div>
 </footer>
 
-<script type="text/javascript">
-(function(){const b=document.getElementById('rpHamburger'),d=document.getElementById('rpDrawer'),c=document.getElementById('rpDrawerClose'),k=document.getElementById('rpBackdrop');function o(){d.classList.add('open');k.hidden=false;k.classList.add('show');document.body.style.overflow='hidden'}function x(){d.classList.remove('open');k.classList.remove('show');k.hidden=true;document.body.style.overflow=''}b&&b.addEventListener('click',o);c&&c.addEventListener('click',x);k&&k.addEventListener('click',x);window.addEventListener('keydown',e=>{if(e.key==='Escape')x()})})();
-</script>
-<script>
+<!-- SCRIPT NAV -->
+<script type="text/javascript" data-cookieconsent="ignore">
 (function(){
-  const raw = localStorage.getItem('rpCurrentUser');
-  if(!raw){
-    window.location.href = './login.html';
-    return;
-  }
-  const user = JSON.parse(raw);
-  document.getElementById('hello').textContent = `Benvenuto, ${user.name}`;
+  const btn=document.getElementById('rpHamburger'),
+        drawer=document.getElementById('rpDrawer'),
+        closeBtn=document.getElementById('rpDrawerClose'),
+        backdrop=document.getElementById('rpBackdrop');
+  function openD(){drawer.classList.add('open');backdrop.hidden=false;backdrop.classList.add('show');document.body.style.overflow='hidden'}
+  function closeD(){drawer.classList.remove('open');backdrop.classList.remove('show');backdrop.hidden=true;document.body.style.overflow=''}
+  btn&&btn.addEventListener('click',openD);
+  closeBtn&&closeBtn.addEventListener('click',closeD);
+  backdrop&&backdrop.addEventListener('click',closeD);
+  window.addEventListener('keydown',e=>{if(e.key==='Escape')closeD()});
+  drawer.querySelectorAll('a').forEach(a=>a.addEventListener('click',closeD));
 })();
+</script>
+
+<!-- SCRIPT LOGIN DEMO -->
+<script>
+/**
+ * "Database" demo in memoria
+ */
+const DEMO_USERS = {
+  landlord: [
+    { id:'l1', role:'landlord', name:'Mario Rossi', email:'mario.rossi@rentpay.demo', iban:'IT60X0542811101000000123456', props:3 },
+    { id:'l2', role:'landlord', name:'Sara Verdi',  email:'sara.verdi@rentpay.demo',  iban:'IT85U0300203280764839234567', props:1 }
+  ],
+  tenant: [
+    { id:'t1', role:'tenant', name:'Luca Bianchi',  email:'luca.bianchi@rentpay.demo',  address:'Via Roma 12, Milano',  rent:850 },
+    { id:'t2', role:'tenant', name:'Giulia Neri',   email:'giulia.neri@rentpay.demo',   address:'Via Po 8, Torino',     rent:720 }
+  ]
+};
+
+const state = { role:'landlord', selectedId:null };
+
+const accountSelect = document.getElementById('accountSelect');
+const fldName = document.getElementById('fldName');
+const fldEmail = document.getElementById('fldEmail');
+const fldExtra1 = document.getElementById('fldExtra1');
+const fldExtra2 = document.getElementById('fldExtra2');
+const lblExtra1 = document.getElementById('lblExtra1');
+const lblExtra2 = document.getElementById('lblExtra2');
+const btnLogin = document.getElementById('btnLogin');
+const formTitle = document.getElementById('formTitle');
+
+/** Popola la tendina in base al ruolo */
+function populate(role){
+  state.role = role;
+  formTitle.textContent = (role==='landlord' ? 'Proprietario — profili disponibili' : 'Inquilino — profili disponibili');
+
+  accountSelect.innerHTML = '';
+  DEMO_USERS[role].forEach(u=>{
+    const opt = document.createElement('option');
+    opt.value = u.id;
+    opt.textContent = `${u.name} — ${u.email}`;
+    accountSelect.appendChild(opt);
+  });
+  state.selectedId = DEMO_USERS[role][0]?.id || null;
+  accountSelect.value = state.selectedId;
+  fillDetails();
+}
+
+/** Riempie i campi con i dati del profilo selezionato */
+function fillDetails(){
+  const list = DEMO_USERS[state.role] || [];
+  const user = list.find(u=>u.id===state.selectedId);
+  if(!user){ fldName.value=fldEmail.value=fldExtra1.value=fldExtra2.value=''; return; }
+
+  fldName.value = user.name;
+  fldEmail.value = user.email;
+
+  if(state.role==='landlord'){
+    lblExtra1.firstChild.textContent = 'IBAN (accredito)';
+    lblExtra2.firstChild.textContent = 'Immobili gestiti';
+    fldExtra1.value = user.iban || '';
+    fldExtra2.value = String(user.props ?? '');
+  }else{
+    lblExtra1.firstChild.textContent = 'Indirizzo immobile';
+    lblExtra2.firstChild.textContent = 'Canone mensile (€)';
+    fldExtra1.value = user.address || '';
+    fldExtra2.value = user.rent!=null ? new Intl.NumberFormat('it-IT').format(user.rent) : '';
+  }
+}
+
+/** Gestione UI tabs */
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    populate(btn.dataset.tab);
+  });
+});
+
+/** Cambio selezione profilo */
+accountSelect.addEventListener('change', ()=>{
+  state.selectedId = accountSelect.value;
+  fillDetails();
+});
+
+/** Login demo → salva su localStorage e reindirizza */
+btnLogin.addEventListener('click', ()=>{
+  const list = DEMO_USERS[state.role] || [];
+  const user = list.find(u=>u.id===state.selectedId);
+  if(!user) return;
+
+  // Salva utente corrente per le dashboard
+  localStorage.setItem('rpCurrentUser', JSON.stringify(user));
+
+  // Vai alla dashboard corretta
+  if(state.role==='landlord'){
+    window.location.href = './dashboard-prop.html';
+  }else{
+    window.location.href = './dashboard-inq.html';
+  }
+});
+
+// init
+populate('landlord');
 </script>
 </body>
 </html>
