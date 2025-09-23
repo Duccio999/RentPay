@@ -3,89 +3,98 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Dashboard Inquilino — RentPay</title>
+  <title>Dashboard Inquilino — RentPay (DEMO)</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <nav class="rp-nav">
-  <a class="rp-brand" href="index.html"><span class="rp-house">🏠</span><span class="rp-brand-text">RentPay</span></a>
-  <div class="rp-menu-desktop"><a href="index.html">Home</a><a class="rp-accent" href="login.html">Cambia account</a></div>
-  <button id="rpHamburger" class="rp-hamburger">☰</button>
+  <a class="rp-brand" href="./index.html"><span class="rp-house">🏠</span><span class="rp-brand-text">RentPay</span></a>
+  <div class="rp-menu-desktop">
+    <a href="funzioni.html">Funzioni</a>
+    <a class="rp-accent" href="login.html">Cambia account</a>
+  </div>
+  <button id="rpHamburger" class="rp-hamburger" aria-label="Apri menu">☰</button>
 </nav>
-<aside id="rpDrawer" class="rp-drawer" aria-hidden="true"><div class="rp-drawer-head"><span>Menù</span><button id="rpDrawerClose" class="rp-close">×</button></div><a href="index.html">Home</a><a class="rp-accent" href="login.html">Cambia account</a></aside><div id="rpBackdrop" class="rp-backdrop" hidden></div>
+<aside id="rpDrawer" class="rp-drawer" aria-hidden="true">
+  <div class="rp-drawer-head"><span>Menù</span><button id="rpDrawerClose" class="rp-close">×</button></div>
+  <a href="funzioni.html">Funzioni</a>
+  <a class="rp-accent" href="login.html">Cambia account</a>
+</aside><div id="rpBackdrop" class="rp-backdrop" hidden></div>
 
 <main class="container">
-  <section class="hero card"><h1 id="hello">Area Inquilino</h1><p class="lead">Contratti da firmare e pagamenti (DEMO).</p></section>
+  <section class="hero card">
+    <h1 id="welcome">Area Inquilino</h1>
+    <p class="lead">Visualizza e firma i contratti. (DEMO)</p>
+  </section>
 
-  <section class="card section">
+  <section class="card">
     <h2>Contratti da firmare</h2>
-    <div class="table-wrap"><table class="rp-table" id="tblToSign">
-      <thead><tr><th>Immobile</th><th>Proprietario</th><th>Canone</th><th>Azioni</th></tr></thead><tbody></tbody>
+    <div class="table-wrap"><table class="rp-table" id="tblSign">
+      <thead><tr><th>Immobile</th><th>Canone</th><th>Dal</th><th></th></tr></thead>
+      <tbody></tbody>
     </table></div>
   </section>
 
-  <section class="card section">
+  <section class="card">
     <h2>Contratti attivi</h2>
     <div class="table-wrap"><table class="rp-table" id="tblActive">
-      <thead><tr><th>Immobile</th><th>Proprietario</th><th>Dal</th><th>Canone</th></tr></thead><tbody></tbody>
-    </table></div>
-  </section>
-
-  <section class="card section">
-    <h2>Pagamenti programmati</h2>
-    <div class="table-wrap"><table class="rp-table" id="tblPay">
-      <thead><tr><th>Data</th><th>Contratto</th><th>Importo</th><th>Stato</th></tr></thead><tbody></tbody>
+      <thead><tr><th>Immobile</th><th>Dal</th><th>Canone</th></tr></thead>
+      <tbody></tbody>
     </table></div>
   </section>
 </main>
 
-<footer class="footer container"><div class="copy">© 2025 RentPay — PWA</div></footer>
+<footer class="footer container">
+  <div class="f-links"><a href="terms.html">Termini</a><a href="privacy.html">Privacy</a><a href="cookie.html">Cookie</a></div>
+  <div class="copy">© 2025 RentPay — PWA</div>
+</footer>
 
 <script src="rp-store.js"></script>
 <script>
-/* nav */
+// nav mobile
 (function(){const b=rpHamburger,d=rpDrawer,x=rpDrawerClose,o=rpBackdrop;function open(){d.classList.add('open');o.hidden=false;o.classList.add('show');document.body.style.overflow='hidden'}function close(){d.classList.remove('open');o.classList.remove('show');o.hidden=true;document.body.style.overflow=''}b&&b.addEventListener('click',open);x&&x.addEventListener('click',close);o&&o.addEventListener('click',close);window.addEventListener('keydown',e=>{if(e.key==='Escape')close()});})();
 
-const me = RP.me(); if(!me || me.role!=='tenant'){ location.replace('login.html'); }
-document.getElementById('hello').textContent = 'Benvenuto, ' + me.name;
+// helpers
+const fmtEur = n => new Intl.NumberFormat('it-IT',{style:'currency',currency:'EUR'}).format(n);
+const fmtDMY = d => { if(!d) return ''; const [y,m,day]=d.split('-'); return `${day}/${m}/${y}`; };
 
-const toSign = RP.contracts.list({tenantId:me.id, status:'pending_tenant'});
-const active = RP.contracts.list({tenantId:me.id, status:'active'});
+const me = RP.me();
+if(!me || me.role!=='tenant'){ location.href='login.html'; }
 
-function row(html){ const tr=document.createElement('tr'); tr.innerHTML=html; return tr; }
+document.getElementById('welcome').textContent = `Ciao, ${me.name}`;
 
-// Da firmare
-const tbS = document.querySelector('#tblToSign tbody');
-if(toSign.length===0) tbS.append(row('<td colspan="4">Nessun contratto da firmare.</td>'));
-toSign.forEach(c=>{
-  const tr = row(`<td>${c.address}</td><td>${RP.contracts.name(c.landlordId)}</td><td>${RP.contracts.euro(c.rent)}</td><td><button class="btn primary" data-sign="${c.id}">Firma ora (DEMO)</button></td>`);
-  tbS.append(tr);
-});
-tbS.addEventListener('click', (e)=>{
-  const b = e.target.closest('button[data-sign]'); if(!b) return;
-  RP.contracts.setStatus(b.getAttribute('data-sign'),'active');
-  alert('Firmato (DEMO). Il contratto è ora attivo.');
-  location.reload();
-});
+// dati
+const contracts = RP.contracts.forTenant(me.id);
 
-// Attivi
-const tbA = document.querySelector('#tblActive tbody');
-if(active.length===0) tbA.append(row('<td colspan="4">Nessun contratto attivo.</td>'));
-active.forEach(c=>{
-  tbA.append(row(`<td>${c.address}</td><td>${RP.contracts.name(c.landlordId)}</td><td>${c.start}</td><td>${RP.contracts.euro(c.rent)}</td>`));
-});
+// da firmare
+const tbodyS = document.querySelector('#tblSign tbody');
+const pending = contracts.filter(c=>c.status==='pending_tenant');
+tbodyS.innerHTML = pending.length ? pending.map(c=>`
+  <tr>
+    <td>${c.address}</td>
+    <td>${fmtEur(c.rent)}</td>
+    <td>${fmtDMY(c.start)}</td>
+    <td><button class="btn primary" data-sign="${c.id}">Leggi & firma (demo)</button></td>
+  </tr>`).join('') : `<tr><td colspan="4">Nessun contratto in attesa.</td></tr>`;
 
-// Pagamenti programmati (due prossime date per ogni attivo)
-const tbP = document.querySelector('#tblPay tbody');
-let any=false;
-active.forEach(c=>{
-  const now=new Date();
-  for(let k=1;k<=2;k++){ const d=new Date(now.getFullYear(), now.getMonth()+k, 1);
-    tbP.append(row(`<td>${d.toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit'})}</td><td>${c.address}</td><td>${RP.contracts.euro(c.rent)}</td><td>Programmato</td>`));
-    any=true;
+tbodyS.addEventListener('click', (e)=>{
+  const id = e.target?.dataset?.sign;
+  if(!id) return;
+  if(RP.contracts.signByTenant(id)){
+    // ricarica veloce
+    location.reload();
   }
 });
-if(!any) tbP.append(row('<td colspan="4">Nessun pagamento programmato.</td>'));
+
+// attivi
+const tbodyA = document.querySelector('#tblActive tbody');
+const active = contracts.filter(c=>c.status==='active');
+tbodyA.innerHTML = active.length ? active.map(c=>`
+  <tr>
+    <td>${c.address}</td>
+    <td>${fmtDMY(c.start)}</td>
+    <td>${fmtEur(c.rent)}</td>
+  </tr>`).join('') : `<tr><td colspan="3">Nessun contratto attivo.</td></tr>`;
 </script>
 </body>
 </html>
