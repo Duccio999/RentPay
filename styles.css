@@ -108,3 +108,82 @@ section{scroll-margin-top:90px}
 
 .rp-menu-desktop a.active { opacity:1; text-decoration: underline; }
 
+/* === UI BASE (hero, bottoni, card, footer) === */
+
+/* HERO */
+.hero{
+  margin-top:18px;
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:28px 22px;
+  background:
+    radial-gradient(80% 120% at 0% 0%, rgba(46,160,255,.18), transparent 60%),
+    linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+}
+.hero h1{
+  font-size:clamp(28px,5.2vw,44px);
+  line-height:1.1;
+  margin:0 0 12px;
+}
+.lead{opacity:.92;margin:0 0 18px}
+
+/* BOTTONI */
+.actions{display:flex;gap:12px;flex-wrap:wrap}
+.btn{
+  display:inline-block;
+  padding:10px 16px;
+  border-radius:12px;
+  font-weight:700;
+}
+.btn.primary{background:var(--accent);color:var(--accentText)}
+.btn.ghost{border:1px solid var(--border);background:transparent}
+
+/* CARD */
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:18px;
+}
+
+/* TIPOGRAFIA SEZIONI */
+h2{margin:0 0 10px;font-size:clamp(22px,3.6vw,28px)}
+h3{margin:0 0 8px}
+
+/* FOOTER */
+.footer{margin:36px auto 24px;opacity:.9;text-align:center}
+.footer .f-links{
+  display:flex;
+  gap:14px;
+  justify-content:center;
+  flex-wrap:wrap;
+  margin-bottom:8px;
+}
+.footer a{opacity:.9}
+.footer a:hover{opacity:1}
+
+/* Banner DEMO (se lo usi) */
+.demo-banner{
+  background:rgba(250,204,21,.12);
+  border:1px solid rgba(250,204,21,.5);
+  color:#eab308;
+  padding:12px 14px;
+  border-radius:12px;
+  margin:16px auto 8px;
+}
+
+/* Form scuri leggibili (sezioni login/firma) */
+.form{margin-top:10px}
+.form.hidden{display:none}
+label{display:flex;flex-direction:column;gap:6px;font-size:14px}
+.form input,.form select,.form textarea{
+  background:#0e1b2b;color:#e8f1ff;
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:10px;padding:10px 12px;width:100%;outline:none;
+}
+.form input::placeholder,.form textarea::placeholder{color:rgba(232,241,255,.6)}
+.preview-box{
+  min-height:120px;background:#0e1b2b;border:1px solid rgba(255,255,255,.18);
+  border-radius:12px;padding:14px;color:#e8f1ff;
+}
+.card.success{border:1px solid rgba(46,160,255,.35);background:#0b1a2a}
