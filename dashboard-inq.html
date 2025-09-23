@@ -41,9 +41,14 @@
 
 <main class="container">
   <!-- HERO -->
-  <section class="hero card">
-    <h1>Benvenuto, <span id="who">Inquilino</span></h1>
-    <p class="lead">Panoramica demo del tuo contratto, dei prossimi pagamenti e delle garanzie.</p>
+  <section class="hero card" style="display:flex;align-items:flex-start;gap:12px;justify-content:space-between;flex-wrap:wrap">
+    <div>
+      <h1>Benvenuto, <span id="who">Inquilino</span></h1>
+      <p class="lead">Panoramica demo del tuo contratto, dei prossimi pagamenti e delle garanzie.</p>
+    </div>
+    <div class="actions" style="align-self:center">
+      <button class="btn ghost" id="btnLogout" type="button">Logout</button>
+    </div>
   </section>
 
   <!-- KPI CARDS -->
@@ -91,7 +96,7 @@
     <div class="section-head"><h2>Storico pagamenti</h2></div>
     <div class="table-wrap">
       <table class="table" id="tblHistory">
-        <thead><tr><th>Data</th><th>Riferimento</th><th>Importo</th><th>Esito</th></tr></thead>
+        <thead><tr><th>Data</th><th>Riferimento</th><th>Importo</th><th>Esito</th><th>Ricevuta</th></tr></thead>
         <tbody>
           <!-- popolato via JS -->
         </tbody>
@@ -127,6 +132,9 @@
 })();
 </script>
 
+<!-- jsPDF per ricevute PDF (demo) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" integrity="sha512-V5b0m3q0U/0O9G0kJ9X4hQ6x0g2b9bM7UjJ2hgh2m8x1F0xG2y8pQ7h6yQ7w7Z7kL1Q1Xh0L9cQKX2j0uM2G6w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 <!-- SCRIPT DATI DEMO & PERSONALIZZAZIONE -->
 <script>
 (function(){
@@ -136,7 +144,7 @@
     { name:'Giulia Neri',   address:'Via Po 8, Torino',     rent: 720, card:'Mastercard **** 9911' }
   ];
 
-  // Legge ?demo=inquilino&i=0/1 (fallback a 0)
+  // Legge ?i=0/1 (fallback a 0)
   const params = new URLSearchParams(location.search);
   const i = Math.max(0, Math.min(1, parseInt(params.get('i') || '0', 10)));
   const t = demoTenants[i];
@@ -156,20 +164,78 @@
   // Storico pagamenti (demo statico coerente col canone)
   const tbody = document.querySelector('#tblHistory tbody');
   const rows = [
-    { date:'01/09', ref:'Canone settembre', amount:euro, status:'ok' },
-    { date:'01/08', ref:'Canone agosto',    amount:euro, status:'ok' },
-    { date:'01/07', ref:'Canone luglio',    amount:euro, status:'ok' }
+    { date:'01/09/2025', ref:'Canone settembre', amount:euro, status:'ok' },
+    { date:'01/08/2025', ref:'Canone agosto',    amount:euro, status:'ok' },
+    { date:'01/07/2025', ref:'Canone luglio',    amount:euro, status:'ok' }
   ];
-  rows.forEach(r=>{
+
+  rows.forEach((r, idx)=>{
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td>${r.date}</td>
       <td>${r.ref}</td>
       <td>${r.amount}</td>
       <td><span class="badge ${r.status==='ok'?'ok':r.status==='warn'?'warn':'err'}">${r.status==='ok'?'Completato':r.status}</span></td>
+      <td><button class="btn ghost btn-pdf" data-idx="${idx}" type="button">Ricevuta PDF</button></td>
     `;
     tbody.appendChild(tr);
   });
+
+  // Logout: pulizia e redirect
+  document.getElementById('btnLogout').addEventListener('click', ()=>{
+    try {
+      localStorage.removeItem('rpCurrentUser');
+      sessionStorage.clear();
+    } catch(e) {}
+    window.location.href = './login.html';
+  });
+
+  // Genera ricevuta PDF (demo) con jsPDF
+  document.querySelectorAll('.btn-pdf').forEach(btn=>{
+    btn.addEventListener('click', async (e)=>{
+      const idx = parseInt(e.currentTarget.getAttribute('data-idx'), 10);
+      const r = rows[idx];
+
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      // Header
+      doc.setFont('helvetica','bold');
+      doc.setFontSize(18);
+      doc.text('RentPay - Ricevuta di pagamento (DEMO)', 14, 20);
+
+      doc.setFont('helvetica','normal');
+      doc.setFontSize(11);
+      doc.text(`Intestatario: ${t.name}`, 14, 32);
+      doc.text(`Indirizzo immobile: ${t.address}`, 14, 39);
+
+      // Dettagli pagamento
+      doc.setFont('helvetica','bold');
+      doc.text('Dettagli pagamento', 14, 52);
+      doc.setFont('helvetica','normal');
+      doc.text(`Data: ${r.date}`, 14, 60);
+      doc.text(`Riferimento: ${r.ref}`, 14, 67);
+      doc.text(`Importo: ${r.amount}`, 14, 74);
+      doc.text(`Esito: Completato`, 14, 81);
+
+      // Nota demo
+      doc.setDrawColor(200);
+      doc.rect(12, 90, 186, 18);
+      doc.setFontSize(10);
+      doc.text('Questa è una ricevuta DEMO generata a fini dimostrativi. Non ha valore fiscale o legale.', 16, 101);
+
+      // Watermark DEMO
+      doc.setTextColor(180);
+      doc.setFontSize(60);
+      doc.setFont('helvetica','bold');
+      doc.text('DEMO', 105, 150, { angle: 30, align: 'center' });
+      doc.setTextColor(0);
+
+      const fileSafe = `ricevuta_${r.date.replaceAll('/','-')}.pdf`;
+      doc.save(fileSafe);
+    });
+  });
+
 })();
 </script>
 
