@@ -52,8 +52,8 @@
 
   <!-- Toggle ruolo -->
   <div class="role-toggle" style="display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 14px">
-    <button class="pill active" id="btnProp">👤 Proprietario</button>
-    <button class="pill" id="btnInq">🏡 Inquilino</button>
+    <button class="pill active" id="btnProp" type="button">👤 Proprietario</button>
+    <button class="pill" id="btnInq" type="button">🏡 Inquilino</button>
   </div>
 
   <!-- Scheda form -->
@@ -107,7 +107,7 @@
   <div class="copy">© 2025 RentPay — PWA</div>
 </footer>
 
-<!-- SCRIPT NAV (stesso di index) -->
+<!-- SCRIPT NAV (identico alle altre pagine) -->
 <script type="text/javascript">
 (function(){
   const btn=document.getElementById('rpHamburger'),
@@ -126,82 +126,103 @@
 })();
 </script>
 
-<!-- SCRIPT LOGIN DEMO (unico e corretto) -->
+<!-- SCRIPT LOGIN DEMO (unico) -->
 <script>
-const demo = {
-  proprietario: [
-    {name:'Sara Verdi',  email:'sara.verdi@rentpay.demo',  iban:'IT85U0300203280764839234567', units:1},
-    {name:'Marco Neri',  email:'marco.neri@rentpay.demo',  iban:'IT60X0542811101000000123456', units:3}
-  ],
-  inquilino: [
-    {name:'Luca Bianchi',  email:'luca.bianchi@rentpay.demo',  card:'Visa **** 4242',       rent:'€ 750/mese'},
-    {name:'Giulia Neri',   email:'giulia.neri@rentpay.demo',   card:'Mastercard **** 9911', rent:'€ 720/mese'}
-  ]
-};
+document.addEventListener('DOMContentLoaded', function(){
+  // Profili demo
+  const demo = {
+    proprietario: [
+      {name:'Sara Verdi',  email:'sara.verdi@rentpay.demo',  iban:'IT85U0300203280764839234567', units:1},
+      {name:'Marco Neri',  email:'marco.neri@rentpay.demo',  iban:'IT60X0542811101000000123456', units:3}
+    ],
+    inquilino: [
+      {name:'Luca Bianchi',  email:'luca.bianchi@rentpay.demo',  card:'Visa **** 4242',       rent:750, address:'Via Roma 12, Milano'},
+      {name:'Giulia Neri',   email:'giulia.neri@rentpay.demo',   card:'Mastercard **** 9911', rent:720, address:'Via Po 8, Torino'}
+    ]
+  };
 
-let ruolo = 'proprietario';
-const sel    = document.getElementById('profileSel');
-const nameEl = document.getElementById('name');
-const mailEl = document.getElementById('email');
-const ext1   = document.getElementById('extra1');
-const ext2   = document.getElementById('extra2');
-const lbl1   = document.getElementById('lblExtra1');
-const lbl2   = document.getElementById('lblExtra2');
+  // Stato e riferimenti DOM
+  let ruolo = 'proprietario';
+  const btnProp = document.getElementById('btnProp');
+  const btnInq  = document.getElementById('btnInq');
+  const sel     = document.getElementById('profileSel');
+  const nameEl  = document.getElementById('name');
+  const mailEl  = document.getElementById('email');
+  const ext1    = document.getElementById('extra1');
+  const ext2    = document.getElementById('extra2');
+  const lbl1    = document.getElementById('lblExtra1');
+  const lbl2    = document.getElementById('lblExtra2');
+  const btnLogin= document.getElementById('btnLogin');
 
-function fillOptions(){
-  sel.innerHTML = '';
-  demo[ruolo].forEach((p,i)=>{
-    const opt = document.createElement('option');
-    opt.value = i;
-    opt.textContent = `${p.name} — ${p.email}`;
-    sel.appendChild(opt);
-  });
-  sel.selectedIndex = 0;
-  applyProfile();
-}
-
-function applyProfile(){
-  const p = demo[ruolo][sel.value||0];
-  nameEl.value = p.name;
-  mailEl.value = p.email;
-  if(ruolo === 'proprietario'){
-    lbl1.textContent = 'IBAN (accredito)';
-    lbl2.textContent = 'Immobili gestiti';
-    ext1.value = p.iban || '';
-    ext2.value = p.units ?? '';
-  }else{
-    lbl1.textContent = 'Metodo pagamento';
-    lbl2.textContent = 'Canone';
-    ext1.value = p.card || '';
-    ext2.value = p.rent || '';
+  function fillOptions(){
+    sel.innerHTML = '';
+    demo[ruolo].forEach((p,i)=>{
+      const opt = document.createElement('option');
+      opt.value = String(i);
+      opt.textContent = `${p.name} — ${p.email}`;
+      sel.appendChild(opt);
+    });
+    sel.selectedIndex = 0;
+    applyProfile();
   }
-}
 
-document.getElementById('btnProp').addEventListener('click', ()=>{
-  document.getElementById('btnProp').classList.add('active');
-  document.getElementById('btnInq').classList.remove('active');
-  ruolo = 'proprietario';
+  function applyProfile(){
+    const idx = parseInt(sel.value || '0', 10) || 0;
+    const p = demo[ruolo][idx];
+    if(!p) return;
+
+    nameEl.value = p.name;
+    mailEl.value = p.email;
+
+    if(ruolo === 'proprietario'){
+      lbl1.textContent = 'IBAN (accredito)';
+      lbl2.textContent = 'Immobili gestiti';
+      ext1.value = p.iban || '';
+      ext2.value = String(p.units ?? '');
+    } else {
+      lbl1.textContent = 'Metodo pagamento';
+      lbl2.textContent = 'Canone mensile (€)';
+      ext1.value = p.card || '';
+      ext2.value = new Intl.NumberFormat('it-IT').format(p.rent ?? 0);
+    }
+  }
+
+  // Toggle ruolo
+  btnProp.addEventListener('click', ()=>{
+    btnProp.classList.add('active');
+    btnInq.classList.remove('active');
+    ruolo = 'proprietario';
+    fillOptions();
+  });
+  btnInq.addEventListener('click', ()=>{
+    btnInq.classList.add('active');
+    btnProp.classList.remove('active');
+    ruolo = 'inquilino';
+    fillOptions();
+  });
+
+  // Cambio profilo
+  sel.addEventListener('change', applyProfile);
+
+  // Click Accedi
+  btnLogin.addEventListener('click', ()=>{
+    const idx = parseInt(sel.value || '0', 10) || 0;
+    const profilo = demo[ruolo][idx];
+    if(!profilo) return;
+
+    // Salva profilo corrente per le dashboard (facoltativo ma utile)
+    try { localStorage.setItem('rpCurrentUser', JSON.stringify({ ruolo, ...profilo })); } catch(e){}
+
+    // Redirect
+    const target = (ruolo === 'proprietario') ? 'dashboard-prop.html' : 'dashboard-inq.html';
+    // Passo anche l'indice per coerenza
+    window.location.href = `${target}?demo=${encodeURIComponent(ruolo)}&i=${idx}`;
+  });
+
+  // Init
   fillOptions();
 });
-
-document.getElementById('btnInq').addEventListener('click', ()=>{
-  document.getElementById('btnInq').classList.add('active');
-  document.getElementById('btnProp').classList.remove('active');
-  ruolo = 'inquilino';
-  fillOptions();
-});
-
-sel.addEventListener('change', applyProfile);
-
-// CLICK ACCEDI → redirect alla dashboard giusta
-document.getElementById('btnLogin').addEventListener('click', ()=>{
-  const i = sel.value || 0;
-  const target = (ruolo === 'proprietario') ? 'dashboard-prop.html' : 'dashboard-inq.html';
-  window.location.href = `${target}?demo=${encodeURIComponent(ruolo)}&i=${i}`;
-});
-
-// init
-fillOptions();
 </script>
+
 </body>
 </html>
