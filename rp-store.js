@@ -1,119 +1,115 @@
 <!-- rp-store.js -->
 <script>
-// ===== Mini store DEMO – persistenza su localStorage =====
+// ===== Mini store DEMO — persistenza su localStorage =====
 const RP = (() => {
-  const KEY = 'rp_demo_store';
-  const CUR = 'rpCurrentUser';
+  const DB_KEY  = 'rp_demo_store';
+  const CUR_KEY = 'rpCurrentUser';
 
-  // seed iniziale
+  // SEED con campi completi
   const SEED = {
     users: {
       landlords: [
-        { id:'l1', role:'landlord', name:'Sara Verdi',  email:'sara.verdi@rentpay.demo' },
-        { id:'l2', role:'landlord', name:'Marco Neri',  email:'marco.neri@rentpay.demo' },
+        { id:'l1', role:'landlord', name:'Sara Verdi',  email:'sara.verdi@rentpay.demo',  iban:'IT85U0300203280764839234567', props:1 },
+        { id:'l2', role:'landlord', name:'Marco Neri',  email:'marco.neri@rentpay.demo',  iban:'IT60X0542811101000000123456', props:3 },
       ],
       tenants: [
         { id:'t1', role:'tenant', name:'Luca Bianchi',  email:'luca.bianchi@rentpay.demo',  address:'Via Roma 12', rent:850 },
-        { id:'t2', role:'tenant', name:'Giulia Neri',  email:'giulia.neri@rentpay.demo',   address:'Via Po 8',   rent:720 },
+        { id:'t2', role:'tenant', name:'Giulia Neri',   email:'giulia.neri@rentpay.demo',   address:'Via Po 8',   rent:720  },
       ]
     },
-    // alcuni contratti attivi + uno in attesa firma per vedere tutto pieno
     contracts: [
       { id:'c1', landlordId:'l1', tenantId:'t1', address:'Via Roma 12', rent:850, start:'2025-06-01', months:12, status:'active' },
       { id:'c2', landlordId:'l1', tenantId:'t2', address:'Via Po 8',   rent:720, start:'2025-07-01', months:12, status:'active' },
       { id:'c3', landlordId:'l2', tenantId:'t2', address:'Via Po 8',   rent:720, start:'2025-09-01', months:12, status:'pending_tenant' }
     ],
     payments: [
-      // ultimi incassi per l1
       { id:'p1', contractId:'c1', date:'2025-09-01', amount:850, status:'paid' },
       { id:'p2', contractId:'c2', date:'2025-09-01', amount:720, status:'paid' },
       { id:'p3', contractId:'c1', date:'2025-08-01', amount:850, status:'paid' },
     ]
   };
 
+  // --- storage helpers
   function read(){
-    const raw = localStorage.getItem(KEY);
+    const raw = localStorage.getItem(DB_KEY);
     if(!raw){
-      localStorage.setItem(KEY, JSON.stringify(SEED));
+      localStorage.setItem(DB_KEY, JSON.stringify(SEED));
       return structuredClone(SEED);
     }
     try { return JSON.parse(raw); }
-    catch{ localStorage.setItem(KEY, JSON.stringify(SEED)); return structuredClone(SEED); }
+    catch{
+      localStorage.setItem(DB_KEY, JSON.stringify(SEED));
+      return structuredClone(SEED);
+    }
   }
-  function write(db){ localStorage.setItem(KEY, JSON.stringify(db)); }
+  function write(db){ localStorage.setItem(DB_KEY, JSON.stringify(db)); }
 
-  function ensureCurrentUser(){
-    let u = me();
-    if(u) return u;
-    const db = read();
-    // default: primo proprietario (così dashboard prop non è mai vuota)
-    u = db.users.landlords[0];
-    localStorage.setItem(CUR, JSON.stringify(u));
-    return u;
-  }
-
+  // --- current user
   function me(){
-    try { return JSON.parse(localStorage.getItem(CUR) || 'null'); }
+    try { return JSON.parse(localStorage.getItem(CUR_KEY) || 'null'); }
     catch { return null; }
   }
-  function setMe(user){ localStorage.setItem(CUR, JSON.stringify(user)); }
+  function setMe(user){ localStorage.setItem(CUR_KEY, JSON.stringify(user)); }
 
-  function byId(role, id){
-    const db = read();
-    const list = role==='landlord' ? db.users.landlords : db.users.tenants;
-    return list.find(u=>u.id===id) || null;
+  // login da login.html
+  function loginById(role, id){
+    const list = role==='landlord' ? users.landlords() : users.tenants();
+    const u = list.find(x=>x.id===id);
+    if(!u) return false;
+    setMe(u);
+    return true;
   }
 
-  function listByLandlord(landlordId){
-    const db = read();
-    return db.contracts.filter(c=>c.landlordId===landlordId);
-  }
-  function listByTenant(tenantId){
-    const db = read();
-    return db.contracts.filter(c=>c.tenantId===tenantId);
-  }
+  // --- users
+  const users = {
+    landlords: () => read().users.landlords,
+    tenants:   () => read().users.tenants,
+    byId: (role, id) => {
+      const list = role==='landlord' ? read().users.landlords : read().users.tenants;
+      return list.find(u=>u.id===id) || null;
+    }
+  };
 
-  function createContract({ landlordId, tenantId, address, rent, start, months }){
-    const db = read();
-    const id = 'c' + (Math.random().toString(36).slice(2,8));
-    db.contracts.push({ id, landlordId, tenantId, address, rent, start, months, status:'pending_tenant' });
-    write(db);
-    return id;
-  }
+  // --- contracts
+  const contracts = {
+    listByLandlord: (landlordId) => read().contracts.filter(c=>c.landlordId===landlordId),
+    listByTenant:   (tenantId)   => read().contracts.filter(c=>c.tenantId===tenantId),
+    create: ({landlordId, tenantId, address, rent, start, months}) => {
+      const db = read();
+      const id = 'c' + Math.random().toString(36).slice(2,8);
+      db.contracts.push({ id, landlordId, tenantId, address, rent, start, months, status:'pending_tenant' });
+      write(db);
+      return id;
+    },
+    markSignedByTenant: (contractId) => {
+      const db = read();
+      const c = db.contracts.find(x=>x.id===contractId);
+      if(c){ c.status='active'; write(db); return true; }
+      return false;
+    },
+    ymd: (d) => new Date(d).toISOString().slice(0,10),
+  };
 
-  function markSignedByTenant(contractId){
-    const db = read();
-    const c = db.contracts.find(x=>x.id===contractId);
-    if(c){ c.status='active'; write(db); }
-    return !!c;
-  }
+  // --- payments
+  const payments = {
+    forLandlord: (landlordId) => {
+      const db = read();
+      const cids = db.contracts.filter(c=>c.landlordId===landlordId).map(c=>c.id);
+      return db.payments.filter(p=>cids.includes(p.contractId));
+    }
+  };
 
-  function paymentsForLandlord(landlordId){
-    const db = read();
-    const cids = db.contracts.filter(c=>c.landlordId===landlordId).map(c=>c.id);
-    return db.payments.filter(p=>cids.includes(p.contractId));
-  }
-
+  // util
   function userName(role, id){
-    const u = byId(role, id);
+    const u = users.byId(role, id);
     return u ? u.name : '—';
   }
 
-  function ymd(d){ return new Date(d).toISOString().slice(0,10); }
-
+  // export
   return {
-    init: read, write, me:ensureCurrentUser, setMe,
-    users:{
-      landlords:()=>read().users.landlords,
-      tenants:()=>read().users.tenants,
-      byId
-    },
-    contracts:{
-      listByLandlord, listByTenant, create:createContract,
-      markSignedByTenant, ymd
-    },
-    payments:{ forLandlord: paymentsForLandlord },
-    util:{ userName }
+    me, setMe, loginById,
+    users, contracts, payments,
+    util:{ userName },
   };
 })();
 </script>
