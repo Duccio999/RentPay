@@ -6,6 +6,28 @@
   <title>RentPay</title>
   <meta name="description" content="Affitti automatici, contratti digitali, KYC e garanzie.">
   <link rel="stylesheet" href="styles.css">
+
+  <!-- Cookiebot -->
+  <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js"
+          data-cbid="5bcf64ab-7ce1-4b46-958c-548ecf3d9c05" data-blockingmode="auto" type="text/javascript"></script>
+
+  <!-- GA4 (consenso 'statistics') -->
+  <script type="text/plain" data-cookieconsent="statistics" async src="https://www.googletagmanager.com/gtag/js?id=G-ELHNQ36D70"></script>
+  <script type="text/plain" data-cookieconsent="statistics">
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ELHNQ36D70');
+  </script>
+
+  <!-- Clarity (consenso 'statistics') -->
+  <script type="text/plain" data-cookieconsent="statistics">
+    (function(c,l,a,r,i,t,y){
+      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "tb7r154uwi");
+  </script>
 </head>
 <body>
 
@@ -26,6 +48,7 @@
   </div>
   <button id="rpHamburger" class="rp-hamburger" aria-label="Apri menu" aria-expanded="false">☰</button>
 </nav>
+
 <aside id="rpDrawer" class="rp-drawer" aria-hidden="true">
   <div class="rp-drawer-head">
     <span class="rp-drawer-title">Menù</span>
@@ -50,14 +73,13 @@
   </p>
 </section>
 
-<!-- SEZIONE RUOLI -->
+<!-- SEZIONE RUOLI (tab stile login) -->
 <section class="container center">
   <div class="tabs">
     <button id="tab-landlord" class="tab active" data-target="landlord">👤 Proprietario</button>
     <button id="tab-tenant" class="tab" data-target="tenant">🏠 Inquilino</button>
   </div>
 
-  <!-- Contenuti dinamici -->
   <div id="roleContent" class="card role-box" style="margin-top:20px;">
     <h2>👤 Vantaggi per Proprietari</h2>
     <ul class="role-list">
@@ -66,6 +88,10 @@
       <li>✅ Garanzie contro i mancati pagamenti.</li>
       <li>✅ Dashboard chiara per gestire più immobili.</li>
     </ul>
+    <div class="actions" style="margin-top:12px;">
+      <a class="btn primary" href="./login.html#landlord">Inizia come Proprietario</a>
+      <a class="btn ghost" href="./funzioni.html">Scopri le funzioni</a>
+    </div>
   </div>
 </section>
 
@@ -112,6 +138,10 @@ const contents = {
       <li>✅ Garanzie contro i mancati pagamenti.</li>
       <li>✅ Dashboard chiara per gestire più immobili.</li>
     </ul>
+    <div class="actions" style="margin-top:12px;">
+      <a class="btn primary" href="./login.html#landlord">Inizia come Proprietario</a>
+      <a class="btn ghost" href="./funzioni.html">Scopri le funzioni</a>
+    </div>
   `,
   tenant: `
     <h2>🏠 Vantaggi per Inquilini</h2>
@@ -121,6 +151,10 @@ const contents = {
       <li>✅ Storico dei pagamenti consultabile h24.</li>
       <li>✅ Possibilità di garanzie e assicurazioni dedicate.</li>
     </ul>
+    <div class="actions" style="margin-top:12px;">
+      <a class="btn primary" href="./login.html#tenant">Inizia come Inquilino</a>
+      <a class="btn ghost" href="./funzioni.html">Scopri le funzioni</a>
+    </div>
   `
 };
 
@@ -128,8 +162,7 @@ tabs.forEach(tab => {
   tab.addEventListener('click', () => {
     tabs.forEach(t => t.classList.remove('active'));
     tab.classList.add('active');
-    const target = tab.dataset.target;
-    roleContent.innerHTML = contents[target];
+    roleContent.innerHTML = contents[tab.dataset.target];
   });
 });
 </script>
