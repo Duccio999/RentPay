@@ -7,208 +7,85 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
 <nav class="rp-nav">
-  <a class="rp-brand" href="./index.html"><span class="rp-house">🏠</span><span class="rp-brand-text">RentPay</span></a>
-  <div class="rp-menu-desktop">
-    <a href="./index.html">Home</a>
-    <a href="./vision.html">Visione</a>
-    <a href="./funzioni.html">Funzioni</a>
-    <a href="./garanzia.html">Garanzia</a>
-    <a href="./prezzi.html">Prezzi</a>
-    <a href="./firma.html">Firma (demo)</a>
-    <a class="rp-accent" href="./login.html">Accedi</a>
-  </div>
-  <button id="rpHamburger" class="rp-hamburger" aria-label="Apri menu" aria-expanded="false">☰</button>
+  <a class="rp-brand" href="index.html"><span class="rp-house">🏠</span><span class="rp-brand-text">RentPay</span></a>
+  <div class="rp-menu-desktop"><a href="index.html">Home</a><a class="rp-accent" href="login.html">Cambia account</a></div>
+  <button id="rpHamburger" class="rp-hamburger">☰</button>
 </nav>
-<aside id="rpDrawer" class="rp-drawer" aria-hidden="true">
-  <div class="rp-drawer-head"><span class="rp-drawer-title">Menù</span><button id="rpDrawerClose" class="rp-close">×</button></div>
-  <a href="./index.html">Home</a>
-  <a href="./vision.html">Visione</a>
-  <a href="./funzioni.html">Funzioni</a>
-  <a href="./garanzia.html">Garanzia</a>
-  <a href="./prezzi.html">Prezzi</a>
-  <a href="./firma.html">Firma (demo)</a>
-  <a class="rp-accent" href="./login.html">Accedi</a>
-</aside>
-<div id="rpBackdrop" class="rp-backdrop" hidden></div>
+<aside id="rpDrawer" class="rp-drawer" aria-hidden="true"><div class="rp-drawer-head"><span>Menù</span><button id="rpDrawerClose" class="rp-close">×</button></div><a href="index.html">Home</a><a class="rp-accent" href="login.html">Cambia account</a></aside><div id="rpBackdrop" class="rp-backdrop" hidden></div>
 
 <main class="container">
-  <section class="hero card">
-    <h1>Dashboard Inquilino</h1>
-    <p class="lead">Qui trovi i contratti da firmare e quelli attivi. DEMO: le firme non sono vincolanti.</p>
+  <section class="hero card"><h1 id="hello">Area Inquilino</h1><p class="lead">Contratti da firmare e pagamenti (DEMO).</p></section>
+
+  <section class="card section">
+    <h2>Contratti da firmare</h2>
+    <div class="table-wrap"><table class="rp-table" id="tblToSign">
+      <thead><tr><th>Immobile</th><th>Proprietario</th><th>Canone</th><th>Azioni</th></tr></thead><tbody></tbody>
+    </table></div>
   </section>
 
-  <section class="card">
-    <h2>✍️ Contratti da firmare</h2>
-    <div id="tblSign" class="table-wrap" style="margin-top:8px"></div>
+  <section class="card section">
+    <h2>Contratti attivi</h2>
+    <div class="table-wrap"><table class="rp-table" id="tblActive">
+      <thead><tr><th>Immobile</th><th>Proprietario</th><th>Dal</th><th>Canone</th></tr></thead><tbody></tbody>
+    </table></div>
   </section>
 
-  <section class="card">
-    <h2>📄 Contratti attivi</h2>
-    <div id="tblActive" class="table-wrap" style="margin-top:8px"></div>
+  <section class="card section">
+    <h2>Pagamenti programmati</h2>
+    <div class="table-wrap"><table class="rp-table" id="tblPay">
+      <thead><tr><th>Data</th><th>Contratto</th><th>Importo</th><th>Stato</th></tr></thead><tbody></tbody>
+    </table></div>
   </section>
 </main>
 
-<footer class="footer container">
-  <div class="f-links">
-    <a href="terms.html">Termini di servizio</a>
-    <a href="privacy.html">Privacy Policy</a>
-    <a href="cookie.html">Cookie Policy</a>
-  </div>
-  <div class="copy">© <span id="year"></span> RentPay — PWA</div>
-</footer>
+<footer class="footer container"><div class="copy">© 2025 RentPay — PWA</div></footer>
 
-<script src="app.js"></script>
 <script src="rp-store.js"></script>
-<script src="rp-badge.js"></script>
-  <script>
-(function () {
-  if (!window.RP) return;
-
-  const qs = new URLSearchParams(location.search);
-  const demo = qs.get('demo');           // "proprietario" | "inquilino"
-  const i    = parseInt(qs.get('i') || '0', 10);
-
-  // 1) Se non c'è utente loggato, prova a bootstrapparlo dai profili demo passati in query
-  if (!RP.me()) {
-    if (demo === 'proprietario' && RP._demo?.landlords?.length) {
-      RP.login(RP._demo.landlords[i] || RP._demo.landlords[0]);
-    } else if (demo === 'inquilino' && RP._demo?.tenants?.length) {
-      RP.login(RP._demo.tenants[i] || RP._demo.tenants[0]);
-    }
-  }
-
-  // 2) Se ancora non c'è utente -> torna al login
-  if (!RP.me()) {
-    location.href = './login.html';
-    return;
-  }
-
-  // 3) Se sono proprietario e non ho contratti, semino 2 contratti demo per popolare la UI
-  const me = RP.me();
-  if (me.role === 'landlord') {
-    const mine = RP.listContracts({ landlordId: me.id });
-    if (!mine || mine.length === 0) {
-      // prendi due inquilini demo se disponibili
-      const t1 = RP._demo?.tenants?.[0];
-      const t2 = RP._demo?.tenants?.[1] || RP._demo?.tenants?.[0];
-
-      if (t1) RP.createContract({
-        landlordId: me.id,
-        tenantId: t1.id,
-        address: 'Via Roma 12',
-        rent: 850,
-        status: 'pending_tenant'
-      });
-
-      if (t2) RP.createContract({
-        landlordId: me.id,
-        tenantId: t2.id,
-        address: 'Via Po 8',
-        rent: 720,
-        status: 'active'
-      });
-    }
-  }
-})();
-</script>
-<script type="text/javascript" data-cookieconsent="ignore">
-(function(){
-  const btn=document.getElementById('rpHamburger'), d=document.getElementById('rpDrawer'), x=document.getElementById('rpDrawerClose'), b=document.getElementById('rpBackdrop');
-  function openD(){d.classList.add('open');b.hidden=false;b.classList.add('show');document.body.style.overflow='hidden'}
-  function closeD(){d.classList.remove('open');b.classList.remove('show');b.hidden=true;document.body.style.overflow=''}
-  btn&&btn.addEventListener('click',openD); x&&x.addEventListener('click',closeD); b&&b.addEventListener('click',closeD);
-  d.querySelectorAll('a').forEach(a=>a.addEventListener('click',closeD));
-})();
-</script>
-
 <script>
-(function renderTenant(){
-  const me = RP.me();
-  if(!me || !/^t/.test(me.id)){ location.href='login.html'; return; }
+/* nav */
+(function(){const b=rpHamburger,d=rpDrawer,x=rpDrawerClose,o=rpBackdrop;function open(){d.classList.add('open');o.hidden=false;o.classList.add('show');document.body.style.overflow='hidden'}function close(){d.classList.remove('open');o.classList.remove('show');o.hidden=true;document.body.style.overflow=''}b&&b.addEventListener('click',open);x&&x.addEventListener('click',close);o&&o.addEventListener('click',close);window.addEventListener('keydown',e=>{if(e.key==='Escape')close()});})();
 
-  const toSign = RP.listContracts({tenantId:me.id, status:'pending_tenant'});
-  const active = RP.listContracts({tenantId:me.id, status:'active'});
+const me = RP.me(); if(!me || me.role!=='tenant'){ location.replace('login.html'); }
+document.getElementById('hello').textContent = 'Benvenuto, ' + me.name;
 
-  function rowsToSign(list){
-    if(!list.length) return '<div class="small" style="padding:12px">Nessun documento in attesa.</div>';
-    return `
-      <table class="rp-table">
-        <thead><tr>
-          <th>Immobile</th><th>Proprietario</th><th>Canone</th><th>Periodo</th><th></th>
-        </tr></thead>
-        <tbody>
-        ${list.map(c=>{
-          const l = RP.userById(c.landlordId)||{};
-          const per = \`${new Date(c.start).toLocaleDateString('it-IT')} · ${c.months} mesi\`;
-          const can = new Intl.NumberFormat('it-IT',{style:'currency',currency:'EUR'}).format(c.rent);
-          return `<tr>
-            <td>${c.address||'-'}</td>
-            <td>${l.name||'-'}</td>
-            <td>${can}</td>
-            <td>${per}</td>
-            <td><a class="btn primary" href="firma.html?cid=${encodeURIComponent(c.id)}">Apri & Firma</a></td>
-          </tr>`;
-        }).join('')}
-        </tbody>
-      </table>
-    `;
+const toSign = RP.contracts.list({tenantId:me.id, status:'pending_tenant'});
+const active = RP.contracts.list({tenantId:me.id, status:'active'});
+
+function row(html){ const tr=document.createElement('tr'); tr.innerHTML=html; return tr; }
+
+// Da firmare
+const tbS = document.querySelector('#tblToSign tbody');
+if(toSign.length===0) tbS.append(row('<td colspan="4">Nessun contratto da firmare.</td>'));
+toSign.forEach(c=>{
+  const tr = row(`<td>${c.address}</td><td>${RP.contracts.name(c.landlordId)}</td><td>${RP.contracts.euro(c.rent)}</td><td><button class="btn primary" data-sign="${c.id}">Firma ora (DEMO)</button></td>`);
+  tbS.append(tr);
+});
+tbS.addEventListener('click', (e)=>{
+  const b = e.target.closest('button[data-sign]'); if(!b) return;
+  RP.contracts.setStatus(b.getAttribute('data-sign'),'active');
+  alert('Firmato (DEMO). Il contratto è ora attivo.');
+  location.reload();
+});
+
+// Attivi
+const tbA = document.querySelector('#tblActive tbody');
+if(active.length===0) tbA.append(row('<td colspan="4">Nessun contratto attivo.</td>'));
+active.forEach(c=>{
+  tbA.append(row(`<td>${c.address}</td><td>${RP.contracts.name(c.landlordId)}</td><td>${c.start}</td><td>${RP.contracts.euro(c.rent)}</td>`));
+});
+
+// Pagamenti programmati (due prossime date per ogni attivo)
+const tbP = document.querySelector('#tblPay tbody');
+let any=false;
+active.forEach(c=>{
+  const now=new Date();
+  for(let k=1;k<=2;k++){ const d=new Date(now.getFullYear(), now.getMonth()+k, 1);
+    tbP.append(row(`<td>${d.toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit'})}</td><td>${c.address}</td><td>${RP.contracts.euro(c.rent)}</td><td>Programmato</td>`));
+    any=true;
   }
-
-  function rowsActive(list){
-    if(!list.length) return '<div class="small" style="padding:12px">Nessun contratto attivo.</div>';
-    return `
-      <table class="rp-table">
-        <thead><tr>
-          <th>Immobile</th><th>Proprietario</th><th>Canone</th><th>Periodo</th><th>Stato</th>
-        </tr></thead>
-        <tbody>
-        ${list.map(c=>{
-          const l = RP.userById(c.landlordId)||{};
-          const per = \`${new Date(c.start).toLocaleDateString('it-IT')} · ${c.months} mesi\`;
-          const can = new Intl.NumberFormat('it-IT',{style:'currency',currency:'EUR'}).format(c.rent);
-          return `<tr>
-            <td>${c.address||'-'}</td>
-            <td>${l.name||'-'}</td>
-            <td>${can}</td>
-            <td>${per}</td>
-            <td>Attivo</td>
-          </tr>`;
-        }).join('')}
-        </tbody>
-      </table>
-    `;
-  }
-
-  document.getElementById('tblSign').innerHTML   = rowsToSign(toSign);
-  document.getElementById('tblActive').innerHTML = rowsActive(active);
-
-  if(new URLSearchParams(location.search).get('signed')==='1'){
-    setTimeout(()=>alert('Firma registrata (demo).'), 200);
-  }
-})();
+});
+if(!any) tbP.append(row('<td colspan="4">Nessun pagamento programmato.</td>'));
 </script>
-
-  <script>
-(function(){
-  if (!window.RP || !RP.me()) return;
-  const me = RP.me();
-  if (me.role !== 'tenant') return;
-
-  const haveAny = RP.listContracts({ tenantId: me.id }).length > 0;
-  if (!haveAny) {
-    // crea un contratto "da firmare" per far vedere il flusso
-    RP.createContract({
-      landlordId: RP._demo?.landlords?.[0]?.id || 'l1',
-      tenantId: me.id,
-      address: 'Via Torino 20',
-      rent: 780,
-      status: 'pending_tenant'
-    });
-  }
-})();
-</script>
-  
 </body>
 </html>
