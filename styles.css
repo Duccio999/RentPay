@@ -247,3 +247,34 @@ label{display:flex;flex-direction:column;gap:6px;font-size:14px}
 }
 #rpBackdrop.show { display:block }
 #rpBackdrop[hidden] { display:none !important; }
+
+/* --- FIX z-index e click fuori --- */
+.rp-nav{ z-index: 900 !important; }           /* sotto a drawer/backdrop */
+#rpBackdrop{ z-index: 9998 !important; }
+#rpDrawer{ z-index: 9999 !important; }
+
+/* Backdrop: visibile quando .show, invisibile quando [hidden] */
+#rpBackdrop{ position:fixed; inset:0; background:rgba(0,0,0,.45);
+             backdrop-filter:blur(2px); display:none; }
+#rpBackdrop.show{ display:block !important; }
+#rpBackdrop[hidden]{ display:none !important; pointer-events:none !important; }
+
+/* Drawer sempre sopra e con header “X” sempre visibile */
+#rpDrawer{ position:fixed; top:0; right:0; width:300px; max-width:85vw; height:100dvh;
+           background:var(--rp-panel); border-left:1px solid var(--rp-border);
+           transform:translateX(110%); transition:transform .25s ease; }
+#rpDrawer.open{ transform:translateX(0) !important; }
+
+.rp-drawer-head{
+  position: sticky; top:0;
+  display:flex; align-items:center; justify-content:space-between;
+  background:var(--rp-panel); padding:12px 16px; margin:-16px -16px 8px;
+  border-bottom:1px solid var(--rp-border); z-index:1;
+}
+.rp-close{ background:transparent; color:var(--rp-text); border:1px solid var(--rp-border);
+           border-radius:10px; padding:4px 10px; font-size:22px; line-height:1; }
+
+/* Su desktop il drawer resta chiuso anche se .open */
+@media (min-width:861px){
+  #rpDrawer{ transform:translateX(110%) !important; }
+}
