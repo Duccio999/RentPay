@@ -101,18 +101,21 @@
   const closeBtn = document.getElementById('rpDrawerClose');
   const backdrop = document.getElementById('rpBackdrop');
 
-  if(!drawer || !backdrop) return; // in caso di pagina senza nav
+  if(!drawer || !backdrop) return;
 
   function openDrawer(){
     drawer.classList.add('open');
     drawer.setAttribute('aria-hidden','false');
+    backdrop.classList.add('show');
     backdrop.hidden = false;
     document.body.style.overflow='hidden';
     if(btn) btn.setAttribute('aria-expanded','true');
   }
+
   function closeDrawer(){
     drawer.classList.remove('open');
     drawer.setAttribute('aria-hidden','true');
+    backdrop.classList.remove('show');
     backdrop.hidden = true;
     document.body.style.overflow='';
     if(btn) btn.setAttribute('aria-expanded','false');
@@ -120,8 +123,14 @@
 
   btn    && btn.addEventListener('click', openDrawer);
   closeBtn&& closeBtn.addEventListener('click', closeDrawer);
-  backdrop&& backdrop.addEventListener('click', closeDrawer);
+
+  // Qui il click sul backdrop chiude DAVVERO
+  backdrop.addEventListener('click', closeDrawer);
+
+  // Esc per chiudere
   window.addEventListener('keydown', e => { if(e.key === 'Escape') closeDrawer(); });
+
+  // Click sui link del drawer → chiude
   drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', closeDrawer));
 })();
 </script>
