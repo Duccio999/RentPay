@@ -3,85 +3,51 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Accesso Demo - RentPay</title>
-  <meta name="description" content="Demo accesso con profili già registrati.">
+  <title>Accesso Demo — RentPay</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<!-- NAVBAR -->
+<!-- NAV -->
 <nav class="rp-nav">
-  <a class="rp-brand" href="./index.html" aria-label="RentPay Home">
-    <span class="rp-house" aria-hidden="true">🏠</span>
-    <span class="rp-brand-text">RentPay</span>
-  </a>
+  <a class="rp-brand" href="./index.html"><span class="rp-house">🏠</span><span class="rp-brand-text">RentPay</span></a>
   <div class="rp-menu-desktop">
-    <a href="./index.html">Home</a>
-    <a href="./vision.html">Visione</a>
-    <a href="./funzioni.html">Funzioni</a>
-    <a href="./garanzia.html">Garanzia</a>
-    <a href="./prezzi.html">Prezzi</a>
-    <a href="./firma.html">Firma (demo)</a>
-    <a class="rp-accent" href="./login.html" aria-current="page">Accedi</a>
+    <a href="index.html">Home</a><a href="funzioni.html">Funzioni</a><a href="prezzi.html">Prezzi</a>
+    <a class="rp-accent" href="login.html" aria-current="page">Accedi</a>
   </div>
-  <button id="rpHamburger" class="rp-hamburger" aria-label="Apri menu" aria-expanded="false">☰</button>
+  <button id="rpHamburger" class="rp-hamburger" aria-label="Apri menu">☰</button>
 </nav>
-
-<!-- Drawer mobile -->
 <aside id="rpDrawer" class="rp-drawer" aria-hidden="true">
-  <div class="rp-drawer-head">
-    <span class="rp-drawer-title">Menù</span>
-    <button id="rpDrawerClose" class="rp-close" aria-label="Chiudi menu">×</button>
-  </div>
-  <a href="./index.html">Home</a>
-  <a href="./vision.html">Visione</a>
-  <a href="./funzioni.html">Funzioni</a>
-  <a href="./garanzia.html">Garanzia</a>
-  <a href="./prezzi.html">Prezzi</a>
-  <a href="./firma.html">Firma (demo)</a>
-  <a class="rp-accent" href="./login.html" aria-current="page">Accedi</a>
-</aside>
-<div id="rpBackdrop" class="rp-backdrop" hidden></div>
+  <div class="rp-drawer-head"><span>Menù</span><button id="rpDrawerClose" class="rp-close">×</button></div>
+  <a href="index.html">Home</a><a href="funzioni.html">Funzioni</a><a href="prezzi.html">Prezzi</a>
+  <a class="rp-accent" href="login.html">Accedi</a>
+</aside><div id="rpBackdrop" class="rp-backdrop" hidden></div>
 
-<!-- CONTENUTO -->
 <main class="container narrow">
   <section class="hero card">
     <h1>Accesso demo con profili registrati</h1>
-    <p class="lead">Seleziona il ruolo e poi un profilo demo: i dati sono già compilati. Alla conferma entrerai nella tua pagina personale.</p>
+    <p class="lead">Scegli il ruolo e il profilo: i dati sono già compilati.</p>
   </section>
 
-  <!-- Toggle ruolo -->
-  <div class="role-toggle" style="display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 14px">
-    <button class="pill active" id="btnProp" type="button">👤 Proprietario</button>
-    <button class="pill" id="btnInq" type="button">🏡 Inquilino</button>
+  <div class="role-toggle">
+    <button class="pill active" id="btnProp">👤 Proprietario</button>
+    <button class="pill" id="btnInq">🏡 Inquilino</button>
   </div>
 
-  <!-- Scheda form -->
-  <div class="form-card" id="cardForm" style="padding:16px">
+  <div class="form-card">
     <div class="field">
       <label><strong>Seleziona profilo demo</strong></label>
-      <div class="input">
-        <span>📁</span>
-        <select id="profileSel"></select>
-      </div>
+      <div class="input"><span>📁</span><select id="profileSel"></select></div>
     </div>
 
     <div class="grid" style="margin-top:12px">
+      <div class="field"><label>Nome e Cognome</label><div class="input"><span>🧑</span><input id="name" readonly></div></div>
+      <div class="field"><label>Email</label><div class="input"><span>✉️</span><input id="email" readonly></div></div>
       <div class="field">
-        <label>Nome e Cognome</label>
-        <div class="input"><span>🧑</span><input id="name" placeholder="Nome Cognome" readonly></div>
+        <label id="lbl1">IBAN (accredito)</label><div class="input"><span>🏦</span><input id="extra1" readonly></div>
       </div>
       <div class="field">
-        <label>Email</label>
-        <div class="input"><span>✉️</span><input id="email" placeholder="email@example.com" readonly></div>
-      </div>
-      <div class="field">
-        <label id="lblExtra1">IBAN (accredito)</label>
-        <div class="input"><span>🏦</span><input id="extra1" placeholder="IT.." readonly></div>
-      </div>
-      <div class="field">
-        <label id="lblExtra2">Immobili gestiti</label>
-        <div class="input"><span>🏢</span><input id="extra2" placeholder="1" readonly></div>
+        <label id="lbl2">Immobili gestiti</label><div class="input"><span>🏢</span><input id="extra2" readonly></div>
       </div>
     </div>
 
@@ -90,139 +56,62 @@
     </p>
 
     <div class="actions" style="margin-top:10px">
-      <button type="button" class="btn primary" id="btnLogin">Accedi</button>
+      <button class="btn primary" id="btnLogin">Accedi</button>
     </div>
   </div>
 </main>
 
-<!-- FOOTER -->
 <footer class="footer container">
-  <div class="f-links">
-    <a href="terms.html">Termini di servizio</a>
-    <a href="privacy.html">Privacy Policy</a>
-    <a href="cookie.html">Cookie Policy</a>
-    <a href="vision.html">Visione</a>
-    <a href="https://forms.gle/INSERISCI-LINK-FORM" target="_blank" rel="noopener">Questionario investitori</a>
-  </div>
+  <div class="f-links"><a href="terms.html">Termini di servizio</a><a href="privacy.html">Privacy</a><a href="cookie.html">Cookie</a></div>
   <div class="copy">© 2025 RentPay — PWA</div>
 </footer>
 
-<!-- SCRIPT NAV (identico alle altre pagine) -->
-<script type="text/javascript">
+<!-- Store condiviso -->
+<script src="rp-store.js"></script>
+
+<!-- Nav mobile -->
+<script>
 (function(){
-  const btn=document.getElementById('rpHamburger'),
-        drawer=document.getElementById('rpDrawer'),
-        closeBtn=document.getElementById('rpDrawerClose'),
-        backdrop=document.getElementById('rpBackdrop');
-
-  function openD(){ drawer.classList.add('open'); backdrop.hidden=false; backdrop.classList.add('show'); document.body.style.overflow='hidden'; }
-  function closeD(){ drawer.classList.remove('open'); backdrop.classList.remove('show'); backdrop.hidden=true; document.body.style.overflow=''; }
-
-  btn && btn.addEventListener('click', openD);
-  closeBtn && closeBtn.addEventListener('click', closeD);
-  backdrop && backdrop.addEventListener('click', closeD);
-  window.addEventListener('keydown', e => { if(e.key === 'Escape') closeD(); });
-  drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', closeD));
+  const b=document.getElementById('rpHamburger'),d=document.getElementById('rpDrawer'),x=document.getElementById('rpDrawerClose'),o=document.getElementById('rpBackdrop');
+  function open(){d.classList.add('open');o.hidden=false;o.classList.add('show');document.body.style.overflow='hidden'}
+  function close(){d.classList.remove('open');o.classList.remove('show');o.hidden=true;document.body.style.overflow=''}
+  b&&b.addEventListener('click',open); x&&x.addEventListener('click',close); o&&o.addEventListener('click',close); window.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
 })();
 </script>
 
-<!-- SCRIPT LOGIN DEMO (unico) -->
+<!-- Login logic -->
 <script>
-document.addEventListener('DOMContentLoaded', function(){
-  // Profili demo
-  const demo = {
-    proprietario: [
-      {name:'Sara Verdi',  email:'sara.verdi@rentpay.demo',  iban:'IT85U0300203280764839234567', units:1},
-      {name:'Marco Neri',  email:'marco.neri@rentpay.demo',  iban:'IT60X0542811101000000123456', units:3}
-    ],
-    inquilino: [
-      {name:'Luca Bianchi',  email:'luca.bianchi@rentpay.demo',  card:'Visa **** 4242',       rent:750, address:'Via Roma 12, Milano'},
-      {name:'Giulia Neri',   email:'giulia.neri@rentpay.demo',   card:'Mastercard **** 9911', rent:720, address:'Via Po 8, Torino'}
-    ]
-  };
+let ruolo = 'landlord';
+const sel=document.getElementById('profileSel'), nameI=document.getElementById('name'), emailI=document.getElementById('email'),
+      ex1=document.getElementById('extra1'), ex2=document.getElementById('extra2'), l1=document.getElementById('lbl1'), l2=document.getElementById('lbl2');
 
-  // Stato e riferimenti DOM
-  let ruolo = 'proprietario';
-  const btnProp = document.getElementById('btnProp');
-  const btnInq  = document.getElementById('btnInq');
-  const sel     = document.getElementById('profileSel');
-  const nameEl  = document.getElementById('name');
-  const mailEl  = document.getElementById('email');
-  const ext1    = document.getElementById('extra1');
-  const ext2    = document.getElementById('extra2');
-  const lbl1    = document.getElementById('lblExtra1');
-  const lbl2    = document.getElementById('lblExtra2');
-  const btnLogin= document.getElementById('btnLogin');
-
-  function fillOptions(){
-    sel.innerHTML = '';
-    demo[ruolo].forEach((p,i)=>{
-      const opt = document.createElement('option');
-      opt.value = String(i);
-      opt.textContent = `${p.name} — ${p.email}`;
-      sel.appendChild(opt);
-    });
-    sel.selectedIndex = 0;
-    applyProfile();
-  }
-
-  function applyProfile(){
-    const idx = parseInt(sel.value || '0', 10) || 0;
-    const p = demo[ruolo][idx];
-    if(!p) return;
-
-    nameEl.value = p.name;
-    mailEl.value = p.email;
-
-    if(ruolo === 'proprietario'){
-      lbl1.textContent = 'IBAN (accredito)';
-      lbl2.textContent = 'Immobili gestiti';
-      ext1.value = p.iban || '';
-      ext2.value = String(p.units ?? '');
-    } else {
-      lbl1.textContent = 'Metodo pagamento';
-      lbl2.textContent = 'Canone mensile (€)';
-      ext1.value = p.card || '';
-      ext2.value = new Intl.NumberFormat('it-IT').format(p.rent ?? 0);
-    }
-  }
-
-  // Toggle ruolo
-  btnProp.addEventListener('click', ()=>{
-    btnProp.classList.add('active');
-    btnInq.classList.remove('active');
-    ruolo = 'proprietario';
-    fillOptions();
+function fillOptions(){
+  sel.innerHTML='';
+  const list = ruolo==='landlord' ? RP.users.landlords() : RP.users.tenants();
+  list.forEach(u=>{
+    const opt=document.createElement('option'); opt.value=u.id; opt.textContent=`${u.name} — ${u.email}`; sel.appendChild(opt);
   });
-  btnInq.addEventListener('click', ()=>{
-    btnInq.classList.add('active');
-    btnProp.classList.remove('active');
-    ruolo = 'inquilino';
-    fillOptions();
-  });
+  sel.selectedIndex=0; showDetail();
+}
+function showDetail(){
+  const id = sel.value;
+  const u = (ruolo==='landlord' ? RP.users.landlords() : RP.users.tenants()).find(x=>x.id===id);
+  if(!u) return;
+  nameI.value = u.name; emailI.value = u.email;
+  if(ruolo==='landlord'){ l1.textContent='IBAN (accredito)'; l2.textContent='Immobili gestiti'; ex1.value=u.iban||''; ex2.value=u.props??''; }
+  else { l1.textContent='Indirizzo'; l2.textContent='Canone mensile (€)'; ex1.value=u.address||''; ex2.value=u.rent??''; }
+}
+document.getElementById('btnProp').onclick=()=>{document.getElementById('btnProp').classList.add('active');document.getElementById('btnInq').classList.remove('active');ruolo='landlord';fillOptions();}
+document.getElementById('btnInq').onclick =()=>{document.getElementById('btnInq').classList.add('active');document.getElementById('btnProp').classList.remove('active');ruolo='tenant';fillOptions();}
+sel.onchange=showDetail;
 
-  // Cambio profilo
-  sel.addEventListener('change', applyProfile);
+document.getElementById('btnLogin').onclick=()=>{
+  const ok = RP.loginById(ruolo, sel.value);
+  if(!ok) return;
+  location.href = (ruolo==='landlord') ? 'dashboard-prop.html' : 'dashboard-inq.html';
+};
 
-  // Click Accedi
-  btnLogin.addEventListener('click', ()=>{
-    const idx = parseInt(sel.value || '0', 10) || 0;
-    const profilo = demo[ruolo][idx];
-    if(!profilo) return;
-
-    // Salva profilo corrente per le dashboard (facoltativo ma utile)
-    try { localStorage.setItem('rpCurrentUser', JSON.stringify({ ruolo, ...profilo })); } catch(e){}
-
-    // Redirect
-    const target = (ruolo === 'proprietario') ? 'dashboard-prop.html' : 'dashboard-inq.html';
-    // Passo anche l'indice per coerenza
-    window.location.href = `${target}?demo=${encodeURIComponent(ruolo)}&i=${idx}`;
-  });
-
-  // Init
-  fillOptions();
-});
+fillOptions();
 </script>
-
 </body>
 </html>
