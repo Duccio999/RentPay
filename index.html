@@ -125,37 +125,42 @@
 
 <!-- SCRIPT TABS -->
 <script>
-const tabs = document.querySelectorAll('.tab-btn');
-const roleContent = document.getElementById('roleContent');
+  // Bottoni: funziona sia con .tab che con .pill
+  const tabButtons = document.querySelectorAll('.tab[data-target], .pill[data-target]');
+  const roleContent = document.getElementById('roleContent');
 
-const contents = {
-  landlord: `
-    <h2> Vantaggi per Proprietari</h2>
-    <ul class="role-list" style="list-style:none;padding:0;margin:0;line-height:1.8">
-      <li>💸 Incassi puntuali con addebiti automatici.</li>
-      <li>🖊️ Contratti digitali firmati online.</li>
-      <li>🛡️ Garanzie contro i mancati pagamenti.</li>
-      <li>📊 Dashboard per gestire più immobili.</li>
-    </ul>
-  `,
-  tenant: `
-    <h2> Vantaggi per Inquilini</h2>
-    <ul class="role-list" style="list-style:none;padding:0;margin:0;line-height:1.8">
-      <li>💸 Pagamenti automatici, senza ritardi.</li>
-      <li>🖊️ Contratto digitale sicuro e sempre accessibile.</li>
-      <li>📊 Storico dei pagamenti consultabile h24.</li>
-      <li>🛡️ Garanzie e assicurazioni dedicate.</li>
-    </ul>
-  `
-};
+  const contents = {
+    landlord: `
+      <h2>👤 Vantaggi per Proprietari</h2>
+      <ul class="role-list">
+        <li>✅ Incassi puntuali con addebiti automatici.</li>
+        <li>✅ Contratti digitali firmati online.</li>
+        <li>✅ Garanzie contro i mancati pagamenti.</li>
+        <li>✅ Dashboard chiara per gestire più immobili.</li>
+      </ul>
+    `,
+    tenant: `
+      <h2>🏠 Vantaggi per Inquilini</h2>
+      <ul class="role-list">
+        <li>✅ Pagamenti automatici, senza pensieri e ritardi.</li>
+        <li>✅ Contratto digitale sicuro e sempre accessibile.</li>
+        <li>✅ Storico dei pagamenti consultabile h24.</li>
+        <li>✅ Possibilità di garanzie e assicurazioni dedicate.</li>
+      </ul>
+    `
+  };
 
-tabs.forEach(tab => {
-  tab.addEventListener('click', () => {
-    tabs.forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
-    roleContent.innerHTML = contents[tab.dataset.target];
-  });
-});
+  function activate(btn){
+    tabButtons.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    roleContent.innerHTML = contents[btn.dataset.target] || '';
+  }
+
+  tabButtons.forEach(btn => btn.addEventListener('click', () => activate(btn)));
+
+  // Stato iniziale: se c'è già un pulsante attivo lo usa, altrimenti prende il primo
+  const current = document.querySelector('.tab.active[data-target], .pill.active[data-target]') || tabButtons[0];
+  if (current) activate(current);
 </script>
 
 </body>
