@@ -187,3 +187,52 @@ label{display:flex;flex-direction:column;gap:6px;font-size:14px}
 
 #rpBackdrop[hidden] { display: none !important; }
 
+/* === PATCH NAV/DRAWER RENTO === */
+
+/* Backdrop: invisibile e non cliccabile quando hidden */
+#rpBackdrop[hidden] {
+  display: none !important;
+  pointer-events: none !important;
+}
+
+/* Z-index robusti e ombra del drawer */
+#rpBackdrop {
+  z-index: 9998;                 /* sopra tutto */
+}
+#rpDrawer {
+  z-index: 9999;                 /* sopra il backdrop */
+  box-shadow: -14px 0 30px rgba(0,0,0,.35);
+  -webkit-overflow-scrolling: touch;   /* iOS scroll smooth */
+  overscroll-behavior: contain;        /* evita scroll dietro */
+}
+
+/* Transizioni più solide (Safari) */
+#rpDrawer {
+  will-change: transform;
+  transition: transform .25s ease;
+}
+
+/* Focus state accessibile per i link del menu */
+.rp-menu-desktop a:focus-visible,
+#rpDrawer a:focus-visible,
+.rp-close:focus-visible,
+.rp-hamburger:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+
+/* Migliora tap target su mobile */
+#rpDrawer a,
+.rp-hamburger,
+.rp-close {
+  min-height: 40px;
+}
+
+/* Su desktop il drawer è sempre off-screen (anche se per errore resta .open) */
+@media (min-width: 861px){
+  #rpDrawer { transform: translateX(110%) !important; }
+}
+
+/* (Opzionale) Nav sticky sempre in cima anche con altri z-index in pagina */
+.rp-nav { z-index: 10000; }
