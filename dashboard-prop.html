@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Dashboard Proprietario — RentPay</title>
-  <meta name="description" content="Panoramica contratti, incassi e garanzia per il proprietario.">
+  <meta name="description" content="Panoramica contratti, incassi e garanzia per il proprietario (demo).">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -12,13 +12,12 @@
 <!-- NAVBAR -->
 <nav class="rp-nav">
   <a class="rp-brand" href="./index.html" aria-label="RentPay Home">
-    <span class="rp-house" aria-hidden="true">🏠</span><span class="rp-brand-text">RentPay</span>
+    <span class="rp-house" aria-hidden="true">🏠</span>
+    <span class="rp-brand-text">RentPay</span>
   </a>
   <div class="rp-menu-desktop">
     <a href="./index.html">Home</a>
-    <a href="./vision.html">Visione</a>
     <a href="./funzioni.html">Funzioni</a>
-    <a href="./garanzia.html">Garanzia</a>
     <a href="./prezzi.html">Prezzi</a>
     <a href="./firma.html">Firma (demo)</a>
     <a class="rp-accent" href="./login.html">Cambia account</a>
@@ -33,9 +32,7 @@
     <button id="rpDrawerClose" class="rp-close" aria-label="Chiudi menu">×</button>
   </div>
   <a href="./index.html">Home</a>
-  <a href="./vision.html">Visione</a>
   <a href="./funzioni.html">Funzioni</a>
-  <a href="./garanzia.html">Garanzia</a>
   <a href="./prezzi.html">Prezzi</a>
   <a href="./firma.html">Firma (demo)</a>
   <a class="rp-accent" href="./login.html">Cambia account</a>
@@ -43,39 +40,81 @@
 <div id="rpBackdrop" class="rp-backdrop" hidden></div>
 
 <main class="container">
-  <section class="hero card" style="margin-bottom:18px">
-    <h1 id="welcome">Benvenuto</h1>
-    <p class="lead">Panoramica dei tuoi immobili, contratti e incassi (DEMO).</p>
+  <section class="hero card">
+    <h1 id="hello">Benvenuto</h1>
+    <p class="lead">Qui trovi una panoramica demo dei tuoi immobili, contratti e incassi.</p>
   </section>
 
-  <!-- Garanzia -->
-  <section class="card" style="margin-bottom:16px">
+  <!-- Garanzia → proprietario -->
+  <section class="card">
     <h2>🛡️ Garanzia</h2>
-    <p id="garanziaInfo">Attiva su 0 contratti.</p>
-    <div class="actions"><a class="btn" href="./garanzia.html">Dettagli garanzia</a></div>
+    <p>Attiva su <strong>2 contratti</strong>.</p>
+    <div class="actions">
+      <a class="btn" href="./garanzia.html">Dettagli garanzia</a>
+    </div>
   </section>
 
-  <!-- Contratti -->
-  <section class="card" style="margin-bottom:16px">
-    <h2>📄 Contratti</h2>
+  <!-- Contratti (tabella) -->
+  <section class="card">
+    <h2>📄 Contratti attivi</h2>
     <div class="table-wrap">
-      <table class="rp-table" id="tblContratti">
-        <thead><tr><th>Immobile</th><th>Inquilino</th></tr></thead>
-        <tbody></tbody>
+      <table class="rp-table">
+        <thead>
+          <tr>
+            <th>Immobile</th>
+            <th>Inquilino</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Via Roma 12</td>
+            <td>Luca Bianchi</td>
+          </tr>
+          <tr>
+            <td>Via Po 8</td>
+            <td>Giulia Neri</td>
+          </tr>
+        </tbody>
       </table>
     </div>
-    <div class="actions" style="margin-top:10px">
+    <div class="actions" style="margin-top:12px">
       <a class="btn" href="./firma.html">Crea nuovo contratto (demo)</a>
     </div>
   </section>
 
-  <!-- Incassi recenti -->
+  <!-- Incassi (tabella) -->
   <section class="card">
     <h2>💳 Incassi recenti</h2>
     <div class="table-wrap">
-      <table class="rp-table" id="tblIncassi">
-        <thead><tr><th>Data</th><th>Contratto</th><th>Importo</th><th>Stato</th></tr></thead>
-        <tbody></tbody>
+      <table class="rp-table">
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>Contratto</th>
+            <th>Importo</th>
+            <th>Stato</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>01/09</td>
+            <td>Via Roma 12</td>
+            <td class="rp-amount">€ 850</td>
+            <td>Completato</td>
+          </tr>
+          <tr>
+            <td>01/09</td>
+            <td>Via Po 8</td>
+            <td class="rp-amount">€ 720</td>
+            <td>Completato</td>
+          </tr>
+          <tr>
+            <td>01/08</td>
+            <td>Via Roma 12</td>
+            <td class="rp-amount">€ 850</td>
+            <td>Completato</td>
+          </tr>
+        </tbody>
       </table>
     </div>
   </section>
@@ -90,7 +129,7 @@
   <div class="copy">© 2025 RentPay — PWA</div>
 </footer>
 
-<!-- NAV JS -->
+<!-- NAV script -->
 <script type="text/javascript">
 (function(){
   const btn=document.getElementById('rpHamburger'),
@@ -107,46 +146,15 @@
 })();
 </script>
 
-<!-- DATA + RENDER -->
+<!-- Saluto da localStorage -->
 <script>
 (function(){
-  // Utente corrente (o fallback demo)
-  const current = JSON.parse(localStorage.getItem('rpCurrentUser')||'{}');
-  const name = current?.name || 'Proprietario demo';
-  document.getElementById('welcome').textContent = `Benvenuto, ${name}`;
-
-  // Dati demo legati ai contratti del proprietario
-  const contratti = [
-    { immobile:'Via Roma 12', inquilino:'Luca Bianchi', garantito:true },
-    { immobile:'Via Po 8',   inquilino:'Giulia Neri',  garantito:true }
-  ];
-  const incassi = [
-    { data:'01/09', contratto:'Via Roma 12', importo:850, stato:'Completato' },
-    { data:'01/09', contratto:'Via Po 8',   importo:720, stato:'Completato' },
-    { data:'01/08', contratto:'Via Roma 12', importo:850, stato:'Completato' }
-  ];
-
-  // Garanzia: quante righe marcate garantito
-  const garantiti = contratti.filter(c=>c.garantito).length;
-  document.getElementById('garanziaInfo').textContent = `Attiva su ${garantiti} contratti.`;
-
-  // Render contratti
-  const tbC = document.querySelector('#tblContratti tbody');
-  tbC.innerHTML = contratti.map(c=>(
-    `<tr><td>${c.immobile}</td><td>${c.inquilino}</td></tr>`
-  )).join('');
-
-  // Render incassi
-  const nf = new Intl.NumberFormat('it-IT',{style:'currency',currency:'EUR',maximumFractionDigits:0});
-  const tbI = document.querySelector('#tblIncassi tbody');
-  tbI.innerHTML = incassi.map(r=>(
-    `<tr>
-      <td>${r.data}</td>
-      <td>${r.contratto}</td>
-      <td class="rp-amount">${nf.format(r.importo)}</td>
-      <td>${r.stato}</td>
-    </tr>`
-  )).join('');
+  try{
+    const u = JSON.parse(localStorage.getItem('rpCurrentUser')||'{}');
+    if(u && u.name){
+      document.getElementById('hello').textContent = `Benvenuto, ${u.name}`;
+    }
+  }catch(e){}
 })();
 </script>
 </body>
