@@ -190,3 +190,31 @@ label{ display:flex; flex-direction:column; gap:6px; font-size:14px }
   background:rgba(16,185,129,.12); color:#10b981;
   border:1px solid rgba(16,185,129,.45); border-radius:12px;
 }
+
+/* Tabs stile login */
+.tabs{
+  display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin-top:20px;
+}
+.tab{
+  padding:10px 16px; border-radius:10px;
+  border:1px solid rgba(255,255,255,.18);
+  background:rgba(255,255,255,.05);
+  color:var(--text); font-weight:600; cursor:pointer;
+}
+.tab.active{
+  background:var(--accent); color:var(--accentText); border-color:transparent;
+  font-weight:800;
+}
+
+/* Box ruoli */
+.role-box{
+  text-align:left;
+  margin-top:20px;
+  padding:24px;
+}
+.role-box h2{
+  margin-top:0; margin-bottom:14px;
+  font-size:1.3rem;
+}
+.role-list{ list-style:none; padding:0; margin:0 }
+.role-list li{ margin-bottom:8px }
