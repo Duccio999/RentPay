@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>RentPay – Firma contratto (DEMO)</title>
   <link rel="icon" href="./icons/icon-192.png" sizes="192x192">
   <link rel="apple-touch-icon" href="./icons/icon-192.png">
@@ -11,246 +11,211 @@
   <meta name="description" content="Dimostrazione di firma contratto di locazione con KYC e firma elettronica (simulata).">
 </head>
 <body>
-<!-- NAVBAR GLOBALE -->
+<!-- NAV -->
 <nav class="rp-nav">
   <a class="rp-brand" href="./index.html" aria-label="RentPay Home">
-    <span class="rp-house" aria-hidden="true">🏠</span>
-    <span class="rp-brand-text">RentPay</span>
+    <span class="rp-house">🏠</span><span class="rp-brand-text">RentPay</span>
   </a>
-
-  <!-- Desktop -->
   <div class="rp-menu-desktop">
     <a href="./index.html">Home</a>
     <a href="./vision.html">Visione</a>
     <a href="./funzioni.html">Funzioni</a>
     <a href="./garanzia.html">Garanzia</a>
     <a href="./prezzi.html">Prezzi</a>
-    <a href="./firma.html">Firma (demo)</a>
+    <a href="./firma.html" class="active">Firma (demo)</a>
     <a class="rp-accent" href="./login.html">Accedi</a>
   </div>
-
-  <!-- Mobile -->
   <button id="rpHamburger" class="rp-hamburger" aria-label="Apri menu" aria-expanded="false">☰</button>
 </nav>
-
-<!-- Drawer mobile -->
 <aside id="rpDrawer" class="rp-drawer" aria-hidden="true">
-  <div class="rp-drawer-head">
-    <span class="rp-drawer-title">Menù</span>
-    <button id="rpDrawerClose" class="rp-close" aria-label="Chiudi menu">×</button>
-  </div>
+  <div class="rp-drawer-head"><span class="rp-drawer-title">Menù</span><button id="rpDrawerClose" class="rp-close">×</button></div>
   <a href="./index.html">Home</a>
   <a href="./vision.html">Visione</a>
   <a href="./funzioni.html">Funzioni</a>
   <a href="./garanzia.html">Garanzia</a>
   <a href="./prezzi.html">Prezzi</a>
-  <a href="./firma.html">Firma (demo)</a>
+  <a href="./firma.html" class="active">Firma (demo)</a>
   <a class="rp-accent" href="./login.html">Accedi</a>
 </aside>
 <div id="rpBackdrop" class="rp-backdrop" hidden></div>
-<!-- /NAVBAR GLOBALE -->
-  
-  <main class="container">
-    <div class="demo-banner"><strong>DEMO</strong> – Questa è una simulazione di firma. Non vengono eseguite verifiche reali né create scritture vincolanti.</div>
 
-    <section class="card hero">
-      <h1>Firma contratto (DEMO)</h1>
-      <p>Compila i dati essenziali, visualizza l’anteprima e conferma con “firma digitata”. Nel prodotto reale qui avvieremmo <b>KYC</b> e <b>firma elettronica</b> con provider certificato.</p>
+<main class="container">
+  <div class="demo-banner"><strong>DEMO</strong> – Questa è una simulazione di firma. Non vengono eseguite verifiche reali né create scritture vincolanti.</div>
 
-      <ol class="steps">
-        <li>Dati base contratto</li>
-        <li>Anteprima</li>
-        <li>Firma & Conferma</li>
-      </ol>
+  <section class="card hero">
+    <h1>Firma contratto (DEMO)</h1>
+    <p>Compila i dati essenziali, visualizza l’anteprima e conferma con “firma digitata”. Nel prodotto reale qui avvieremmo <b>KYC</b> e <b>firma elettronica</b> con provider certificato.</p>
 
-      <!-- STEP 1 -->
-      <form id="form-contract" class="form">
-        <h3>Dati del contratto</h3>
-        <div class="grid">
-          <label>Proprietario
-            <input required name="landlord" placeholder="Mario Rossi">
-          </label>
-          <label>Inquilino
-            <input required name="tenant" placeholder="Luca Bianchi">
-          </label>
-          <label>Indirizzo immobile
-            <input required name="address" placeholder="Via Garibaldi 10, Torino">
-          </label>
-          <label>Canone mensile (€)
-            <input required type="number" min="1" step="1" name="rent" placeholder="750">
-          </label>
-          <label>Data inizio
-            <input required type="date" name="start">
-          </label>
-          <label>Durata (mesi)
-            <input required type="number" min="1" step="1" name="months" placeholder="12">
-          </label>
-        </div>
-        <div class="actions">
-          <button class="btn primary" type="submit">Genera anteprima</button>
-        </div>
-      </form>
+    <ol class="steps">
+      <li>Dati base contratto</li>
+      <li>Anteprima</li>
+      <li>Firma & Conferma</li>
+    </ol>
 
-      <!-- STEP 2: PREVIEW -->
-      <div id="preview" class="card hidden">
-        <h3>Anteprima contratto (demo)</h3>
-        <div id="preview-body" class="preview-box"></div>
-        <div class="actions">
-          <button class="btn" id="btn-edit">Modifica</button>
-          <button class="btn primary" id="btn-continue">Continua alla firma</button>
-        </div>
+    <!-- STEP 1 -->
+    <form id="form-contract" class="form">
+      <h3>Dati del contratto</h3>
+      <div class="grid">
+        <label>Proprietario
+          <input required name="landlord" placeholder="Mario Rossi">
+        </label>
+        <label>Inquilino
+          <input required name="tenant" placeholder="Luca Bianchi">
+        </label>
+        <label>Indirizzo immobile
+          <input required name="address" placeholder="Via Garibaldi 10, Torino">
+        </label>
+        <label>Canone mensile (€)
+          <input required type="number" min="1" step="1" name="rent" placeholder="750">
+        </label>
+        <label>Data inizio
+          <input required type="date" name="start">
+        </label>
+        <label>Durata (mesi)
+          <input required type="number" min="1" step="1" name="months" placeholder="12">
+        </label>
       </div>
-
-      <!-- STEP 3: SIGN -->
-      <form id="form-sign" class="form hidden">
-        <h3>Firma & conferma</h3>
-        <p>Nel prodotto reale qui faremmo KYC (documento + selfie) e <b>firma elettronica</b> (avanzata/qualificata).</p>
-        <div class="grid">
-          <label>Firma digitata (nome e cognome)
-            <input required name="typedSignature" placeholder="Scrivi il tuo nome e cognome">
-          </label>
-          <label>
-            <input type="checkbox" required name="accept">
-            Dichiaro di approvare e firmare il contratto (DEMO). Ho letto
-            <a href="./terms.html" target="_blank">Termini</a> e
-            <a href="./privacy.html" target="_blank">Privacy</a>.
-          </label>
-        </div>
-        <div class="actions">
-          <button class="btn" id="btn-back">Indietro</button>
-          <button class="btn primary" type="submit">Firma ora (DEMO)</button>
-        </div>
-      </form>
-
-      <!-- RESULT -->
-      <div id="signed" class="card success hidden" role="status">
-        <h3>Contratto firmato (DEMO)</h3>
-        <p>Abbiamo registrato la tua firma digitata e il riepilogo contratto. In produzione il PDF sarebbe firmato digitalmente e conservato a norma.</p>
-        <div class="actions">
-          <a class="btn" href="./index.html">Torna alla Home</a>
-        </div>
+      <div class="actions">
+        <button class="btn primary" type="submit">Genera anteprima</button>
       </div>
-    </section>
-  </main>
+    </form>
 
-  <footer class="footer">
-    <div class="links">
-      <a href="./terms.html">Termini di servizio</a>
-      <a href="./privacy.html">Privacy Policy</a>
-      <a href="./cookie.html">Cookie</a>
-      <a href="https://forms.gle" target="_blank" rel="noopener">Questionario investitori</a>
+    <!-- STEP 2 -->
+    <div id="preview" class="card hidden">
+      <h3>Anteprima contratto (demo)</h3>
+      <div id="preview-body" class="preview-box"></div>
+      <div class="actions">
+        <button class="btn" id="btn-edit">Modifica</button>
+        <button class="btn primary" id="btn-continue">Continua alla firma</button>
+      </div>
     </div>
-    <div>© 2025 RentPay — PWA — DEMO</div>
-  </footer>
 
-  <script>
-    const f = document.getElementById('form-contract');
-    const prev = document.getElementById('preview');
-    const prevBody = document.getElementById('preview-body');
-    const signForm = document.getElementById('form-sign');
-    const signed = document.getElementById('signed');
+    <!-- STEP 3 -->
+    <form id="form-sign" class="form hidden">
+      <h3>Firma & conferma</h3>
+      <p>Nel prodotto reale qui faremmo KYC (documento + selfie) e <b>firma elettronica</b> (avanzata/qualificata).</p>
+      <div class="grid">
+        <label>Firma digitata (nome e cognome)
+          <input required name="typedSignature" placeholder="Scrivi il tuo nome e cognome">
+        </label>
+        <label>
+          <input type="checkbox" required name="accept">
+          Dichiaro di approvare e firmare il contratto (DEMO). Ho letto
+          <a href="./terms.html" target="_blank">Termini</a> e
+          <a href="./privacy.html" target="_blank">Privacy</a>.
+        </label>
+      </div>
+      <div class="actions">
+        <button class="btn" id="btn-back">Indietro</button>
+        <button class="btn primary" type="submit">Firma ora (DEMO)</button>
+      </div>
+    </form>
 
-    f.addEventListener('submit', (e)=>{
-      e.preventDefault();
-      const data = Object.fromEntries(new FormData(f).entries());
-      const end = new Date(data.start);
-      end.setMonth(end.getMonth() + Number(data.months || 0));
-      prevBody.innerHTML = `
-        <p><b>Proprietario:</b> ${data.landlord}</p>
-        <p><b>Inquilino:</b> ${data.tenant}</p>
-        <p><b>Immobile:</b> ${data.address}</p>
-        <p><b>Canone:</b> € ${Number(data.rent).toLocaleString('it-IT')}</p>
-        <p><b>Periodo:</b> dal ${new Date(data.start).toLocaleDateString('it-IT')}
-        al ${end.toLocaleDateString('it-IT')} (${data.months} mesi)</p>
-      `;
-      f.classList.add('hidden');
-      prev.classList.remove('hidden');
-    });
+    <!-- RESULT -->
+    <div id="signed" class="card success hidden" role="status">
+      <h3>Contratto firmato (DEMO)</h3>
+      <p>Abbiamo registrato la tua firma digitata e il riepilogo contratto. In produzione il PDF sarebbe firmato digitalmente e conservato a norma.</p>
+      <div class="actions">
+        <a class="btn" href="./index.html">Torna alla Home</a>
+      </div>
+    </div>
+  </section>
+</main>
 
-    document.getElementById('btn-edit').addEventListener('click', ()=>{
-      prev.classList.add('hidden');
-      f.classList.remove('hidden');
-    });
+<footer class="footer container">
+  <div class="f-links">
+    <a href="terms.html">Termini di servizio</a>
+    <a href="privacy.html">Privacy Policy</a>
+    <a href="cookie.html">Cookie Policy</a>
+  </div>
+  <div class="copy">© <span id="year"></span> RentPay — PWA</div>
+</footer>
 
-    document.getElementById('btn-continue').addEventListener('click', ()=>{
-      prev.classList.add('hidden');
-      signForm.classList.remove('hidden');
-    });
-
-    document.getElementById('btn-back').addEventListener('click', (e)=>{
-      e.preventDefault();
-      signForm.classList.add('hidden');
-      prev.classList.remove('hidden');
-    });
-
-    signForm.addEventListener('submit', (e)=>{
-      e.preventDefault();
-      // DEMO: qui in produzione invieresti a provider firma
-      signForm.classList.add('hidden');
-      signed.classList.remove('hidden');
-      window.scrollTo({top: signed.offsetTop - 80, behavior:'smooth'});
-    });
-  </script>
-  <script>
+<script src="app.js"></script>
+<script src="rp-store.js"></script>
+<script type="text/javascript" data-cookieconsent="ignore">
 (function(){
-  const btn = document.getElementById('rpHamburger');
-  const drawer = document.getElementById('rpDrawer');
-  const closeBtn = document.getElementById('rpDrawerClose');
-  const backdrop = document.getElementById('rpBackdrop');
-
-  function openDrawer(){
-    drawer.classList.add('open'); backdrop.hidden = false;
-    btn && btn.setAttribute('aria-expanded','true');
-    drawer.setAttribute('aria-hidden','false');
-    document.body.style.overflow='hidden';
-  }
-  function closeDrawer(){
-    drawer.classList.remove('open'); backdrop.hidden = true;
-    btn && btn.setAttribute('aria-expanded','false');
-    drawer.setAttribute('aria-hidden','true');
-    document.body.style.overflow='';
-  }
-
-  btn && btn.addEventListener('click', openDrawer);
-  closeBtn && closeBtn.addEventListener('click', closeDrawer);
-  backdrop && backdrop.addEventListener('click', closeDrawer);
-  window.addEventListener('keydown', e => { if(e.key === 'Escape') closeDrawer(); });
-  drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', closeDrawer));
+  const btn=document.getElementById('rpHamburger'), d=document.getElementById('rpDrawer'), x=document.getElementById('rpDrawerClose'), b=document.getElementById('rpBackdrop');
+  function openD(){d.classList.add('open');b.hidden=false;b.classList.add('show');document.body.style.overflow='hidden'}
+  function closeD(){d.classList.remove('open');b.classList.remove('show');b.hidden=true;document.body.style.overflow=''}
+  btn&&btn.addEventListener('click',openD); x&&x.addEventListener('click',closeD); b&&b.addEventListener('click',closeD);
+  d.querySelectorAll('a').forEach(a=>a.addEventListener('click',closeD));
 })();
 </script>
- <script type="text/javascript" data-cookieconsent="ignore">
-(function(){
-  const btn      = document.getElementById('rpHamburger');
-  const drawer   = document.getElementById('rpDrawer');
-  const closeBtn = document.getElementById('rpDrawerClose');
-  const backdrop = document.getElementById('rpBackdrop');
 
-  if(!drawer || !backdrop) return;
+<script>
+  const f = document.getElementById('form-contract');
+  const prev = document.getElementById('preview');
+  const prevBody = document.getElementById('preview-body');
+  const signForm = document.getElementById('form-sign');
+  const signed = document.getElementById('signed');
 
-  function openDrawer(){
-    drawer.classList.add('open');
-    drawer.setAttribute('aria-hidden','false');
-    backdrop.classList.add('show');
-    backdrop.hidden = false;
-    document.body.style.overflow='hidden';
-    if(btn) btn.setAttribute('aria-expanded','true');
-  }
+  f.addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(f).entries());
+    const end = new Date(data.start);
+    end.setMonth(end.getMonth() + Number(data.months || 0));
+    prevBody.innerHTML = `
+      <p><b>Proprietario:</b> ${data.landlord}</p>
+      <p><b>Inquilino:</b> ${data.tenant}</p>
+      <p><b>Immobile:</b> ${data.address}</p>
+      <p><b>Canone:</b> € ${Number(data.rent).toLocaleString('it-IT')}</p>
+      <p><b>Periodo:</b> dal ${new Date(data.start).toLocaleDateString('it-IT')}
+      al ${end.toLocaleDateString('it-IT')} (${data.months} mesi)</p>
+    `;
+    f.classList.add('hidden');
+    prev.classList.remove('hidden');
+  });
 
-  function closeDrawer(){
-    drawer.classList.remove('open');
-    drawer.setAttribute('aria-hidden','true');
-    backdrop.classList.remove('show');
-    backdrop.hidden = true;
-    document.body.style.overflow='';
-    if(btn) btn.setAttribute('aria-expanded','false');
-  }
+  document.getElementById('btn-edit').addEventListener('click', ()=>{
+    prev.classList.add('hidden');
+    f.classList.remove('hidden');
+  });
 
-  btn    && btn.addEventListener('click', openDrawer);
-  closeBtn&& closeBtn.addEventListener('click', closeDrawer);
-  backdrop.addEventListener('click', closeDrawer);
-  window.addEventListener('keydown', e => { if(e.key === 'Escape') closeDrawer(); });
-  drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', closeDrawer));
-})();
+  document.getElementById('btn-continue').addEventListener('click', ()=>{
+    prev.classList.add('hidden');
+    signForm.classList.remove('hidden');
+  });
+
+  document.getElementById('btn-back').addEventListener('click', (e)=>{
+    e.preventDefault();
+    signForm.classList.add('hidden');
+    prev.classList.remove('hidden');
+  });
+
+  // ====== Modalità firma da dashboard inquilino: ?cid= ======
+  (function initFromContract(){
+    const params = new URLSearchParams(location.search);
+    const cid = params.get('cid');
+    if(!cid) return;
+
+    const c = RP.contractById(cid);
+    if(!c) return;
+
+    const landlord = RP.userById(c.landlordId)||{};
+    const tenant   = RP.userById(c.tenantId)||{};
+    const end = new Date(c.start); end.setMonth(end.getMonth()+Number(c.months||0));
+
+    // Mostra direttamente l’anteprima → passo firma
+    document.getElementById('form-contract')?.classList.add('hidden');
+    prevBody.innerHTML = `
+      <p><b>Proprietario:</b> ${landlord.name} — ${landlord.email}</p>
+      <p><b>Inquilino:</b> ${tenant.name} — ${tenant.email}</p>
+      <p><b>Immobile:</b> ${c.address}</p>
+      <p><b>Canone:</b> ${new Intl.NumberFormat('it-IT',{style:'currency',currency:'EUR'}).format(c.rent)}</p>
+      <p><b>Periodo:</b> dal ${new Date(c.start).toLocaleDateString('it-IT')} al ${end.toLocaleDateString('it-IT')} (${c.months} mesi)</p>
+    `;
+    prev.classList.remove('hidden');
+    // vai a STEP 3
+    document.getElementById('btn-continue').click();
+
+    // Override submit: registra firma e torna a dashboard inquilino
+    signForm.addEventListener('submit', (e)=>{
+      e.preventDefault();
+      RP.signAsTenant(cid);
+      location.href = 'dashboard-inq.html?signed=1';
+    });
+  })();
 </script>
 </body>
 </html>
