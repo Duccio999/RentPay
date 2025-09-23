@@ -1,5 +1,3 @@
-<!-- rp-store.js -->
-<script>
 // ====== RentPay Demo Store (localStorage) ======
 (function (w){
   const KEY = 'rpStore_v1';
@@ -76,4 +74,3 @@
 
   w.RP = RP;
 })(window);
-</script>
