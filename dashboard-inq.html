@@ -189,5 +189,26 @@
   }
 })();
 </script>
+
+  <script>
+(function(){
+  if (!window.RP || !RP.me()) return;
+  const me = RP.me();
+  if (me.role !== 'tenant') return;
+
+  const haveAny = RP.listContracts({ tenantId: me.id }).length > 0;
+  if (!haveAny) {
+    // crea un contratto "da firmare" per far vedere il flusso
+    RP.createContract({
+      landlordId: RP._demo?.landlords?.[0]?.id || 'l1',
+      tenantId: me.id,
+      address: 'Via Torino 20',
+      rent: 780,
+      status: 'pending_tenant'
+    });
+  }
+})();
+</script>
+  
 </body>
 </html>
