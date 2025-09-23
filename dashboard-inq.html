@@ -62,6 +62,57 @@
 <script src="app.js"></script>
 <script src="rp-store.js"></script>
 <script src="rp-badge.js"></script>
+  <script>
+(function () {
+  if (!window.RP) return;
+
+  const qs = new URLSearchParams(location.search);
+  const demo = qs.get('demo');           // "proprietario" | "inquilino"
+  const i    = parseInt(qs.get('i') || '0', 10);
+
+  // 1) Se non c'è utente loggato, prova a bootstrapparlo dai profili demo passati in query
+  if (!RP.me()) {
+    if (demo === 'proprietario' && RP._demo?.landlords?.length) {
+      RP.login(RP._demo.landlords[i] || RP._demo.landlords[0]);
+    } else if (demo === 'inquilino' && RP._demo?.tenants?.length) {
+      RP.login(RP._demo.tenants[i] || RP._demo.tenants[0]);
+    }
+  }
+
+  // 2) Se ancora non c'è utente -> torna al login
+  if (!RP.me()) {
+    location.href = './login.html';
+    return;
+  }
+
+  // 3) Se sono proprietario e non ho contratti, semino 2 contratti demo per popolare la UI
+  const me = RP.me();
+  if (me.role === 'landlord') {
+    const mine = RP.listContracts({ landlordId: me.id });
+    if (!mine || mine.length === 0) {
+      // prendi due inquilini demo se disponibili
+      const t1 = RP._demo?.tenants?.[0];
+      const t2 = RP._demo?.tenants?.[1] || RP._demo?.tenants?.[0];
+
+      if (t1) RP.createContract({
+        landlordId: me.id,
+        tenantId: t1.id,
+        address: 'Via Roma 12',
+        rent: 850,
+        status: 'pending_tenant'
+      });
+
+      if (t2) RP.createContract({
+        landlordId: me.id,
+        tenantId: t2.id,
+        address: 'Via Po 8',
+        rent: 720,
+        status: 'active'
+      });
+    }
+  }
+})();
+</script>
 <script type="text/javascript" data-cookieconsent="ignore">
 (function(){
   const btn=document.getElementById('rpHamburger'), d=document.getElementById('rpDrawer'), x=document.getElementById('rpDrawerClose'), b=document.getElementById('rpBackdrop');
