@@ -249,3 +249,55 @@ if(!location.hash) location.hash = '#/'; render();
     drawer.querySelectorAll('a').forEach(a=>a.addEventListener('click', closeDrawer));
   })();
 </script>
+
+<script>
+(function () {
+  const hamburger = document.getElementById('rpHamburger');
+  const drawer    = document.getElementById('rpDrawer');
+  const backdrop  = document.getElementById('rpBackdrop');
+  const closeBtn  = drawer?.querySelector('.rp-close');
+
+  if (!hamburger || !drawer || !backdrop) return;
+
+  function openMenu() {
+    drawer.classList.add('open');
+    drawer.setAttribute('aria-hidden', 'false');
+    backdrop.classList.add('show');
+    backdrop.hidden = false;
+    document.body.style.overflow = 'hidden';
+    hamburger.setAttribute('aria-expanded', 'true');
+  }
+
+  function closeMenu() {
+    drawer.classList.remove('open');
+    drawer.setAttribute('aria-hidden', 'true');
+    backdrop.classList.remove('show');
+    // usa hidden per togliere il click sull'overlay
+    backdrop.hidden = true;
+    document.body.style.overflow = '';
+    hamburger.setAttribute('aria-expanded', 'false');
+  }
+
+  hamburger.addEventListener('click', openMenu);
+  closeBtn?.addEventListener('click', closeMenu);
+
+  // CLIC FUORI: il backdrop copre l’area fuori dal drawer
+  backdrop.addEventListener('click', closeMenu);
+
+  // Chiudi quando si clicca un link del menù
+  drawer.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', closeMenu);
+  });
+
+  // Esc per chiudere
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && drawer.classList.contains('open')) closeMenu();
+  });
+
+  // Safety: se la finestra cresce oltre il breakpoint, chiudi il drawer
+  const mql = window.matchMedia('(min-width: 861px)');
+  mql.addEventListener('change', e => { if (e.matches) closeMenu(); });
+})();
+</script>
+
+
