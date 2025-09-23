@@ -233,3 +233,32 @@ label{ display:flex; flex-direction:column; gap:6px; font-size:14px }
   color:var(--accentText);
   border:1px solid var(--accent);
 }
+
+.card {
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:22px 20px; /* più aria */
+  margin-bottom:16px; /* separazione verticale su mobile */
+}
+.card h2 {
+  margin-bottom:10px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.footer .f-links {
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:12px;
+  margin-bottom:8px;
+}
+.footer .f-links a {
+  opacity:.85;
+  font-size:14px;
+}
+.footer .f-links a:hover {
+  opacity:1;
+}
