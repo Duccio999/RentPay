@@ -1,5 +1,5 @@
 /* =========================
-   RentPay — styles.css
+   RentPay — styles.css (rev FIX)
    ========================= */
 
 /* ===== Variabili ===== */
@@ -120,11 +120,11 @@ section{ scroll-margin-top:90px }
 
 .card{
   background:var(--card); border:1px solid var(--border); border-radius:16px;
-  padding:22px 20px; margin:0 auto 20px; max-width:900px;
+  padding:22px 20px; margin:0 auto 22px; max-width:900px;   /* + aria */
   box-shadow:0 8px 22px rgba(0,0,0,.28);
 }
 
-h2{ margin:0 0 10px; font-size:clamp(22px,3.6vw,28px) }
+h2{ margin:0 0 12px; font-size:clamp(22px,3.6vw,28px) }
 h3{ margin:0 0 8px }
 
 /* Footer */
@@ -164,14 +164,14 @@ h3{ margin:0 0 8px }
 }
 
 /* ===== Sezioni dashboard ===== */
-.section{ margin:22px 0 }   /* più aria tra i blocchi */
+.section{ margin:22px 0 }
 .section .section-head{ display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap }
 .section h2{ margin:0 }
 
-/* ===== Tabelle: scroll orizzontale nel box ===== */
+/* ======= TABELLE — scroll orizzontale su mobile ======= */
 .table-wrap{
   max-width:100%;
-  overflow-x:auto;
+  overflow-x:auto;                 /* scroll orizzontale */
   overflow-y:hidden;
   -webkit-overflow-scrolling:touch;
   touch-action:pan-x;
@@ -180,35 +180,24 @@ h3{ margin:0 0 8px }
   border-radius:14px;
   background:rgba(255,255,255,.04);
   padding:0;
-  cursor:grab;
 }
-.table-wrap:active{ cursor:grabbing }
-
 .rp-table{
   border-collapse:collapse;
+  width:max-content;               /* si allarga quanto serve */
+  min-width:820px;                 /* forza scrollbar su 360–430px */
   table-layout:auto;
-  width:max-content;   /* la tabella cresce quanto serve */
-  min-width:720px;     /* forza lo scroll su schermi piccoli */
 }
-
-.rp-table th,
-.rp-table td{
+.rp-table th,.rp-table td{
   white-space:nowrap;
   padding:12px 14px;
   text-align:left;
   border-bottom:1px solid rgba(255,255,255,.12);
-  color:#eaf2ff;
 }
-
 .rp-table thead th{
   font-weight:800;
   background:rgba(255,255,255,.08);
   position:sticky; top:0; z-index:1;
 }
 
-@media (max-width:560px){
-  .rp-table th,.rp-table td{ padding:10px 12px; font-size:.95rem }
-}
-
-/* Evita che contenitori padri blocchino lo scroll orizzontale */
-.card, .section, .container{ overflow:visible; }
+/* evitiamo che contenitori genitori taglino lo scroll */
+.card, .section, .container{ overflow:visible }
