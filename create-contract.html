@@ -15,6 +15,7 @@
   </style>
 </head>
 <body>
+<!-- NAV -->
 <nav class="rp-nav">
   <a class="rp-brand" href="./index.html"><span class="rp-house">🏠</span><span class="rp-brand-text">RentPay</span></a>
   <div class="rp-menu-desktop">
@@ -44,7 +45,9 @@
 
     <div class="field">
       <label>Inquilino</label>
-      <div class="input"><span>🏡</span><select id="tenantSel"></select></div>
+      <div class="input"><span>🏡</span>
+        <select id="tenantSel"></select>
+      </div>
     </div>
 
     <div class="field">
@@ -73,7 +76,7 @@
     </p>
 
     <div class="actions" style="margin-top:10px">
-      <button class="btn primary" id="btnSubmit" type="button">Firma & invia (DEMO)</button>
+      <button class="btn primary" id="btnSubmit" type="button">Firma &amp; invia (DEMO)</button>
     </div>
   </section>
 </main>
@@ -85,19 +88,15 @@
 
 <script src="rp-store.js"></script>
 <script>
-/* Nav mobile */
+/* ===== Nav mobile ===== */
 (function(){
   const b=document.getElementById('rpHamburger'),d=document.getElementById('rpDrawer'),x=document.getElementById('rpDrawerClose'),o=document.getElementById('rpBackdrop');
   function open(){d.classList.add('open');o.hidden=false;o.classList.add('show');document.body.style.overflow='hidden'}
   function close(){d.classList.remove('open');o.classList.remove('show');o.hidden=true;document.body.style.overflow=''}
-  b&&b.addEventListener('click',open); x&&x.addEventListener('click',close); o&&o.addEventListener('click',close);
-  d.querySelectorAll('a').forEach(a=>a.addEventListener('click',close));
-  window.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
+  b&&b.addEventListener('click',open); x&&x.addEventListener('click',close); o&&o.addEventListener('click',close); window.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
 })();
-</script>
 
-<script>
-/* Logica creazione contratto (demo) */
+/* ===== Logica pagina ===== */
 (function(){
   if(!window.RP){ alert('Errore di caricamento store'); location.href='login.html'; return; }
   const me = RP.me();
@@ -111,13 +110,13 @@
   const months  = document.getElementById('months');
   const btn     = document.getElementById('btnSubmit');
 
-  const ownerName = me.name || me.nome || '—';
-  owner.value = `${ownerName} — ${me.email}`;
+  owner.value = `${me.name || me.nome} — ${me.email}`;
 
   const db = RP.read();
   db.utenti.inquilini.forEach(t=>{
     const opt=document.createElement('option');
-    opt.value=t.id; opt.textContent=`${t.nome || t.name} — ${t.email}`;
+    opt.value=t.id;
+    opt.textContent=`${t.nome || t.name} — ${t.email}`;
     tenantSel.appendChild(opt);
   });
 
@@ -144,14 +143,20 @@
     const monthsNum= parseInt(months.value||'12') || 12;
 
     if(!tenantId || !address || !startIso){
-      alert('Compila inquilino, indirizzo e data inizio.');
-      return;
+      alert('Compila inquilino, indirizzo e data inizio.'); return;
     }
 
     const dbNow = RP.read();
     const newId = 'C' + Date.now();
     dbNow.contratti.push({
-      id:newId, landlordId:me.id, tenantId, address, rent:rentNum, start:startIso, months:monthsNum, status:'pending_tenant'
+      id: newId,
+      landlordId: me.id,
+      tenantId,
+      address,
+      rent: rentNum,
+      start: startIso,
+      months: monthsNum,
+      status: 'pending_tenant'
     });
     RP.write(dbNow);
 
