@@ -242,3 +242,6 @@ h3{ margin:0 0 8px }
 
 /* sicurezza: evita che lo scroll orizzontale “prenda” tutta la pagina */
 html, body { overflow-x: hidden; }
+
+.table-wrap.wide  .rp-table{ min-width: max(100%, 820px); }
+.table-wrap.xwide .rp-table{ min-width: max(100%, 980px); }
