@@ -168,36 +168,60 @@ h3{ margin:0 0 8px }
 .section .section-head{ display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap }
 .section h2{ margin:0 }
 
-/* ======= TABELLE — scroll orizzontale su mobile ======= */
+/* ======= TABELLE: scroll orizzontale VERO su mobile ======= */
+
+/* wrapper: isola lo scroll orizzontale dalla pagina */
 .table-wrap{
   max-width:100%;
-  overflow-x:auto;                 /* scroll orizzontale */
+  overflow-x:auto;
   overflow-y:hidden;
   -webkit-overflow-scrolling:touch;
-  touch-action:pan-x;
-  overscroll-behavior-x:contain;
+  touch-action: pan-x;
+  overscroll-behavior-x: contain;
   border:1px solid rgba(255,255,255,.14);
   border-radius:14px;
   background:rgba(255,255,255,.04);
   padding:0;
+  position: relative;
 }
-.rp-table{
-  border-collapse:collapse;
-  width:max-content;               /* si allarga quanto serve */
-  min-width:820px;                 /* forza scrollbar su 360–430px */
-  table-layout:auto;
+
+/* “hint” visivo: sfumature ai lati quando c'è altro contenuto */
+.table-wrap::before,
+.table-wrap::after{
+  content:"";
+  position:absolute; top:0; bottom:0; width:16px; pointer-events:none;
 }
-.rp-table th,.rp-table td{
-  white-space:nowrap;
+.table-wrap::before{ left:0; background:linear-gradient(90deg, rgba(0,0,0,.35), rgba(0,0,0,0)); }
+.table-wrap::after{  right:0; background:linear-gradient(270deg, rgba(0,0,0,.35), rgba(0,0,0,0)); }
+
+/* la tabella può essere più larga del wrapper */
+.table-wrap > .rp-table{
+  display: table;              /* evita width:100% implicita */
+  width: max-content;          /* si allarga solo quanto serve */
+  min-width: 620px;            /* default: forza lo scroll su schermi stretti */
+  border-collapse: collapse;
+  table-layout: auto;
+}
+
+/* varianti di larghezza: usa .table-wrap.wide o .table-wrap.xwide se servono più colonne */
+.table-wrap.wide  > .rp-table{ min-width: 820px; }
+.table-wrap.xwide > .rp-table{ min-width: 980px; }
+
+/* celle: no a capo → si scorre */
+.rp-table th,
+.rp-table td{
+  white-space: nowrap;
   padding:12px 14px;
   text-align:left;
   border-bottom:1px solid rgba(255,255,255,.12);
 }
+
 .rp-table thead th{
   font-weight:800;
   background:rgba(255,255,255,.08);
-  position:sticky; top:0; z-index:1;
+  position: sticky; top: 0; z-index: 1;
 }
 
-/* evitiamo che contenitori genitori taglino lo scroll */
-.card, .section, .container{ overflow:visible }
+@media (max-width:560px){
+  .rp-table th,.rp-table td{ padding:10px 12px; font-size:.95rem; }
+}
