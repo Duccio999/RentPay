@@ -5,59 +5,75 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Accesso Demo — RentPay</title>
   <link rel="stylesheet" href="styles.css">
+  <style>
+    .stack { display:flex; flex-direction:column; gap:24px }
+    .form-card .actions{ justify-content:flex-start }
+  </style>
 </head>
 <body>
+<!-- NAV -->
 <nav class="rp-nav">
   <a class="rp-brand" href="./index.html"><span class="rp-house">🏠</span><span class="rp-brand-text">RentPay</span></a>
   <div class="rp-menu-desktop">
-    <a href="index.html">Home</a><a href="funzioni.html">Funzioni</a><a href="prezzi.html">Prezzi</a>
+    <a href="index.html">Home</a>
+    <a href="funzioni.html">Funzioni</a>
+    <a href="prezzi.html">Prezzi</a>
     <a class="rp-accent" href="login.html" aria-current="page">Accedi</a>
   </div>
   <button id="rpHamburger" class="rp-hamburger" aria-label="Apri menu">☰</button>
 </nav>
+
 <aside id="rpDrawer" class="rp-drawer" aria-hidden="true">
   <div class="rp-drawer-head"><span>Menù</span><button id="rpDrawerClose" class="rp-close">×</button></div>
-  <a href="index.html">Home</a><a href="funzioni.html">Funzioni</a><a href="prezzi.html">Prezzi</a>
+  <a href="index.html">Home</a>
+  <a href="funzioni.html">Funzioni</a>
+  <a href="prezzi.html">Prezzi</a>
   <a class="rp-accent" href="login.html">Accedi</a>
-</aside><div id="rpBackdrop" class="rp-backdrop" hidden></div>
+</aside>
+<div id="rpBackdrop" class="rp-backdrop" hidden></div>
 
-<main class="container narrow">
+<main class="container narrow stack">
   <section class="hero card">
     <h1>Accesso demo con profili registrati</h1>
-    <p class="lead">Scegli il ruolo e un profilo. Nome ed email sono già compilati. Inserisci la password <em>(simbolica)</em> per entrare.</p>
+    <p class="lead">Scegli il ruolo e un profilo; email e password fittizia per la DEMO.</p>
   </section>
 
+  <!-- toggle ruolo -->
   <div class="role-toggle">
     <button class="pill active" id="btnProp">👤 Proprietario</button>
     <button class="pill" id="btnInq">🏡 Inquilino</button>
   </div>
 
-  <div class="form-card">
-    <!-- Scelta profilo -->
+  <!-- form -->
+  <section class="form-card">
     <div class="field">
       <label><strong>Seleziona profilo demo</strong></label>
       <div class="input"><span>📁</span><select id="profileSel"></select></div>
     </div>
 
-
-    <!-- Password simbolica -->
-    <div class="field" style="margin-top:12px">
-      <label>Password (demo)</label>
-      <div class="input"><span>🔒</span><input id="pwd" type="password" placeholder="Inserisci: demo"></div>
+    <div class="grid" style="margin-top:12px">
+      <div class="field">
+        <label>Email</label>
+        <div class="input"><span>✉️</span><input id="email" readonly></div>
+      </div>
+      <div class="field">
+        <label>Password (demo)</label>
+        <div class="input"><span>🔒</span><input id="pwd" type="password" placeholder="••••••••"></div>
+      </div>
     </div>
 
     <p class="notice" style="margin-top:12px;padding:10px 12px;border-radius:10px">
-      <strong>DEMO:</strong> la password è solo dimostrativa. Usa <code>demo</code>.
+      <strong>DEMO:</strong> la password non viene verificata né salvata.
     </p>
 
     <div class="actions" style="margin-top:10px">
       <button class="btn primary" id="btnLogin">Accedi</button>
     </div>
-  </div>
+  </section>
 </main>
 
 <footer class="footer container">
-  <div class="f-links"><a href="terms.html">Termini di servizio</a><a href="privacy.html">Privacy</a><a href="cookie.html">Cookie</a></div>
+  <div class="f-links"><a href="terms.html">Termini</a><a href="privacy.html">Privacy</a><a href="cookie.html">Cookie</a></div>
   <div class="copy">© 2025 RentPay — PWA</div>
 </footer>
 
@@ -76,41 +92,50 @@
 
 <!-- Login logic -->
 <script>
-if (typeof RP === 'undefined') { alert('Errore di caricamento rp-store.js'); }
+if(!window.RP){ alert('Errore di caricamento rp-store.js'); }
 
 let ruolo = 'landlord';
-const sel   = document.getElementById('profileSel');
-const nameI = document.getElementById('name');
-const emailI= document.getElementById('email');
-const pwd   = document.getElementById('pwd');
+const sel = document.getElementById('profileSel');
+const emailI = document.getElementById('email');
 
-function list(){ return ruolo==='landlord' ? RP.users.landlords() : RP.users.tenants(); }
+function normUser(u){
+  // supporta seed con chiavi in IT o EN
+  return {
+    id: u.id,
+    role: u.role || u.ruolo,
+    name: u.name || u.nome,
+    email: u.email
+  };
+}
+
+function getList(){
+  const db = RP.read();
+  const list = ruolo==='landlord' ? db.utenti.proprietari : db.utenti.inquilini;
+  return list.map(normUser);
+}
 
 function fillOptions(){
   sel.innerHTML='';
-  list().forEach(u=>{
+  getList().forEach(u=>{
     const opt=document.createElement('option');
-    opt.value=u.id;
-    opt.textContent=`${u.name} — ${u.email}`;
+    opt.value=u.id; opt.textContent=`${u.name} — ${u.email}`;
     sel.appendChild(opt);
   });
   sel.selectedIndex=0;
   showDetail();
 }
-
 function showDetail(){
-  const u = list().find(x=>x.id===sel.value);
+  const id = sel.value;
+  const u = getList().find(x=>x.id===id);
   if(!u) return;
-  nameI.value  = u.name;
-  emailI.value = u.email;
+  emailI.value = u.email || '';
 }
 
-document.getElementById('btnProp').onclick = ()=>{ ruolo='landlord'; document.getElementById('btnProp').classList.add('active'); document.getElementById('btnInq').classList.remove('active'); fillOptions(); };
-document.getElementById('btnInq').onclick  = ()=>{ ruolo='tenant';   document.getElementById('btnInq').classList.add('active');  document.getElementById('btnProp').classList.remove('active'); fillOptions(); };
-sel.onchange = showDetail;
+document.getElementById('btnProp').onclick=()=>{document.getElementById('btnProp').classList.add('active');document.getElementById('btnInq').classList.remove('active');ruolo='landlord';fillOptions();}
+document.getElementById('btnInq').onclick =()=>{document.getElementById('btnInq').classList.add('active');document.getElementById('btnProp').classList.remove('active');ruolo='tenant';fillOptions();}
+sel.onchange=showDetail;
 
-document.getElementById('btnLogin').onclick = ()=>{
-  if((pwd.value||'').toLowerCase() !== 'demo'){ alert('Password demo non valida. Usa: "demo".'); return; }
+document.getElementById('btnLogin').onclick=()=>{
   if(RP.loginById(ruolo, sel.value)){
     location.href = (ruolo==='landlord') ? 'dashboard-prop.html' : 'dashboard-inq.html';
   }
