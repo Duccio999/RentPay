@@ -6,11 +6,24 @@
   <title>Dashboard Proprietario — RentPay (DEMO)</title>
   <link rel="stylesheet" href="styles.css">
   <style>
-    /* Spaziatura morbida tra i box senza toccare styles.css */
-    .stack{display:flex;flex-direction:column;gap:22px}
-    @media (min-width:900px){ .stack{gap:26px} }
-    .kv{display:grid;grid-template-columns:160px 1fr;gap:8px 14px}
-    .kv b{opacity:.9}
+    /* Spaziatura morbida tra i box */
+    .stack { display:flex; flex-direction:column; gap:32px }
+    @media (min-width:900px){ .stack{gap:36px} }
+
+    /* Profilo: verticale su mobile */
+    .kv { display:grid; grid-template-columns:1fr; gap:8px 0 }
+    .kv b { display:block; font-weight:600; margin-top:6px }
+
+    /* Pulsante "Crea contratto" */
+    .section-head { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px }
+    .section-head .btn { margin-left:auto }
+    @media (max-width:600px){
+      .section-head{flex-direction:column; align-items:stretch}
+      .section-head .btn{width:100%; margin-left:0}
+    }
+
+    /* Tabelle scrollabili */
+    .table-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch }
   </style>
 </head>
 <body>
@@ -35,37 +48,42 @@
       <p class="lead">Gestisci i contratti e monitora incassi. (DEMO)</p>
     </section>
 
-    <!-- Profilo proprietario (include dati sensibili) -->
     <section class="card">
       <h2>Dati profilo</h2>
       <div class="kv" id="ownerKV"></div>
     </section>
 
     <section class="card">
-      <div class="section-head" style="gap:12px">
+      <div class="section-head">
         <h2>Contratti in attesa di firma dell’inquilino</h2>
         <a class="btn primary" href="create-contract.html">Crea nuovo contratto (demo)</a>
       </div>
-      <div class="table-wrap"><table class="rp-table" id="tblPending">
-        <thead><tr><th>Immobile</th><th>Inquilino</th><th>Canone</th><th>Stato</th></tr></thead>
-        <tbody></tbody>
-      </table></div>
+      <div class="table-wrap">
+        <table class="rp-table" id="tblPending">
+          <thead><tr><th>Immobile</th><th>Inquilino</th><th>Canone</th><th>Stato</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
     </section>
 
     <section class="card">
       <h2>Contratti attivi</h2>
-      <div class="table-wrap"><table class="rp-table" id="tblActive">
-        <thead><tr><th>Immobile</th><th>Inquilino</th><th>Dal</th><th>Canone</th></tr></thead>
-        <tbody></tbody>
-      </table></div>
+      <div class="table-wrap">
+        <table class="rp-table" id="tblActive">
+          <thead><tr><th>Immobile</th><th>Inquilino</th><th>Dal</th><th>Canone</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
     </section>
 
     <section class="card">
       <h2>Incassi recenti</h2>
-      <div class="table-wrap"><table class="rp-table" id="tblPay">
-        <thead><tr><th>Data</th><th>Contratto</th><th>Importo</th><th>Stato</th></tr></thead>
-        <tbody></tbody>
-      </table></div>
+      <div class="table-wrap">
+        <table class="rp-table" id="tblPay">
+          <thead><tr><th>Data</th><th>Contratto</th><th>Importo</th><th>Stato</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
     </section>
   </div>
 </main>
@@ -87,7 +105,6 @@ const me = RP.me();
 if(!me || me.role!=='landlord'){ location.href='login.html'; }
 document.getElementById('welcome').textContent = `Benvenuto, ${me.name}`;
 
-// Profilo
 document.getElementById('ownerKV').innerHTML = `
   <b>Nome</b><div>${me.name}</div>
   <b>Email</b><div>${me.email}</div>
@@ -95,43 +112,27 @@ document.getElementById('ownerKV').innerHTML = `
   <b>Immobili</b><div>${me.props ?? 0}</div>
 `;
 
-// Dati tabellari
 const tenants = RP.users.tenants().reduce((a,t)=> (a[t.id]=t,a), {});
 const contracts = RP.contracts.forLandlord(me.id);
 
-// Pending
 const tbodyP = document.querySelector('#tblPending tbody');
 const pending = contracts.filter(c=>c.status==='pending_tenant');
 tbodyP.innerHTML = pending.length? pending.map(c=>`
-  <tr>
-    <td>${c.address}</td>
-    <td>${tenants[c.tenantId]?.name||'-'}</td>
-    <td>${fmtEur(c.rent)}</td>
-    <td>In attesa firma</td>
-  </tr>`).join('') : `<tr><td colspan="4">Nessun contratto in attesa.</td></tr>`;
+  <tr><td>${c.address}</td><td>${tenants[c.tenantId]?.name||'-'}</td><td>${fmtEur(c.rent)}</td><td>In attesa firma</td></tr>
+`).join('') : `<tr><td colspan="4">Nessun contratto in attesa.</td></tr>`;
 
-// Active
 const tbodyA = document.querySelector('#tblActive tbody');
 const active = contracts.filter(c=>c.status==='active');
 tbodyA.innerHTML = active.length? active.map(c=>`
-  <tr>
-    <td>${c.address}</td>
-    <td>${tenants[c.tenantId]?.name||'-'}</td>
-    <td>${fmtDMY(c.start)}</td>
-    <td>${fmtEur(c.rent)}</td>
-  </tr>`).join('') : `<tr><td colspan="4">Nessun contratto attivo.</td></tr>`;
+  <tr><td>${c.address}</td><td>${tenants[c.tenantId]?.name||'-'}</td><td>${fmtDMY(c.start)}</td><td>${fmtEur(c.rent)}</td></tr>
+`).join('') : `<tr><td colspan="4">Nessun contratto attivo.</td></tr>`;
 
-// Payments
 const tbodyPay = document.querySelector('#tblPay tbody');
 const pays = RP.payments.forLandlord(me.id);
 const contractsMap = contracts.reduce((a,c)=> (a[c.id]=c, a), {});
 tbodyPay.innerHTML = pays.length? pays.map(p=>`
-  <tr>
-    <td>${fmtDMY(p.date)}</td>
-    <td>${contractsMap[p.contractId]?.address || '-'}</td>
-    <td>${fmtEur(p.amount)}</td>
-    <td>${p.status==='pagato'?'Completato':'-'}</td>
-  </tr>`).join('') : `<tr><td colspan="4">Nessun incasso registrato (DEMO).</td></tr>`;
+  <tr><td>${fmtDMY(p.date)}</td><td>${contractsMap[p.contractId]?.address || '-'}</td><td>${fmtEur(p.amount)}</td><td>${p.status==='pagato'?'Completato':'-'}</td></tr>
+`).join('') : `<tr><td colspan="4">Nessun incasso registrato (DEMO).</td></tr>`;
 </script>
 </body>
 </html>
