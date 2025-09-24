@@ -6,11 +6,10 @@
   <title>Dashboard Inquilino — RentPay (DEMO)</title>
   <link rel="stylesheet" href="styles.css">
   <style>
-    .stack{display:flex;flex-direction:column;gap:32px}
-    @media(min-width:900px){.stack{gap:36px}}
-    .kv{display:grid;grid-template-columns:1fr;gap:8px 0}
-    .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
-    .rp-table{min-width:620px}
+    .stack{display:flex;flex-direction:column;gap:36px}
+    @media(min-width:900px){.stack{gap:40px}}
+    .kv{display:grid;grid-template-columns:1fr 2fr;gap:8px 16px}
+    @media(max-width:560px){.kv{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
@@ -78,8 +77,8 @@
 
 <script src="rp-store.js"></script>
 <script>
+/* nav mobile */
 (function(){
-  // nav mobile
   const b=document.getElementById('rpHamburger'),d=document.getElementById('rpDrawer'),x=document.getElementById('rpDrawerClose'),o=document.getElementById('rpBackdrop');
   function open(){d.classList.add('open');o.hidden=false;o.classList.add('show');document.body.style.overflow='hidden'}
   function close(){d.classList.remove('open');o.classList.remove('show');o.hidden=true;document.body.style.overflow=''}
@@ -88,12 +87,12 @@
 </script>
 
 <script>
+/* dati + tabelle */
 (function(){
   if(!window.RP){ location.href='login.html'; return; }
   const me = RP.me();
   if(!me || (me.role!=='tenant' && me.ruolo!=='inquilino')){ location.href='login.html'; return; }
 
-  // normalizzatori
   const nameOf = u => u.name || u.nome;
   const emailOf= u => u.email;
   const fmtEur = n => new Intl.NumberFormat('it-IT',{style:'currency',currency:'EUR'}).format(n);
@@ -146,6 +145,16 @@
     </tr>
   `).join('') : `<tr><td colspan="4">Nessun pagamento (DEMO).</td></tr>`;
 })();
+</script>
+
+<script>
+/* drag-to-scroll orizzontale per le tabelle (mobile friendly) */
+document.querySelectorAll('.table-wrap').forEach(w=>{
+  let down=false, startX=0, startScroll=0;
+  w.addEventListener('pointerdown',e=>{down=true; startX=e.clientX; startScroll=w.scrollLeft; w.setPointerCapture?.(e.pointerId);});
+  w.addEventListener('pointermove',e=>{if(!down)return; w.scrollLeft = startScroll - (e.clientX - startX);});
+  ['pointerup','pointercancel','mouseleave'].forEach(ev=>w.addEventListener(ev,()=>{down=false;}));
+});
 </script>
 </body>
 </html>
