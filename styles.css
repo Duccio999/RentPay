@@ -240,3 +240,44 @@ h3{margin:0 0 8px}
   font-size:12px; font-weight:800; line-height:1;
   vertical-align:middle;
 }
+/* Wrapper che gestisce lo scroll orizzontale della tabella */
+.table-wrap{
+  max-width: 100%;
+  overflow-x: auto;             /* scorrimento orizzontale */
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;          /* trascina solo in orizzontale */
+  overscroll-behavior: contain; /* non trascinare tutta la pagina */
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 14px;
+  background: rgba(255,255,255,.04);
+  padding: 0;
+}
+
+/* La tabella deve essere più larga del wrapper su mobile */
+.rp-table{
+  width: 100%;
+  min-width: 620px;             /* forza comparsa della scrollbar */
+  border-collapse: collapse;
+}
+
+/* Celle: mai andare a capo (così si scorre) */
+.rp-table th,
+.rp-table td{
+  white-space: nowrap;
+  padding: 12px 14px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255,255,255,.12);
+}
+
+/* Header più leggibile */
+.rp-table thead th{
+  font-weight: 800;
+  background: rgba(255,255,255,.08);
+  position: sticky; top: 0; z-index: 1;
+}
+
+/* Evita che un contenitore superiore tagli lo scroll */
+.card, .section, .container{
+  overflow: visible;
+}
