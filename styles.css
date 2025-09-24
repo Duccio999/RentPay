@@ -225,3 +225,36 @@ h3{ margin:0 0 8px }
 @media (max-width:560px){
   .rp-table th,.rp-table td{ padding:10px 12px; font-size:.95rem; }
 }
+
+/* ===== HOTFIX TABELLE — forza lo scroll orizzontale su mobile ===== */
+.card, .section, .container { overflow: visible !important; }
+
+.table-wrap{
+  max-width: 100%;
+  overflow-x: auto !important;      /* scroll orizzontale dentro al box */
+  overflow-y: hidden !important;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x !important;    /* trascina solo in orizzontale */
+  overscroll-behavior-x: contain !important;
+}
+
+.rp-table{
+  width: max-content !important;     /* la tabella si allarga quanto serve */
+  min-width: 900px !important;       /* > larghezza dello schermo → compare lo scroll */
+  border-collapse: collapse;
+  table-layout: auto;
+}
+
+.rp-table th,
+.rp-table td{
+  white-space: nowrap;
+  padding: 12px 14px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255,255,255,.12);
+}
+
+.rp-table thead th{
+  font-weight: 800;
+  background: rgba(255,255,255,.08);
+  position: sticky; top: 0; z-index: 1;
+}
