@@ -11,7 +11,6 @@
   </style>
 </head>
 <body>
-<!-- NAV -->
 <nav class="rp-nav">
   <a class="rp-brand" href="./index.html"><span class="rp-house">🏠</span><span class="rp-brand-text">RentPay</span></a>
   <div class="rp-menu-desktop">
@@ -22,7 +21,6 @@
   </div>
   <button id="rpHamburger" class="rp-hamburger" aria-label="Apri menu">☰</button>
 </nav>
-
 <aside id="rpDrawer" class="rp-drawer" aria-hidden="true">
   <div class="rp-drawer-head"><span>Menù</span><button id="rpDrawerClose" class="rp-close">×</button></div>
   <a href="index.html">Home</a>
@@ -38,13 +36,11 @@
     <p class="lead">Scegli il ruolo e un profilo; email e password fittizia per la DEMO.</p>
   </section>
 
-  <!-- toggle ruolo -->
   <div class="role-toggle">
     <button class="pill active" id="btnProp">👤 Proprietario</button>
     <button class="pill" id="btnInq">🏡 Inquilino</button>
   </div>
 
-  <!-- form -->
   <section class="form-card">
     <div class="field">
       <label><strong>Seleziona profilo demo</strong></label>
@@ -77,21 +73,27 @@
   <div class="copy">© 2025 RentPay — PWA</div>
 </footer>
 
-<!-- Store condiviso -->
 <script src="rp-store.js"></script>
 
-<!-- Nav mobile -->
 <script>
+/* === Nav mobile, chiusura anche al click sui link === */
 (function(){
-  const b=document.getElementById('rpHamburger'),d=document.getElementById('rpDrawer'),x=document.getElementById('rpDrawerClose'),o=document.getElementById('rpBackdrop');
+  const b=document.getElementById('rpHamburger'),
+        d=document.getElementById('rpDrawer'),
+        x=document.getElementById('rpDrawerClose'),
+        o=document.getElementById('rpBackdrop');
   function open(){d.classList.add('open');o.hidden=false;o.classList.add('show');document.body.style.overflow='hidden'}
   function close(){d.classList.remove('open');o.classList.remove('show');o.hidden=true;document.body.style.overflow=''}
-  b&&b.addEventListener('click',open); x&&x.addEventListener('click',close); o&&o.addEventListener('click',close); window.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
+  b&&b.addEventListener('click',open);
+  x&&x.addEventListener('click',close);
+  o&&o.addEventListener('click',close);
+  d.querySelectorAll('a').forEach(a=>a.addEventListener('click',close));
+  window.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
 })();
 </script>
 
-<!-- Login logic -->
 <script>
+/* === Login === */
 if(!window.RP){ alert('Errore di caricamento rp-store.js'); }
 
 let ruolo = 'landlord';
@@ -110,8 +112,7 @@ function fillOptions(){
   sel.innerHTML = '';
   list.forEach(u=>{
     const opt = document.createElement('option');
-    opt.value = u.id;
-    opt.textContent = `${u.name} — ${u.email}`;
+    opt.value = u.id; opt.textContent = `${u.name} — ${u.email}`;
     sel.appendChild(opt);
   });
   sel.selectedIndex = 0;
@@ -136,15 +137,11 @@ document.getElementById('btnInq').onclick = ()=>{
 sel.onchange = showDetail;
 
 document.getElementById('btnLogin').onclick = ()=>{
-  // se mai fosse vuoto, prendo il primo profilo disponibile
   if(!sel.value && sel.options.length){ sel.value = sel.options[0].value; }
   const ok = RP.loginById(ruolo, sel.value);
-  if(ok){
-    location.href = (ruolo==='landlord') ? 'dashboard-prop.html' : 'dashboard-inq.html';
-  }
+  if(ok){ location.href = (ruolo==='landlord') ? 'dashboard-prop.html' : 'dashboard-inq.html'; }
 };
 
-// init sicuro (se lo storage è corrotto, RP.read() lo ripristina)
 fillOptions();
 </script>
 </body>
