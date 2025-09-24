@@ -43,9 +43,11 @@
   <section class="card">
     <div class="section-head"><h2>Contratti in attesa di firma dell’inquilino</h2></div>
     <a class="btn primary create" href="create-contract.html">Crea nuovo contratto (demo)</a>
-    <div class="table-wrap" tabindex="0" aria-label="Contratti in attesa">
+    <div class="table-wrap">
       <table class="rp-table" id="tblPending">
-        <thead><tr><th>Immobile</th><th>Inquilino</th><th>Canone</th><th>Stato</th></tr></thead>
+        <thead>
+          <tr><th>Immobile</th><th>Inquilino</th><th>Canone</th><th>Stato</th></tr>
+        </thead>
         <tbody></tbody>
       </table>
     </div>
@@ -53,9 +55,11 @@
 
   <section class="card">
     <h2>Contratti attivi</h2>
-    <div class="table-wrap" tabindex="0" aria-label="Contratti attivi">
+    <div class="table-wrap">
       <table class="rp-table" id="tblActive">
-        <thead><tr><th>Immobile</th><th>Inquilino</th><th>Dal</th><th>Canone</th></tr></thead>
+        <thead>
+          <tr><th>Immobile</th><th>Inquilino</th><th>Dal</th><th>Canone</th></tr>
+        </thead>
         <tbody></tbody>
       </table>
     </div>
@@ -63,9 +67,11 @@
 
   <section class="card">
     <h2>Incassi recenti</h2>
-    <div class="table-wrap" tabindex="0" aria-label="Incassi recenti">
+    <div class="table-wrap">
       <table class="rp-table" id="tblPays">
-        <thead><tr><th>Data</th><th>Contratto</th><th>Importo</th><th>Stato</th></tr></thead>
+        <thead>
+          <tr><th>Data</th><th>Contratto</th><th>Importo</th><th>Stato</th></tr>
+        </thead>
         <tbody></tbody>
       </table>
     </div>
@@ -79,19 +85,17 @@
 
 <script src="rp-store.js"></script>
 <script>
-/* Nav mobile stabile */
+/* nav mobile */
 (function(){
   const b=document.getElementById('rpHamburger'),d=document.getElementById('rpDrawer'),x=document.getElementById('rpDrawerClose'),o=document.getElementById('rpBackdrop');
   function open(){d.classList.add('open');o.hidden=false;o.classList.add('show');document.body.style.overflow='hidden'}
   function close(){d.classList.remove('open');o.classList.remove('show');o.hidden=true;document.body.style.overflow=''}
-  b&&b.addEventListener('click',open); x&&x.addEventListener('click',close); o&&o.addEventListener('click',close);
-  d.querySelectorAll('a').forEach(a=>a.addEventListener('click',close));
-  window.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
+  b&&b.addEventListener('click',open); x&&x.addEventListener('click',close); o&&o.addEventListener('click',close); window.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
 })();
 </script>
 
 <script>
-/* Dati + Tabelle */
+/* dati + tabelle */
 (function(){
   if(!window.RP){ location.href='login.html'; return; }
   const me = RP.me();
@@ -100,12 +104,12 @@
   const nameOf = u => u.name || u.nome;
   const emailOf= u => u.email;
   const ibanOf = u => u.iban;
-  const eur = n => new Intl.NumberFormat('it-IT',{style:'currency',currency:'EUR'}).format(n);
-  const dmy = d => { if(!d) return ''; const [y,m,dd]=d.split('-'); return `${dd}/${m}/${y}`; };
+  const fmtEur = n => new Intl.NumberFormat('it-IT',{style:'currency',currency:'EUR'}).format(n);
+  const fmtDMY = d => { if(!d) return ''; const [y,m,dd]=d.split('-'); return `${dd}/${m}/${y}`; };
 
   const db = RP.read();
-  const tenants = Object.fromEntries(db.utenti.inquilini.map(t => [t.id, t]));
-  const mine = db.contratti.filter(c => c.landlordId===me.id);
+  const tenantsMap   = Object.fromEntries(db.utenti.inquilini.map(t => [t.id, t]));
+  const contractsAll = db.contratti;
 
   document.getElementById('welcome').textContent = `Benvenuto, ${nameOf(me)}`;
   document.getElementById('ownerKV').innerHTML = `
@@ -114,39 +118,53 @@
     <b>IBAN</b><div>${ibanOf(me) || '—'}</div>
   `;
 
+  const mine = contractsAll.filter(c => c.landlordId===me.id);
+
+  // Pending
   const pending = mine.filter(c => (c.status||c.stato)==='pending_tenant');
   document.querySelector('#tblPending tbody').innerHTML = pending.length ? pending.map(c=>`
-    <tr><td>${c.address||c.indirizzo}</td><td>${nameOf(tenants[c.tenantId])}</td><td>${eur(c.rent||c.affitto)}</td><td>In attesa firma</td></tr>
+    <tr>
+      <td>${c.address||c.indirizzo}</td>
+      <td>${tenantsMap[c.tenantId]?.nome || tenantsMap[c.tenantId]?.name || '-'}</td>
+      <td>${fmtEur(c.rent||c.affitto)}</td>
+      <td>In attesa firma</td>
+    </tr>
   `).join('') : `<tr><td colspan="4">Nessun contratto in attesa.</td></tr>`;
 
+  // Active
   const active = mine.filter(c => (c.status||c.stato)==='active');
   document.querySelector('#tblActive tbody').innerHTML = active.length ? active.map(c=>`
-    <tr><td>${c.address||c.indirizzo}</td><td>${nameOf(tenants[c.tenantId])}</td><td>${dmy(c.start||c.dataInizio)}</td><td>${eur(c.rent||c.affitto)}</td></tr>
+    <tr>
+      <td>${c.address||c.indirizzo}</td>
+      <td>${tenantsMap[c.tenantId]?.nome || tenantsMap[c.tenantId]?.name || '-'}</td>
+      <td>${fmtDMY(c.start||c.dataInizio)}</td>
+      <td>${fmtEur(c.rent||c.affitto)}</td>
+    </tr>
   `).join('') : `<tr><td colspan="4">Nessun contratto attivo.</td></tr>`;
 
+  // Pagamenti
   const myIds = new Set(mine.map(c=>c.id));
   const pays = db.pagamenti.filter(p => myIds.has(p.contractId||p.contrattoId));
   const cmap = Object.fromEntries(mine.map(c=>[c.id,c]));
   document.querySelector('#tblPays tbody').innerHTML = pays.length ? pays.map(p=>`
-    <tr><td>${dmy(p.data||p.date)}</td>
-        <td>${(cmap[p.contractId||p.contrattoId]?.address) || (cmap[p.contractId||p.contrattoId]?.indirizzo) || '-'}</td>
-        <td>${eur(p.importo||p.amount)}</td>
-        <td>${(p.stato||p.status)==='pagato' ? 'Completato' : (p.stato||p.status)}</td></tr>
+    <tr>
+      <td>${fmtDMY(p.data||p.date)}</td>
+      <td>${(cmap[p.contractId||p.contrattoId]?.address) || (cmap[p.contractId||p.contrattoId]?.indirizzo) || '-'}</td>
+      <td>${fmtEur(p.importo||p.amount)}</td>
+      <td>${(p.stato||p.status)==='pagato' ? 'Completato' : (p.stato||p.status)}</td>
+    </tr>
   `).join('') : `<tr><td colspan="4">Nessun pagamento (DEMO).</td></tr>`;
 })();
 </script>
 
 <script>
-/* Drag-to-scroll orizzontale senza bloccare i click */
-(function(){
-  document.querySelectorAll('.table-wrap').forEach(w=>{
-    let down=false, sx=0, sl=0, moved=false;
-    w.addEventListener('pointerdown', e=>{down=true; moved=false; sx=e.clientX; sl=w.scrollLeft; w.setPointerCapture?.(e.pointerId);});
-    w.addEventListener('pointermove', e=>{ if(!down) return; const dx=e.clientX-sx; if(Math.abs(dx)>3) moved=true; w.scrollLeft = sl - dx; });
-    ['pointerup','pointercancel','pointerleave'].forEach(t=> w.addEventListener(t, ()=>{down=false;}));
-    w.addEventListener('click', e=>{ if(moved){ e.preventDefault(); e.stopPropagation(); }}, true);
-  });
-})();
+/* drag-to-scroll orizzontale per le tabelle */
+document.querySelectorAll('.table-wrap').forEach(w=>{
+  let down=false, startX=0, startScroll=0;
+  w.addEventListener('pointerdown',e=>{down=true; startX=e.clientX; startScroll=w.scrollLeft; w.setPointerCapture?.(e.pointerId);});
+  w.addEventListener('pointermove',e=>{if(!down)return; w.scrollLeft = startScroll - (e.clientX - startX);});
+  ['pointerup','pointercancel','mouseleave'].forEach(ev=>w.addEventListener(ev,()=>{down=false;}));
+});
 </script>
 </body>
 </html>
