@@ -5,6 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Dashboard Inquilino — RentPay (DEMO)</title>
   <link rel="stylesheet" href="styles.css">
+  <style>
+    .stack{display:flex;flex-direction:column;gap:22px}
+    @media (min-width:900px){ .stack{gap:26px} }
+    .kv{display:grid;grid-template-columns:160px 1fr;gap:8px 14px}
+    .kv b{opacity:.9}
+  </style>
 </head>
 <body>
 <nav class="rp-nav">
@@ -22,26 +28,34 @@
 </aside><div id="rpBackdrop" class="rp-backdrop" hidden></div>
 
 <main class="container">
-  <section class="hero card">
-    <h1 id="welcome">Area Inquilino</h1>
-    <p class="lead">Visualizza e firma i contratti. (DEMO)</p>
-  </section>
+  <div class="stack">
+    <section class="hero card">
+      <h1 id="welcome">Area Inquilino</h1>
+      <p class="lead">Visualizza e firma i contratti. (DEMO)</p>
+    </section>
 
-  <section class="card">
-    <h2>Contratti da firmare</h2>
-    <div class="table-wrap"><table class="rp-table" id="tblSign">
-      <thead><tr><th>Immobile</th><th>Canone</th><th>Dal</th><th></th></tr></thead>
-      <tbody></tbody>
-    </table></div>
-  </section>
+    <!-- Profilo inquilino -->
+    <section class="card">
+      <h2>Dati profilo</h2>
+      <div class="kv" id="tenantKV"></div>
+    </section>
 
-  <section class="card">
-    <h2>Contratti attivi</h2>
-    <div class="table-wrap"><table class="rp-table" id="tblActive">
-      <thead><tr><th>Immobile</th><th>Dal</th><th>Canone</th></tr></thead>
-      <tbody></tbody>
-    </table></div>
-  </section>
+    <section class="card">
+      <h2>Contratti da firmare</h2>
+      <div class="table-wrap"><table class="rp-table" id="tblSign">
+        <thead><tr><th>Immobile</th><th>Canone</th><th>Dal</th><th></th></tr></thead>
+        <tbody></tbody>
+      </table></div>
+    </section>
+
+    <section class="card">
+      <h2>Contratti attivi</h2>
+      <div class="table-wrap"><table class="rp-table" id="tblActive">
+        <thead><tr><th>Immobile</th><th>Dal</th><th>Canone</th></tr></thead>
+        <tbody></tbody>
+      </table></div>
+    </section>
+  </div>
 </main>
 
 <footer class="footer container">
@@ -54,7 +68,6 @@
 // nav mobile
 (function(){const b=rpHamburger,d=rpDrawer,x=rpDrawerClose,o=rpBackdrop;function open(){d.classList.add('open');o.hidden=false;o.classList.add('show');document.body.style.overflow='hidden'}function close(){d.classList.remove('open');o.classList.remove('show');o.hidden=true;document.body.style.overflow=''}b&&b.addEventListener('click',open);x&&x.addEventListener('click',close);o&&o.addEventListener('click',close);window.addEventListener('keydown',e=>{if(e.key==='Escape')close()});})();
 
-// helpers
 const fmtEur = n => new Intl.NumberFormat('it-IT',{style:'currency',currency:'EUR'}).format(n);
 const fmtDMY = d => { if(!d) return ''; const [y,m,day]=d.split('-'); return `${day}/${m}/${y}`; };
 
@@ -63,10 +76,18 @@ if(!me || me.role!=='tenant'){ location.href='login.html'; }
 
 document.getElementById('welcome').textContent = `Ciao, ${me.name}`;
 
-// dati
+// Profilo (dati non sensibili ok)
+document.getElementById('tenantKV').innerHTML = `
+  <b>Nome</b><div>${me.name}</div>
+  <b>Email</b><div>${me.email}</div>
+  <b>Indirizzo</b><div>${me.address || '-'}</div>
+  <b>Canone tipico</b><div>${me.rent ? fmtEur(me.rent) : '-'}</div>
+`;
+
+// Dati contratti
 const contracts = RP.contracts.forTenant(me.id);
 
-// da firmare
+// Da firmare
 const tbodyS = document.querySelector('#tblSign tbody');
 const pending = contracts.filter(c=>c.status==='pending_tenant');
 tbodyS.innerHTML = pending.length ? pending.map(c=>`
@@ -80,13 +101,10 @@ tbodyS.innerHTML = pending.length ? pending.map(c=>`
 tbodyS.addEventListener('click', (e)=>{
   const id = e.target?.dataset?.sign;
   if(!id) return;
-  if(RP.contracts.signByTenant(id)){
-    // ricarica veloce
-    location.reload();
-  }
+  if(RP.contracts.signByTenant(id)){ location.reload(); }
 });
 
-// attivi
+// Attivi
 const tbodyA = document.querySelector('#tblActive tbody');
 const active = contracts.filter(c=>c.status==='active');
 tbodyA.innerHTML = active.length ? active.map(c=>`
