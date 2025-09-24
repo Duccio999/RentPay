@@ -170,52 +170,75 @@ h3{ margin:0 0 8px }
 .section .section-head{ display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap }
 .section h2{ margin:0 }
 
-/* ======= TABELLE: scroll orizzontale SOLO dentro al box ======= */
+/* ======= TABELLE: responsive + scroll orizzontale nel box ======= */
+
+.card, .section, .container { overflow: visible; }  /* evita tagli */
+
 .table-wrap{
+  width: 100%;
   max-width: 100%;
-  overflow-x: auto;
+  overflow-x: auto;                /* scroll solo qui */
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
   touch-action: pan-x;
   overscroll-behavior-x: contain;
-  border:1px solid rgba(255,255,255,.14);
-  border-radius:14px;
-  background:rgba(255,255,255,.04);
-  padding:0;
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 14px;
+  background: rgba(255,255,255,.04);
+  padding: 0;
   position: relative;
 }
+
+/* Effetto ombra laterale (facoltativo) */
 .table-wrap::before,
 .table-wrap::after{
   content:"";
   position:absolute; top:0; bottom:0; width:16px; pointer-events:none;
 }
-.table-wrap::before{ left:0;  background:linear-gradient(90deg,  rgba(0,0,0,.35), rgba(0,0,0,0)); }
-.table-wrap::after{  right:0; background:linear-gradient(270deg, rgba(0,0,0,.35), rgba(0,0,0,0)); }
+.table-wrap::before{ left:0;  background:linear-gradient(90deg, rgba(0,0,0,.35), rgba(0,0,0,0)); }
+.table-wrap::after { right:0; background:linear-gradient(270deg,rgba(0,0,0,.35), rgba(0,0,0,0)); }
 
-.table-wrap > .rp-table{
-  display: table;
-  width: max-content;
-  min-width: 620px;
+/* La tabella è più larga del wrapper → appare lo scroll.
+   Su mobile si “stringe” gradualmente (font/padding ridotti). */
+.rp-table{
   border-collapse: collapse;
+  width: max-content;                       /* cresce oltre il wrapper */
+  min-width: max(100%, 720px);              /* MAI più stretta del wrapper */
   table-layout: auto;
 }
-.table-wrap.wide  > .rp-table{ min-width: 820px; }
-.table-wrap.xwide > .rp-table{ min-width: 980px; }
 
 .rp-table th,
 .rp-table td{
   white-space: nowrap;
-  padding:12px 14px;
-  text-align:left;
-  border-bottom:1px solid rgba(255,255,255,.12);
+  padding: 12px 14px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255,255,255,.12);
+  font-size: 1rem;
 }
 
 .rp-table thead th{
-  font-weight:800;
-  background:rgba(255,255,255,.08);
+  font-weight: 800;
+  background: rgba(255,255,255,.08);
   position: sticky; top: 0; z-index: 1;
 }
 
-@media (max-width:560px){
-  .rp-table th,.rp-table td{ padding:10px 12px; font-size:.95rem; }
+/* breakpoint 720px: tabella un po' più stretta + testo leggermente ridotto */
+@media (max-width: 720px){
+  .rp-table{ min-width: max(100%, 620px); }
+  .rp-table th, .rp-table td{ padding: 10px 12px; font-size: .95rem; }
 }
+
+/* breakpoint 560px: ancora più compatta */
+@media (max-width: 560px){
+  .rp-table{ min-width: max(100%, 560px); }
+  .rp-table th, .rp-table td{ padding: 9px 10px; font-size: .92rem; }
+}
+
+/* breakpoint 400px: super compatta ma leggibile */
+@media (max-width: 400px){
+  .rp-table{ min-width: max(100%, 520px); }
+  .rp-table th, .rp-table td{ padding: 8px 9px; font-size: .88rem; }
+}
+
+/* sicurezza: evita che lo scroll orizzontale “prenda” tutta la pagina */
+html, body { overflow-x: hidden; }
