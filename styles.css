@@ -183,60 +183,9 @@ h3{ margin:0 0 8px }
 .section .section-head{ display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap }
 .section h2{ margin:0 }
 
-/* ===== Tabelle — scroll orizzontale mobile ===== */
-.table-wrap{
-  position:relative;
-  max-width:100%;
-  overflow-x:auto;          /* orizzontale */
-  overflow-y:hidden;
-  -webkit-overflow-scrolling:touch;
-  touch-action:pan-x;       /* Android */
-  overscroll-behavior:contain;
-  border:1px solid var(--border);
-  border-radius:14px;
-  background:rgba(255,255,255,.04);
-  padding:0;
-}
-/* Ombre ai bordi per suggerire lo scroll */
-.table-wrap::before,.table-wrap::after{
-  content:""; position:absolute; top:0; bottom:0; width:16px; pointer-events:none;
-}
-.table-wrap::before{ left:0;  background:linear-gradient(to right, rgba(0,0,0,.35), transparent) }
-.table-wrap::after{  right:0; background:linear-gradient(to left,  rgba(0,0,0,.35), transparent) }
-
-.rp-table{
-  border-collapse:collapse;
-  width:100%;
-  min-width:700px;          /* forza overflow su schermi piccoli */
-}
-.rp-table th,.rp-table td{
-  white-space:nowrap;       /* evita a capo: si scorre */
-  padding:12px 14px;
-  text-align:left;
-  border-bottom:1px solid rgba(255,255,255,.14);
-  color:#eaf2ff;
-}
-.rp-table thead th{
-  font-weight:800;
-  background:rgba(255,255,255,.10);
-  position:sticky; top:0; z-index:1;
-}
-.rp-table tbody tr:nth-child(even) td{ background:rgba(255,255,255,.03) }
-
-/* Evita che un contenitore tagli lo scroll del wrapper */
-.card, .section, .container{ overflow:visible }
-
-/* Badge (se servisse nei menu) */
-.rp-badge{
-  display:inline-grid; place-items:center;
-  min-width:18px; height:18px; padding:0 6px; margin-left:6px;
-  border-radius:999px; background:#ff4757; color:#fff;
-  font-size:12px; font-weight:800; line-height:1; vertical-align:middle;
-}
-
 /* ======= TABELLE: scroll orizzontale VERO su mobile ======= */
 
-/* wrapper che abilita lo scroll orizzontale e lo isola dallo scroll pagina */
+/* Tabelle con scroll orizzontale */
 .table-wrap{
   max-width:100%;
   overflow-x:auto;
@@ -250,34 +199,25 @@ h3{ margin:0 0 8px }
   padding:0;
 }
 
-/* la tabella deve poter essere più larga del wrapper */
-.table-wrap > .rp-table{
-  display: table;              /* evita width:100% implicita */
-  width: max-content;          /* si allarga quanto serve */
-  min-width: 820px;            /* forza la comparsa dello scroll su schermi stretti */
-  border-collapse: collapse;
-  table-layout: auto;
+.rp-table{
+  border-collapse:collapse;
+  width:max-content;   /* <— la tabella si allarga quanto serve */
+  min-width:720px;     /* <— forza la scrollbar su schermi piccoli */
+  table-layout:auto;
 }
 
-/* celle: mai andare a capo, così si scorre */
 .rp-table th,
 .rp-table td{
-  white-space: nowrap;
+  white-space:nowrap;
   padding:12px 14px;
   text-align:left;
   border-bottom:1px solid rgba(255,255,255,.12);
 }
 
-/* header più leggibile e sempre visibile durante lo scroll orizzontale */
 .rp-table thead th{
   font-weight:800;
   background:rgba(255,255,255,.08);
-  position: sticky;
-  top: 0;
-  z-index: 1;
-}
-
-/* piccolo ritocco su mobile */
-@media (max-width:560px){
-  .rp-table th,.rp-table td{ padding:10px 12px; font-size:.95rem; }
+  position:sticky;
+  top:0;
+  z-index:1;
 }
