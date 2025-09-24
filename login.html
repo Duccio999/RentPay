@@ -95,52 +95,56 @@
 if(!window.RP){ alert('Errore di caricamento rp-store.js'); }
 
 let ruolo = 'landlord';
-const sel = document.getElementById('profileSel');
+const sel    = document.getElementById('profileSel');
 const emailI = document.getElementById('email');
 
-function normUser(u){
-  // supporta seed con chiavi in IT o EN
-  return {
-    id: u.id,
-    role: u.role || u.ruolo,
-    name: u.name || u.nome,
-    email: u.email
-  };
-}
-
-function getList(){
+function normUser(u){ return { id:u.id, role:u.role||u.ruolo, name:u.name||u.nome, email:u.email }; }
+function listForRole(){
   const db = RP.read();
-  const list = ruolo==='landlord' ? db.utenti.proprietari : db.utenti.inquilini;
+  const list = (ruolo==='landlord') ? db.utenti.proprietari : db.utenti.inquilini;
   return list.map(normUser);
 }
 
 function fillOptions(){
-  sel.innerHTML='';
-  getList().forEach(u=>{
-    const opt=document.createElement('option');
-    opt.value=u.id; opt.textContent=`${u.name} — ${u.email}`;
+  const list = listForRole();
+  sel.innerHTML = '';
+  list.forEach(u=>{
+    const opt = document.createElement('option');
+    opt.value = u.id;
+    opt.textContent = `${u.name} — ${u.email}`;
     sel.appendChild(opt);
   });
-  sel.selectedIndex=0;
+  sel.selectedIndex = 0;
   showDetail();
 }
+
 function showDetail(){
-  const id = sel.value;
-  const u = getList().find(x=>x.id===id);
-  if(!u) return;
-  emailI.value = u.email || '';
+  const u = listForRole().find(x=>x.id===sel.value);
+  emailI.value = u ? (u.email || '') : '';
 }
 
-document.getElementById('btnProp').onclick=()=>{document.getElementById('btnProp').classList.add('active');document.getElementById('btnInq').classList.remove('active');ruolo='landlord';fillOptions();}
-document.getElementById('btnInq').onclick =()=>{document.getElementById('btnInq').classList.add('active');document.getElementById('btnProp').classList.remove('active');ruolo='tenant';fillOptions();}
-sel.onchange=showDetail;
+document.getElementById('btnProp').onclick = ()=>{
+  document.getElementById('btnProp').classList.add('active');
+  document.getElementById('btnInq').classList.remove('active');
+  ruolo='landlord'; fillOptions();
+};
+document.getElementById('btnInq').onclick = ()=>{
+  document.getElementById('btnInq').classList.add('active');
+  document.getElementById('btnProp').classList.remove('active');
+  ruolo='tenant'; fillOptions();
+};
+sel.onchange = showDetail;
 
-document.getElementById('btnLogin').onclick=()=>{
-  if(RP.loginById(ruolo, sel.value)){
+document.getElementById('btnLogin').onclick = ()=>{
+  // se mai fosse vuoto, prendo il primo profilo disponibile
+  if(!sel.value && sel.options.length){ sel.value = sel.options[0].value; }
+  const ok = RP.loginById(ruolo, sel.value);
+  if(ok){
     location.href = (ruolo==='landlord') ? 'dashboard-prop.html' : 'dashboard-inq.html';
   }
 };
 
+// init sicuro (se lo storage è corrotto, RP.read() lo ripristina)
 fillOptions();
 </script>
 </body>
