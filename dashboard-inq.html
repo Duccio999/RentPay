@@ -41,9 +41,11 @@
 
   <section class="card">
     <h2>Contratti da firmare</h2>
-    <div class="table-wrap" tabindex="0" aria-label="Contratti da firmare">
+    <div class="table-wrap">
       <table class="rp-table" id="tblToSign">
-        <thead><tr><th>Immobile</th><th>Proprietario</th><th>Canone</th><th>Stato</th><th>Azioni</th></tr></thead>
+        <thead>
+          <tr><th>Immobile</th><th>Proprietario</th><th>Canone</th><th>Stato</th><th>Azioni</th></tr>
+        </thead>
         <tbody></tbody>
       </table>
     </div>
@@ -51,7 +53,7 @@
 
   <section class="card">
     <h2>Contratti attivi</h2>
-    <div class="table-wrap" tabindex="0" aria-label="Contratti attivi">
+    <div class="table-wrap">
       <table class="rp-table" id="tblActive">
         <thead><tr><th>Immobile</th><th>Proprietario</th><th>Dal</th><th>Canone</th></tr></thead>
         <tbody></tbody>
@@ -61,7 +63,7 @@
 
   <section class="card">
     <h2>Pagamenti recenti</h2>
-    <div class="table-wrap" tabindex="0" aria-label="Pagamenti recenti">
+    <div class="table-wrap">
       <table class="rp-table" id="tblPays">
         <thead><tr><th>Data</th><th>Contratto</th><th>Importo</th><th>Stato</th></tr></thead>
         <tbody></tbody>
@@ -77,19 +79,17 @@
 
 <script src="rp-store.js"></script>
 <script>
-/* Nav mobile */
+/* nav mobile */
 (function(){
   const b=document.getElementById('rpHamburger'),d=document.getElementById('rpDrawer'),x=document.getElementById('rpDrawerClose'),o=document.getElementById('rpBackdrop');
   function open(){d.classList.add('open');o.hidden=false;o.classList.add('show');document.body.style.overflow='hidden'}
   function close(){d.classList.remove('open');o.classList.remove('show');o.hidden=true;document.body.style.overflow=''}
-  b&&b.addEventListener('click',open); x&&x.addEventListener('click',close); o&&o.addEventListener('click',close);
-  d.querySelectorAll('a').forEach(a=>a.addEventListener('click',close));
-  window.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
+  b&&b.addEventListener('click',open); x&&x.addEventListener('click',close); o&&o.addEventListener('click',close); window.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
 })();
 </script>
 
 <script>
-/* Dati + Tabelle (con bottone Firma DEMO) */
+/* dati + tabelle + firma DEMO */
 (function(){
   if(!window.RP){ location.href='login.html'; return; }
   const me = RP.me();
@@ -97,77 +97,93 @@
 
   const nameOf = u => u.name || u.nome;
   const emailOf= u => u.email;
-  const eur = n => new Intl.NumberFormat('it-IT',{style:'currency',currency:'EUR'}).format(n);
-  const dmy = d => { if(!d) return ''; const [y,m,dd]=d.split('-'); return `${dd}/${m}/${y}`; };
+  const fmtEur = n => new Intl.NumberFormat('it-IT',{style:'currency',currency:'EUR'}).format(n);
+  const fmtDMY = d => { if(!d) return ''; const [y,m,dd]=d.split('-'); return `${dd}/${m}/${y}`; };
 
-  const db = RP.read();
-  const landlordsMap = Object.fromEntries(db.utenti.proprietari.map(l=>[l.id,l]));
-  const myContracts = db.contratti.filter(c=>c.tenantId===me.id);
+  function refresh(){
+    const db = RP.read();
+    const landlordsMap = Object.fromEntries(db.utenti.proprietari.map(l=>[l.id,l]));
+    const myContracts = db.contratti.filter(c=>c.tenantId===me.id);
 
-  document.getElementById('welcome').textContent = `Benvenuto, ${nameOf(me)}`;
-  document.getElementById('tenantKV').innerHTML = `
-    <b>Nome</b><div>${nameOf(me)}</div>
-    <b>Email</b><div>${emailOf(me)}</div>
-    <b>Indirizzo (dal contratto)</b><div>${myContracts[0]?.address || myContracts[0]?.indirizzo || '—'}</div>
-    <b>Canone (dal contratto)</b><div>${myContracts[0] ? eur(myContracts[0].rent || myContracts[0].affitto) : '—'}</div>
-  `;
+    document.getElementById('welcome').textContent = `Benvenuto, ${nameOf(me)}`;
+    document.getElementById('tenantKV').innerHTML = `
+      <b>Nome</b><div>${nameOf(me)}</div>
+      <b>Email</b><div>${emailOf(me)}</div>
+      <b>Indirizzo (dal contratto)</b><div>${myContracts[0]?.address || myContracts[0]?.indirizzo || '—'}</div>
+      <b>Canone (dal contratto)</b><div>${myContracts[0]? fmtEur(myContracts[0].rent || myContracts[0].affitto) : '—'}</div>
+    `;
 
-  const toSign = myContracts.filter(c => (c.status||c.stato)==='pending_tenant');
-  const toSignTbody = document.querySelector('#tblToSign tbody');
-  toSignTbody.innerHTML = toSign.length ? toSign.map(c=>`
-    <tr data-id="${c.id}">
-      <td>${c.address||c.indirizzo}</td>
-      <td>${nameOf(landlordsMap[c.landlordId])}</td>
-      <td>${eur(c.rent||c.affitto)}</td>
-      <td>In attesa firma</td>
-      <td><button class="btn primary btn-sign" data-id="${c.id}">Firma (demo)</button></td>
-    </tr>
-  `).join('') : `<tr><td colspan="5">Nessun contratto da firmare.</td></tr>`;
+    // Da firmare
+    const toSign = myContracts.filter(c => (c.status||c.stato)==='pending_tenant');
+    document.querySelector('#tblToSign tbody').innerHTML = toSign.length ? toSign.map(c=>`
+      <tr>
+        <td>${c.address||c.indirizzo}</td>
+        <td>${nameOf(landlordsMap[c.landlordId])}</td>
+        <td>${fmtEur(c.rent||c.affitto)}</td>
+        <td>In attesa firma</td>
+        <td><button class="btn primary" data-sign="${c.id}">Firma (DEMO)</button></td>
+      </tr>
+    `).join('') : `<tr><td colspan="5">Nessun contratto da firmare.</td></tr>`;
 
-  // click su "Firma (demo)": attiva il contratto e refresh
-  toSignTbody.addEventListener('click', (e)=>{
-    const b = e.target.closest('.btn-sign'); if(!b) return;
-    const id = b.getAttribute('data-id');
-    const dbNow = RP.read();
-    const c = dbNow.contratti.find(x=>x.id===id);
-    if(c){ c.status='active'; RP.write(dbNow); alert('Contratto firmato (DEMO).'); location.reload(); }
+    // Attivi
+    const active = myContracts.filter(c => (c.status||c.stato)==='active');
+    document.querySelector('#tblActive tbody').innerHTML = active.length ? active.map(c=>`
+      <tr>
+        <td>${c.address||c.indirizzo}</td>
+        <td>${nameOf(landlordsMap[c.landlordId])}</td>
+        <td>${fmtDMY(c.start||c.dataInizio)}</td>
+        <td>${fmtEur(c.rent||c.affitto)}</td>
+      </tr>
+    `).join('') : `<tr><td colspan="4">Nessun contratto attivo.</td></tr>`;
+
+    // Pagamenti
+    const myIds = new Set(myContracts.map(c=>c.id));
+    const pays = db.pagamenti.filter(p=> myIds.has(p.contractId||p.contrattoId));
+    const cmap = Object.fromEntries(myContracts.map(c=>[c.id,c]));
+    document.querySelector('#tblPays tbody').innerHTML = pays.length ? pays.map(p=>`
+      <tr>
+        <td>${fmtDMY(p.data||p.date)}</td>
+        <td>${(cmap[p.contractId||p.contrattoId]?.address) || (cmap[p.contractId||p.contrattoId]?.indirizzo) || '-'}</td>
+        <td>${fmtEur(p.importo||p.amount)}</td>
+        <td>${(p.stato||p.status)==='pagato' ? 'Completato' : (p.stato||p.status)}</td>
+      </tr>
+    `).join('') : `<tr><td colspan="4">Nessun pagamento (DEMO).</td></tr>`;
+  }
+
+  // click su “Firma (DEMO)”
+  document.addEventListener('click', (e)=>{
+    const btn = e.target.closest('button[data-sign]');
+    if(!btn) return;
+    const id = btn.getAttribute('data-sign');
+    const db = RP.read();
+    const c = db.contratti.find(x=>x.id===id && x.tenantId===me.id);
+    if(!c) return;
+    c.status = 'active';
+    // aggiungo una “prima rata” demo
+    db.pagamenti.push({
+      id:'P'+Date.now(),
+      contractId:c.id,
+      data:c.start || new Date().toISOString().slice(0,10),
+      importo:c.rent || c.affitto || 0,
+      stato:'pagato'
+    });
+    RP.write(db);
+    refresh();
+    alert('Contratto firmato (DEMO).');
   });
 
-  const active = myContracts.filter(c => (c.status||c.stato)==='active');
-  document.querySelector('#tblActive tbody').innerHTML = active.length ? active.map(c=>`
-    <tr>
-      <td>${c.address||c.indirizzo}</td>
-      <td>${nameOf(landlordsMap[c.landlordId])}</td>
-      <td>${dmy(c.start||c.dataInizio)}</td>
-      <td>${eur(c.rent||c.affitto)}</td>
-    </tr>
-  `).join('') : `<tr><td colspan="4">Nessun contratto attivo.</td></tr>`;
-
-  const myIds = new Set(myContracts.map(c=>c.id));
-  const pays = db.pagamenti.filter(p=> myIds.has(p.contractId||p.contrattoId));
-  const cmap = Object.fromEntries(myContracts.map(c=>[c.id,c]));
-  document.querySelector('#tblPays tbody').innerHTML = pays.length ? pays.map(p=>`
-    <tr>
-      <td>${dmy(p.data||p.date)}</td>
-      <td>${(cmap[p.contractId||p.contrattoId]?.address) || (cmap[p.contractId||p.contrattoId]?.indirizzo) || '-'}</td>
-      <td>${eur(p.importo||p.amount)}</td>
-      <td>${(p.stato||p.status)==='pagato' ? 'Completato' : (p.stato||p.status)}</td>
-    </tr>
-  `).join('') : `<tr><td colspan="4">Nessun pagamento (DEMO).</td></tr>`;
+  refresh();
 })();
 </script>
 
 <script>
-/* Drag-to-scroll orizzontale senza bloccare i click */
-(function(){
-  document.querySelectorAll('.table-wrap').forEach(w=>{
-    let down=false, sx=0, sl=0, moved=false;
-    w.addEventListener('pointerdown', e=>{down=true; moved=false; sx=e.clientX; sl=w.scrollLeft; w.setPointerCapture?.(e.pointerId);});
-    w.addEventListener('pointermove', e=>{ if(!down) return; const dx=e.clientX-sx; if(Math.abs(dx)>3) moved=true; w.scrollLeft = sl - dx; });
-    ['pointerup','pointercancel','pointerleave'].forEach(t=> w.addEventListener(t, ()=>{down=false;}));
-    w.addEventListener('click', e=>{ if(moved){ e.preventDefault(); e.stopPropagation(); }}, true);
-  });
-})();
+/* drag-to-scroll orizzontale per le tabelle */
+document.querySelectorAll('.table-wrap').forEach(w=>{
+  let down=false, startX=0, startScroll=0;
+  w.addEventListener('pointerdown',e=>{down=true; startX=e.clientX; startScroll=w.scrollLeft; w.setPointerCapture?.(e.pointerId);});
+  w.addEventListener('pointermove',e=>{if(!down)return; w.scrollLeft = startScroll - (e.clientX - startX);});
+  ['pointerup','pointercancel','mouseleave'].forEach(ev=>w.addEventListener(ev,()=>{down=false;}));
+});
 </script>
 </body>
 </html>
