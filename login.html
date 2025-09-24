@@ -24,7 +24,7 @@
 <main class="container narrow">
   <section class="hero card">
     <h1>Accesso demo con profili registrati</h1>
-    <p class="lead">Scegli il ruolo e il profilo: i dati sono già compilati.</p>
+    <p class="lead">Scegli il ruolo e un profilo. Nome ed email sono già compilati. Inserisci la password <em>(simbolica)</em> per entrare.</p>
   </section>
 
   <div class="role-toggle">
@@ -33,20 +33,26 @@
   </div>
 
   <div class="form-card">
+    <!-- Scelta profilo -->
     <div class="field">
       <label><strong>Seleziona profilo demo</strong></label>
       <div class="input"><span>📁</span><select id="profileSel"></select></div>
     </div>
 
+    <!-- Dati visibili (nessun dato sensibile) -->
     <div class="grid" style="margin-top:12px">
       <div class="field"><label>Nome e Cognome</label><div class="input"><span>🧑</span><input id="name" readonly></div></div>
       <div class="field"><label>Email</label><div class="input"><span>✉️</span><input id="email" readonly></div></div>
-      <div class="field"><label id="lbl1">IBAN (accredito)</label><div class="input"><span>🏦</span><input id="extra1" readonly></div></div>
-      <div class="field"><label id="lbl2">Immobili gestiti</label><div class="input"><span>🏢</span><input id="extra2" readonly></div></div>
+    </div>
+
+    <!-- Password simbolica -->
+    <div class="field" style="margin-top:12px">
+      <label>Password (demo)</label>
+      <div class="input"><span>🔒</span><input id="pwd" type="password" placeholder="Inserisci: demo"></div>
     </div>
 
     <p class="notice" style="margin-top:12px;padding:10px 12px;border-radius:10px">
-      <strong>DEMO:</strong> i dati sono statici e non vengono salvati.
+      <strong>DEMO:</strong> la password è solo dimostrativa. Usa <code>demo</code>.
     </p>
 
     <div class="actions" style="margin-top:10px">
@@ -81,10 +87,7 @@ let ruolo = 'landlord';
 const sel   = document.getElementById('profileSel');
 const nameI = document.getElementById('name');
 const emailI= document.getElementById('email');
-const ex1   = document.getElementById('extra1');
-const ex2   = document.getElementById('extra2');
-const l1    = document.getElementById('lbl1');
-const l2    = document.getElementById('lbl2');
+const pwd   = document.getElementById('pwd');
 
 function list(){ return ruolo==='landlord' ? RP.users.landlords() : RP.users.tenants(); }
 
@@ -101,22 +104,10 @@ function fillOptions(){
 }
 
 function showDetail(){
-  const id = sel.value;
-  const u = list().find(x=>x.id===id);
+  const u = list().find(x=>x.id===sel.value);
   if(!u) return;
-  nameI.value = u.name;
+  nameI.value  = u.name;
   emailI.value = u.email;
-  if(ruolo==='landlord'){
-    l1.textContent='IBAN (accredito)';
-    l2.textContent='Immobili gestiti';
-    ex1.value=u.iban || '';
-    ex2.value=String(u.props ?? '');
-  }else{
-    l1.textContent='Indirizzo';
-    l2.textContent='Canone mensile (€)';
-    ex1.value=u.address || '';
-    ex2.value=String(u.rent ?? '');
-  }
 }
 
 document.getElementById('btnProp').onclick = ()=>{ ruolo='landlord'; document.getElementById('btnProp').classList.add('active'); document.getElementById('btnInq').classList.remove('active'); fillOptions(); };
@@ -124,6 +115,7 @@ document.getElementById('btnInq').onclick  = ()=>{ ruolo='tenant';   document.ge
 sel.onchange = showDetail;
 
 document.getElementById('btnLogin').onclick = ()=>{
+  if((pwd.value||'').toLowerCase() !== 'demo'){ alert('Password demo non valida. Usa: "demo".'); return; }
   if(RP.loginById(ruolo, sel.value)){
     location.href = (ruolo==='landlord') ? 'dashboard-prop.html' : 'dashboard-inq.html';
   }
