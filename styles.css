@@ -1,5 +1,5 @@
 /* =========================
-   RentPay — styles.css (rev)
+   RentPay — styles.css
    ========================= */
 
 /* ===== Variabili ===== */
@@ -120,7 +120,7 @@ section{ scroll-margin-top:90px }
 
 .card{
   background:var(--card); border:1px solid var(--border); border-radius:16px;
-  padding:22px 20px; margin:0 auto 16px; max-width:900px;
+  padding:22px 20px; margin:0 auto 20px; max-width:900px;
   box-shadow:0 8px 22px rgba(0,0,0,.28);
 }
 
@@ -132,21 +132,6 @@ h3{ margin:0 0 8px }
 .footer .f-links{ display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-bottom:8px }
 .footer .f-links a{ opacity:.85; font-size:14px }
 .footer .f-links a:hover{ opacity:1 }
-
-/* ===== Tabs (home) ===== */
-.tabs{ display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin-top:14px }
-.tab{
-  appearance:none; border:1px solid rgba(255,255,255,.18);
-  display:inline-flex; align-items:center; gap:8px; cursor:pointer;
-  padding:10px 16px; min-height:40px; border-radius:999px;
-  font-weight:700; letter-spacing:.2px;
-  background:rgba(255,255,255,.06); color:var(--text);
-  transition:transform .08s ease, background .15s ease, border-color .15s ease;
-}
-.tab:hover{ background:rgba(255,255,255,.09) }
-.tab:active{ transform:translateY(1px) }
-.tab.active{ background:var(--accent); color:var(--accentText); border-color:transparent }
-.tab:focus-visible{ outline:2px solid var(--accent); outline-offset:3px }
 
 /* ===== Toggle RUOLO (login) ===== */
 .role-toggle{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin:12px 0 18px }
@@ -179,31 +164,31 @@ h3{ margin:0 0 8px }
 }
 
 /* ===== Sezioni dashboard ===== */
-.section{ margin:22px 0 }            /* più aria tra i blocchi */
+.section{ margin:22px 0 }   /* più aria tra i blocchi */
 .section .section-head{ display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap }
 .section h2{ margin:0 }
 
-/* ======= TABELLE: scroll orizzontale VERO su mobile ======= */
-
-/* Tabelle con scroll orizzontale */
+/* ===== Tabelle: scroll orizzontale nel box ===== */
 .table-wrap{
   max-width:100%;
   overflow-x:auto;
   overflow-y:hidden;
   -webkit-overflow-scrolling:touch;
-  touch-action: pan-x;
-  overscroll-behavior-x: contain;
+  touch-action:pan-x;
+  overscroll-behavior-x:contain;
   border:1px solid rgba(255,255,255,.14);
   border-radius:14px;
   background:rgba(255,255,255,.04);
   padding:0;
+  cursor:grab;
 }
+.table-wrap:active{ cursor:grabbing }
 
 .rp-table{
   border-collapse:collapse;
-  width:max-content;   /* <— la tabella si allarga quanto serve */
-  min-width:720px;     /* <— forza la scrollbar su schermi piccoli */
   table-layout:auto;
+  width:max-content;   /* la tabella cresce quanto serve */
+  min-width:720px;     /* forza lo scroll su schermi piccoli */
 }
 
 .rp-table th,
@@ -212,12 +197,18 @@ h3{ margin:0 0 8px }
   padding:12px 14px;
   text-align:left;
   border-bottom:1px solid rgba(255,255,255,.12);
+  color:#eaf2ff;
 }
 
 .rp-table thead th{
   font-weight:800;
   background:rgba(255,255,255,.08);
-  position:sticky;
-  top:0;
-  z-index:1;
+  position:sticky; top:0; z-index:1;
 }
+
+@media (max-width:560px){
+  .rp-table th,.rp-table td{ padding:10px 12px; font-size:.95rem }
+}
+
+/* Evita che contenitori padri blocchino lo scroll orizzontale */
+.card, .section, .container{ overflow:visible; }
