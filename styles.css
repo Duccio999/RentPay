@@ -233,3 +233,51 @@ h3{ margin:0 0 8px }
   border-radius:999px; background:#ff4757; color:#fff;
   font-size:12px; font-weight:800; line-height:1; vertical-align:middle;
 }
+
+/* ======= TABELLE: scroll orizzontale VERO su mobile ======= */
+
+/* wrapper che abilita lo scroll orizzontale e lo isola dallo scroll pagina */
+.table-wrap{
+  max-width:100%;
+  overflow-x:auto;
+  overflow-y:hidden;
+  -webkit-overflow-scrolling:touch;
+  touch-action: pan-x;
+  overscroll-behavior-x: contain;
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:14px;
+  background:rgba(255,255,255,.04);
+  padding:0;
+}
+
+/* la tabella deve poter essere più larga del wrapper */
+.table-wrap > .rp-table{
+  display: table;              /* evita width:100% implicita */
+  width: max-content;          /* si allarga quanto serve */
+  min-width: 820px;            /* forza la comparsa dello scroll su schermi stretti */
+  border-collapse: collapse;
+  table-layout: auto;
+}
+
+/* celle: mai andare a capo, così si scorre */
+.rp-table th,
+.rp-table td{
+  white-space: nowrap;
+  padding:12px 14px;
+  text-align:left;
+  border-bottom:1px solid rgba(255,255,255,.12);
+}
+
+/* header più leggibile e sempre visibile durante lo scroll orizzontale */
+.rp-table thead th{
+  font-weight:800;
+  background:rgba(255,255,255,.08);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+/* piccolo ritocco su mobile */
+@media (max-width:560px){
+  .rp-table th,.rp-table td{ padding:10px 12px; font-size:.95rem; }
+}
