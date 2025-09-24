@@ -6,23 +6,14 @@
   <title>Dashboard Inquilino — RentPay (DEMO)</title>
   <link rel="stylesheet" href="styles.css">
   <style>
-    /* Spaziatura morbida tra i box */
-    .stack { display:flex; flex-direction:column; gap:32px }
-    @media (min-width:900px){ .stack{gap:36px} }
-
-    /* Profilo: layout verticale su mobile */
-    .kv { display:grid; grid-template-columns:1fr; gap:8px 0 }
-    .kv b { display:block; font-weight:600; margin-top:6px }
-
-    /* Tabelle scrollabili come richiesto */
-    .table-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch }
-
-    /* Head di sezione (se in futuro vorrai bottoni) */
-    .section-head { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap }
+    .stack{display:flex;flex-direction:column;gap:32px}
+    @media(min-width:900px){.stack{gap:36px}}
+    .kv{display:grid;grid-template-columns:1fr;gap:8px 0}
+    .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+    .rp-table{min-width:620px}
   </style>
 </head>
 <body>
-<!-- NAV -->
 <nav class="rp-nav">
   <a class="rp-brand" href="./index.html"><span class="rp-house">🏠</span><span class="rp-brand-text">RentPay</span></a>
   <div class="rp-menu-desktop">
@@ -31,8 +22,6 @@
   </div>
   <button id="rpHamburger" class="rp-hamburger" aria-label="Apri menu">☰</button>
 </nav>
-
-<!-- Drawer mobile -->
 <aside id="rpDrawer" class="rp-drawer" aria-hidden="true">
   <div class="rp-drawer-head"><span>Menù</span><button id="rpDrawerClose" class="rp-close">×</button></div>
   <a href="funzioni.html">Funzioni</a>
@@ -40,166 +29,122 @@
 </aside>
 <div id="rpBackdrop" class="rp-backdrop" hidden></div>
 
-<!-- CONTENUTO -->
-<main class="container">
-  <div class="stack">
-    <section class="hero card">
-      <h1 id="welcome">Dashboard Inquilino</h1>
-      <p class="lead">Qui vedi i contratti, gli addebiti ricorrenti e le richieste di firma. (DEMO)</p>
-    </section>
+<main class="container stack">
+  <section class="hero card">
+    <h1 id="welcome">Dashboard Inquilino</h1>
+    <p class="lead">Contratti, firme e addebiti ricorrenti. (DEMO)</p>
+  </section>
 
-    <section class="card">
-      <h2>Dati profilo</h2>
-      <div class="kv" id="tenantKV"></div>
-    </section>
+  <section class="card">
+    <h2>Dati profilo</h2>
+    <div class="kv" id="tenantKV"></div>
+  </section>
 
-    <section class="card">
-      <div class="section-head">
-        <h2>Contratti da firmare</h2>
-      </div>
-      <div class="table-wrap">
-        <table class="rp-table" id="tblToSign">
-          <thead>
-            <tr>
-              <th>Immobile</th>
-              <th>Proprietario</th>
-              <th>Canone</th>
-              <th>Stato</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </section>
+  <section class="card">
+    <h2>Contratti da firmare</h2>
+    <div class="table-wrap">
+      <table class="rp-table" id="tblToSign">
+        <thead><tr><th>Immobile</th><th>Proprietario</th><th>Canone</th><th>Stato</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
 
-    <section class="card">
-      <h2>Contratti attivi</h2>
-      <div class="table-wrap">
-        <table class="rp-table" id="tblActive">
-          <thead>
-            <tr>
-              <th>Immobile</th>
-              <th>Proprietario</th>
-              <th>Dal</th>
-              <th>Canone</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </section>
+  <section class="card">
+    <h2>Contratti attivi</h2>
+    <div class="table-wrap">
+      <table class="rp-table" id="tblActive">
+        <thead><tr><th>Immobile</th><th>Proprietario</th><th>Dal</th><th>Canone</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
 
-    <section class="card">
-      <h2>Pagamenti recenti</h2>
-      <div class="table-wrap">
-        <table class="rp-table" id="tblPays">
-          <thead>
-            <tr>
-              <th>Data</th>
-              <th>Contratto</th>
-              <th>Importo</th>
-              <th>Stato</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </section>
-  </div>
+  <section class="card">
+    <h2>Pagamenti recenti</h2>
+    <div class="table-wrap">
+      <table class="rp-table" id="tblPays">
+        <thead><tr><th>Data</th><th>Contratto</th><th>Importo</th><th>Stato</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
 </main>
 
-<!-- FOOTER -->
 <footer class="footer container">
-  <div class="f-links">
-    <a href="terms.html">Termini</a>
-    <a href="privacy.html">Privacy</a>
-    <a href="cookie.html">Cookie</a>
-  </div>
+  <div class="f-links"><a href="terms.html">Termini</a><a href="privacy.html">Privacy</a><a href="cookie.html">Cookie</a></div>
   <div class="copy">© 2025 RentPay — PWA</div>
 </footer>
 
-<!-- Store condiviso -->
 <script src="rp-store.js"></script>
-
-<!-- NAV mobile -->
 <script>
 (function(){
-  const b=document.getElementById('rpHamburger'),d=document.getElementById('rpDrawer'),
-        x=document.getElementById('rpDrawerClose'),o=document.getElementById('rpBackdrop');
+  // nav mobile
+  const b=document.getElementById('rpHamburger'),d=document.getElementById('rpDrawer'),x=document.getElementById('rpDrawerClose'),o=document.getElementById('rpBackdrop');
   function open(){d.classList.add('open');o.hidden=false;o.classList.add('show');document.body.style.overflow='hidden'}
   function close(){d.classList.remove('open');o.classList.remove('show');o.hidden=true;document.body.style.overflow=''}
-  b&&b.addEventListener('click',open); x&&x.addEventListener('click',close); o&&o.addEventListener('click',close);
-  window.addEventListener('keydown',e=>{if(e.key==='Escape') close()});
+  b&&b.addEventListener('click',open); x&&x.addEventListener('click',close); o&&o.addEventListener('click',close); window.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
 })();
 </script>
 
-<!-- LOGICA DASHBOARD INQUILINO (solo lettura dal seed demo) -->
 <script>
 (function(){
   if(!window.RP){ location.href='login.html'; return; }
-
   const me = RP.me();
-  if(!me || me.role !== 'tenant'){ location.href='login.html'; return; }
+  if(!me || (me.role!=='tenant' && me.ruolo!=='inquilino')){ location.href='login.html'; return; }
 
-  // Utility formattazioni
+  // normalizzatori
+  const nameOf = u => u.name || u.nome;
+  const emailOf= u => u.email;
   const fmtEur = n => new Intl.NumberFormat('it-IT',{style:'currency',currency:'EUR'}).format(n);
   const fmtDMY = d => { if(!d) return ''; const [y,m,dd]=d.split('-'); return `${dd}/${m}/${y}`; };
 
-  // Header
-  document.getElementById('welcome').textContent = `Benvenuto, ${me.name}`;
-
-  // DB completo dal seed
   const db = RP.read();
+  const landlordsMap = Object.fromEntries(db.utenti.proprietari.map(l=>[l.id,l]));
+  const myContracts = db.contratti.filter(c=>c.tenantId===me.id);
 
-  // Map veloci
-  const landlordsMap = Object.fromEntries(db.utenti.proprietari.map(l => [l.id, l]));
-  const myContracts = db.contratti.filter(c => c.tenantId === me.id);
-
-  // Profilo
+  document.getElementById('welcome').textContent = `Benvenuto, ${nameOf(me)}`;
   document.getElementById('tenantKV').innerHTML = `
-    <b>Nome</b><div>${me.name}</div>
-    <b>Email</b><div>${me.email}</div>
-    <b>Indirizzo (dal contratto)</b><div>${myContracts[0]?.address || '-'}</div>
-    <b>Canone (dal contratto)</b><div>${myContracts[0]? fmtEur(myContracts[0].rent) : '-'}</div>
+    <b>Nome</b><div>${nameOf(me)}</div>
+    <b>Email</b><div>${emailOf(me)}</div>
+    <b>Indirizzo (dal contratto)</b><div>${myContracts[0]?.address || myContracts[0]?.indirizzo || '—'}</div>
+    <b>Canone (dal contratto)</b><div>${myContracts[0]? fmtEur(myContracts[0].rent || myContracts[0].affitto) : '—'}</div>
   `;
 
-  // Contratti da firmare
-  const tbodySign = document.querySelector('#tblToSign tbody');
-  const toSign = myContracts.filter(c => c.status === 'pending_tenant');
-  tbodySign.innerHTML = toSign.length ? toSign.map(c => `
+  // Da firmare
+  const toSign = myContracts.filter(c => (c.status||c.stato)==='pending_tenant');
+  document.querySelector('#tblToSign tbody').innerHTML = toSign.length ? toSign.map(c=>`
     <tr>
-      <td>${c.address}</td>
-      <td>${landlordsMap[c.landlordId]?.name || '-'}</td>
-      <td>${fmtEur(c.rent)}</td>
+      <td>${c.address||c.indirizzo}</td>
+      <td>${nameOf(landlordsMap[c.landlordId])}</td>
+      <td>${fmtEur(c.rent||c.affitto)}</td>
       <td>In attesa firma</td>
     </tr>
   `).join('') : `<tr><td colspan="4">Nessun contratto da firmare.</td></tr>`;
 
-  // Contratti attivi
-  const tbodyAct = document.querySelector('#tblActive tbody');
-  const active = myContracts.filter(c => c.status === 'active');
-  tbodyAct.innerHTML = active.length ? active.map(c => `
+  // Attivi
+  const active = myContracts.filter(c => (c.status||c.stato)==='active');
+  document.querySelector('#tblActive tbody').innerHTML = active.length ? active.map(c=>`
     <tr>
-      <td>${c.address}</td>
-      <td>${landlordsMap[c.landlordId]?.name || '-'}</td>
-      <td>${fmtDMY(c.start)}</td>
-      <td>${fmtEur(c.rent)}</td>
+      <td>${c.address||c.indirizzo}</td>
+      <td>${nameOf(landlordsMap[c.landlordId])}</td>
+      <td>${fmtDMY(c.start||c.dataInizio)}</td>
+      <td>${fmtEur(c.rent||c.affitto)}</td>
     </tr>
   `).join('') : `<tr><td colspan="4">Nessun contratto attivo.</td></tr>`;
 
-  // Pagamenti recenti (per i contratti dell'inquilino)
-  const tbodyPays = document.querySelector('#tblPays tbody');
-  const myContractIds = new Set(myContracts.map(c => c.id));
-  const pays = db.pagamenti.filter(p => myContractIds.has(p.contractId));
-  const contractsMap = Object.fromEntries(myContracts.map(c => [c.id, c]));
-  tbodyPays.innerHTML = pays.length ? pays.map(p => `
+  // Pagamenti
+  const myIds = new Set(myContracts.map(c=>c.id));
+  const pays = db.pagamenti.filter(p=> myIds.has(p.contractId||p.contrattoId));
+  const cmap = Object.fromEntries(myContracts.map(c=>[c.id,c]));
+  document.querySelector('#tblPays tbody').innerHTML = pays.length ? pays.map(p=>`
     <tr>
-      <td>${fmtDMY(p.data)}</td>
-      <td>${contractsMap[p.contractId]?.address || '-'}</td>
-      <td>${fmtEur(p.importo)}</td>
-      <td>${p.stato === 'pagato' ? 'Completato' : '-'}</td>
+      <td>${fmtDMY(p.data||p.date)}</td>
+      <td>${(cmap[p.contractId||p.contrattoId]?.address) || (cmap[p.contractId||p.contrattoId]?.indirizzo) || '-'}</td>
+      <td>${fmtEur(p.importo||p.amount)}</td>
+      <td>${(p.stato||p.status)==='pagato' ? 'Completato' : (p.stato||p.status)}</td>
     </tr>
-  `).join('') : `<tr><td colspan="4">Nessun pagamento registrato (DEMO).</td></tr>`;
+  `).join('') : `<tr><td colspan="4">Nessun pagamento (DEMO).</td></tr>`;
 })();
 </script>
 </body>
