@@ -1,3 +1,92 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Crea nuovo contratto (DEMO) — RentPay</title>
+  <link rel="stylesheet" href="styles.css?v=fix9">
+  <style>
+    .stack{display:flex;flex-direction:column;gap:32px}
+    @media(min-width:900px){.stack{gap:36px}}
+    .form-card{max-width:900px;margin:0 auto}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media(max-width:720px){.grid2{grid-template-columns:1fr}}
+    .actions{justify-content:center}
+  </style>
+</head>
+<body>
+<!-- NAV -->
+<nav class="rp-nav">
+  <a class="rp-brand" href="./index.html"><span class="rp-house">🏠</span><span class="rp-brand-text">RentPay</span></a>
+  <div class="rp-menu-desktop">
+    <a href="dashboard-prop.html">Dashboard</a>
+    <a class="rp-accent" href="login.html">Cambia account</a>
+  </div>
+  <button id="rpHamburger" class="rp-hamburger" aria-label="Apri menu">☰</button>
+</nav>
+<aside id="rpDrawer" class="rp-drawer" aria-hidden="true">
+  <div class="rp-drawer-head"><span>Menù</span><button id="rpDrawerClose" class="rp-close">×</button></div>
+  <a href="dashboard-prop.html">Dashboard</a>
+  <a class="rp-accent" href="login.html">Cambia account</a>
+</aside>
+<div id="rpBackdrop" class="rp-backdrop" hidden></div>
+
+<main class="container stack">
+  <section class="hero card">
+    <h1>Crea nuovo contratto</h1>
+    <p class="lead">Compila e invia all’inquilino per la firma digitale. (DEMO)</p>
+  </section>
+
+  <section class="card form-card">
+    <div class="field">
+      <label>Proprietario</label>
+      <div class="input"><span>🧑‍💼</span><input id="owner" readonly></div>
+    </div>
+
+    <div class="field">
+      <label>Inquilino</label>
+      <div class="input"><span>🏡</span>
+        <select id="tenantSel"></select>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Indirizzo immobile</label>
+      <div class="input"><span>📍</span><input id="addr" placeholder="Via …"></div>
+    </div>
+
+    <div class="grid2">
+      <div class="field">
+        <label>Canone mensile (€)</label>
+        <div class="input"><span>💶</span><input id="rent" type="number" inputmode="decimal" step="1" placeholder="800"></div>
+      </div>
+      <div class="field">
+        <label>Data inizio</label>
+        <div class="input"><span>📅</span><input id="start" type="date"></div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Durata (mesi)</label>
+      <div class="input"><span>🗓️</span><input id="months" type="number" step="1" value="12"></div>
+    </div>
+
+    <p class="notice" style="margin-top:12px;padding:10px 12px;border-radius:10px">
+      <strong>DEMO:</strong> il contratto viene salvato localmente e risulta “In attesa firma” nella dashboard dell’inquilino.
+    </p>
+
+    <div class="actions" style="margin-top:10px">
+      <button class="btn primary" id="btnSubmit" type="button">Firma &amp; invia (DEMO)</button>
+    </div>
+  </section>
+</main>
+
+<footer class="footer container">
+  <div class="f-links"><a href="terms.html">Termini</a><a href="privacy.html">Privacy</a><a href="cookie.html">Cookie</a></div>
+  <div class="copy">© 2025 RentPay — PWA</div>
+</footer>
+
+<script src="rp-store.js"></script>
 <script>
 /* ===== Nav mobile ===== */
 (function(){
@@ -13,74 +102,36 @@
   const me = RP.me();
   if(!me || (me.role!=='landlord' && me.ruolo!=='proprietario')){ location.href='login.html'; return; }
 
-  const owner    = document.getElementById('owner');
-  const tenantSel= document.getElementById('tenantSel');
-  const addr     = document.getElementById('addr');
-  const rent     = document.getElementById('rent');
-  const start    = document.getElementById('start');
-  const months   = document.getElementById('months');
-  const btn      = document.getElementById('btnSubmit');
+  const owner   = document.getElementById('owner');
+  const tenantSel = document.getElementById('tenantSel');
+  const addr    = document.getElementById('addr');
+  const rent    = document.getElementById('rent');
+  const start   = document.getElementById('start');
+  const months  = document.getElementById('months');
+  const btn     = document.getElementById('btnSubmit');
 
-  owner.value = `${me.name || me.nome} — ${me.email}`;
+  owner.value = ${me.name || me.nome} — ${me.email};
 
   const db = RP.read();
-
-  // --- PRESET per-tenant: riconosco per email/nome/id in modo robusto
-  //   (modifica liberamente i valori qui sotto)
-  const TENANT_PRESETS = {
-    // Giulia Neri
-    'giulia':  { address:'Via Po 8, Torino',  rent:720, start:'2025-10-01', months:12 },
-    // Luca Bianchi
-    'luca':    { address:'Via Roma 12, Milano', rent:850, start:'2025-06-01', months:18 }
-  };
-
-  function findPreset(t){
-    const key = `${t.email||''} ${t.nome||t.name||''} ${t.id||''}`.toLowerCase();
-    if(key.includes('giulia')) return TENANT_PRESETS.giulia;
-    if(key.includes('luca'))   return TENANT_PRESETS.luca;
-    return null;
-  }
-
-  // Popola select inquilini
   db.utenti.inquilini.forEach(t=>{
     const opt=document.createElement('option');
     opt.value=t.id;
-    opt.textContent=`${t.nome || t.name} — ${t.email}`;
+    opt.textContent=${t.nome || t.name} — ${t.email};
     tenantSel.appendChild(opt);
   });
 
-  // Applica SEMPRE i default del tenant selezionato (l’utente può poi modificarli)
   function applyTenantDefaults(){
     const t = db.utenti.inquilini.find(x=>x.id===tenantSel.value);
     if(!t) return;
-
-    const p = findPreset(t) || {
-      address: t.indirizzo || '',
-      rent:    (typeof t.affitto !== 'undefined') ? t.affitto : '',
-      start:   '',
-      months:  12
-    };
-
-    addr.value   = p.address || '';
-    rent.value   = p.rent    ?? '';
-    months.value = p.months  ?? 12;
-
-    if(p.start){
-      start.value = p.start;
-    }else{
-      // fallback: oggi
-      const today=new Date();
-      const y=today.getFullYear(), m=String(today.getMonth()+1).padStart(2,'0'), d=String(today.getDate()).padStart(2,'0');
-      start.value = `${y}-${m}-${d}`;
-    }
+    if(!addr.value) addr.value = t.indirizzo || '';
+    if(!rent.value) rent.value = t.affitto != null ? t.affitto : '';
   }
-
   tenantSel.addEventListener('change', applyTenantDefaults);
+  applyTenantDefaults();
 
-  // Inizializzazione: seleziona primo inquilino e applica preset
-  if(tenantSel.options.length){
-    tenantSel.selectedIndex = 0;
-    applyTenantDefaults();
+  if(!start.value){
+    const today = new Date(); const y=today.getFullYear(); const m=String(today.getMonth()+1).padStart(2,'0'); const d=String(today.getDate()).padStart(2,'0');
+    start.value = ${y}-${m}-${d};
   }
 
   btn.addEventListener('click', (e)=>{
@@ -92,8 +143,7 @@
     const monthsNum= parseInt(months.value||'12') || 12;
 
     if(!tenantId || !address || !startIso){
-      alert('Compila inquilino, indirizzo e data inizio.');
-      return;
+      alert('Compila inquilino, indirizzo e data inizio.'); return;
     }
 
     const dbNow = RP.read();
@@ -115,3 +165,5 @@
   });
 })();
 </script>
+</body>
+</html>
