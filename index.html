@@ -29,7 +29,9 @@
     })(window, document, "clarity", "script", "tb7r154uwi");
   </script>
 </head>
-<body>
+
+<!-- body con classe 'home' per limitare gli stili dei bottoni alla sola home -->
+<body class="home">
 
 <!-- NAVBAR -->
 <nav class="rp-nav">
@@ -62,7 +64,7 @@
   <a href="./firma.html">Firma (demo)</a>
   <a class="rp-accent" href="./login.html">Accedi</a>
 </aside>
-<div id="rpBackdrop" class="rp-backdrop" hidden></div>
+<div id="rpBackdrop" hidden></div>
 
 <!-- HERO -->
 <section class="hero container center">
@@ -76,18 +78,15 @@
   </div>
 </section>
 
-<!-- RUOLI con TOGGLE -->
-<section class="container center home-role">
-  <!-- pulsanti toggle (non cambiano pagina) -->
-  <div class="home-toggle" role="tablist" aria-label="Seleziona ruolo">
-    <button type="button" class="home-tbtn" id="tLandlord" data-role="landlord"
-            aria-pressed="true" aria-controls="roleContent">👤 Proprietario</button>
-    <button type="button" class="home-tbtn" id="tTenant" data-role="tenant"
-            aria-pressed="false" aria-controls="roleContent">🏠 Inquilino</button>
+<!-- RUOLI: TOGGLE -->
+<section class="container center">
+  <div class="role-toggle" aria-label="Seleziona ruolo">
+    <button type="button" class="pill active" data-role="landlord">👤 Proprietario</button>
+    <button type="button" class="pill" data-role="tenant">🏠 Inquilino</button>
   </div>
 
-  <div id="roleContent" class="card" style="margin-top:16px">
-    <!-- contenuto iniziale mostrato via JS -->
+  <div id="roleContent" class="card" aria-live="polite" style="margin-top:10px">
+    <!-- riempito via JS -->
   </div>
 </section>
 
@@ -103,7 +102,7 @@
   <div class="copy">© 2025 RentPay — PWA</div>
 </footer>
 
-<!-- SCRIPT NAV -->
+<!-- NAV mobile -->
 <script type="text/javascript" data-cookieconsent="ignore">
 (function(){
   const btn=document.getElementById('rpHamburger'),
@@ -120,43 +119,37 @@
 })();
 </script>
 
-<!-- SCRIPT TOGGLE RUOLI (home) -->
+<!-- TOGGLE RUOLI -->
 <script>
 (function(){
   const content = {
     landlord: `
       <h2>👤 Vantaggi per Proprietari</h2>
-      <ul class="role-list">
+      <ul style="list-style:none;padding:0;margin:0;line-height:1.8;text-align:left">
         <li>✅ Incassi puntuali con addebiti automatici.</li>
         <li>✅ Contratti digitali firmati online.</li>
         <li>✅ Garanzie contro i mancati pagamenti.</li>
         <li>✅ Dashboard chiara per gestire più immobili.</li>
-      </ul>
-    `,
+      </ul>`,
     tenant: `
       <h2>🏠 Vantaggi per Inquilini</h2>
-      <ul class="role-list">
-        <li>✅ Pagamenti automatici, senza pensieri e ritardi.</li>
+      <ul style="list-style:none;padding:0;margin:0;line-height:1.8;text-align:left">
+        <li>✅ Pagamenti automatici senza pensieri.</li>
         <li>✅ Contratto digitale sicuro e sempre accessibile.</li>
         <li>✅ Storico dei pagamenti consultabile h24.</li>
-        <li>✅ Possibilità di garanzie e assicurazioni dedicate.</li>
-      </ul>
-    `
+        <li>✅ Opzioni di garanzie/assicurazioni dedicate.</li>
+      </ul>`
   };
 
-  const out = document.getElementById('roleContent');
-  const btnL = document.getElementById('tLandlord');
-  const btnT = document.getElementById('tTenant');
+  const box = document.getElementById('roleContent');
+  const pills = Array.from(document.querySelectorAll('.role-toggle .pill'));
 
   function setRole(role){
-    out.innerHTML = content[role] || '';
-    const isLandlord = role === 'landlord';
-    btnL.setAttribute('aria-pressed', isLandlord ? 'true' : 'false');
-    btnT.setAttribute('aria-pressed', !isLandlord ? 'true' : 'false');
+    pills.forEach(p=>p.classList.toggle('active', p.dataset.role===role));
+    box.innerHTML = content[role] || '';
   }
 
-  btnL.addEventListener('click', ()=>setRole('landlord'));
-  btnT.addEventListener('click', ()=>setRole('tenant'));
+  pills.forEach(p=>p.addEventListener('click', ()=> setRole(p.dataset.role)));
 
   // stato iniziale
   setRole('landlord');
