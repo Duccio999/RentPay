@@ -172,10 +172,14 @@ h3{ margin:0 0 8px }
 
 /* ======= TABELLE: responsive + scroll orizzontale nel box ======= */
 
+/* la card / container non devono tagliare l'overflow orizzontale */
+.container, .card, .section { overflow: visible; }
+
+/* wrapper che vive dentro la card, con 2px di aria */
 .table-wrap{
-  width: calc(100% - 4px);          /* 2px di margine per lato */
-  margin: 2px auto;                 /* centrata con margine minimo */
-  overflow-x: auto;                 /* scroll orizzontale */
+  width: calc(100% - 4px);     /* 2px per lato */
+  margin: 2px auto;            /* centrato, margine minimo */
+  overflow-x: auto;            /* scroll orizzontale SOLO qui */
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
   touch-action: pan-x;
@@ -183,17 +187,20 @@ h3{ margin:0 0 8px }
   border: 1px solid rgba(255,255,255,.14);
   border-radius: 12px;
   background: rgba(255,255,255,.04);
-  padding: 0;
+  padding: 0;                  /* niente padding: massima area utile allo scroll */
   position: relative;
 }
 
+/* la tabella si allarga quanto serve oltre il wrapper */
 .rp-table{
+  display: table;
   border-collapse: collapse;
-  width: max-content;                       /* cresce oltre il box */
-  min-width: max(100%, 640px);
-  table-layout: auto;
+  width: max-content;          /* cresce quanto richiedono le colonne */
+  min-width: 760px;            /* abbastanza larga da attivare lo scroll su mobile */
+  table-layout: auto;          /* niente fit indeseiderati */
 }
 
+/* celle: non andare a capo -> si scorre */
 .rp-table th,
 .rp-table td{
   white-space: nowrap;
@@ -203,23 +210,23 @@ h3{ margin:0 0 8px }
   font-size: 1rem;
 }
 
+/* header sticky leggibile */
 .rp-table thead th{
   font-weight: 800;
   background: rgba(255,255,255,.08);
   position: sticky; top: 0; z-index: 1;
 }
 
-/* Mobile */
-@media (max-width: 640px){
-  .table-wrap{
-    width: calc(100% - 4px);   /* resta dentro la card */
-    margin: 2px auto;
-    border-radius: 8px;
-  }
-
-  .rp-table{ min-width: max(100%, 560px); }
-  .rp-table th, .rp-table td{
-    padding: 10px 12px;
-    font-size: .94rem;
-  }
+/* breakpoints: tabella più compatta ma sempre scrollabile */
+@media (max-width: 720px){
+  .rp-table{ min-width: 640px; }
+  .rp-table th, .rp-table td{ padding: 10px 12px; font-size: .95rem; }
+}
+@media (max-width: 560px){
+  .rp-table{ min-width: 600px; }
+  .rp-table th, .rp-table td{ padding: 9px 10px; font-size: .92rem; }
+}
+@media (max-width: 400px){
+  .rp-table{ min-width: 560px; }
+  .rp-table th, .rp-table td{ padding: 8px 9px; font-size: .9rem; }
 }
