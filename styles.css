@@ -194,3 +194,94 @@ h3{margin:0 0 8px}
 
 /* un filo di respiro sopra la form */
 .auth .form-card{ margin-top: 6px; }
+
+/* ==== FORM INPUTS (login) – look coerente scuro ==== */
+
+/* contenitore già usato nel tuo HTML */
+.input{
+  display:flex; align-items:center; gap:10px;
+  position: relative;
+  background:#0e1b2b;                 /* scuro */
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:12px;
+  padding:10px 12px;
+  box-shadow: inset 0 0 0 0 transparent;
+}
+
+/* input & select base */
+.input input,
+.input select,
+.input textarea{
+  width:100%;
+  border:0;
+  outline:none;
+  background:transparent;              /* elimina il fondo bianco */
+  color:var(--text);
+  font: inherit;
+  line-height:1.2;
+  padding:6px 0;                       /* comodo ma compatto */
+}
+
+/* focus chiaro blu */
+.input:focus-within{
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px rgba(46,160,255,.22);
+}
+
+/* segnaposto un filo attenuato */
+.input input::placeholder,
+.input textarea::placeholder{ color:rgba(234,242,255,.65) }
+
+/* stato readonly/disabled coerente */
+.input input[readonly],
+.input input:disabled,
+.input select:disabled{
+  opacity:.85;
+  cursor:not-allowed;
+}
+
+/* ===== SELECT – togli stile nativo e metti caret custom ===== */
+.input select{
+  -webkit-appearance:none;
+  -moz-appearance:none;
+  appearance:none;
+  padding-right:28px;                   /* spazio per la freccetta */
+}
+
+/* caret con SVG inline, senza cambiare HTML */
+.input::after{
+  content:"";
+  position:absolute; right:12px; top:50%; translate:0 -50%;
+  width:14px; height:14px; pointer-events:none;
+  background-repeat:no-repeat; background-position:center; background-size:14px 14px;
+  /* freccetta chiara (SVG) */
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24'%3E%3Cpath fill='%23eaf2ff' d='M12 15.5L6 9.5h12z'/%3E%3C/svg%3E");
+}
+/* mostra la freccetta solo se dentro c'è un select */
+.input:has(select)::after{ display:block }
+.input:has(input)::after{ display:none }   /* niente caret sulle text */
+
+/* ===== Autofill Chrome (niente giallo) ===== */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus{
+  -webkit-text-fill-color: var(--text);
+  -webkit-box-shadow: 0 0 0px 1000px #0e1b2b inset;
+  transition: background-color 9999s ease-in-out 0s;
+}
+
+/* etichette sopra i campi, più pulite */
+.field > label{
+  color: var(--muted);
+  font-weight: 700;
+  margin: 6px 2px 6px;
+}
+
+/* pulsante submit in linea con il resto */
+.form-card .actions .btn.primary{ min-width:96px }
+
+/* Mobile: un filo più compatto */
+@media (max-width:640px){
+  .input{ padding:9px 11px; }
+  .input input,.input select{ padding:6px 0; }
+}
