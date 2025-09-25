@@ -230,3 +230,89 @@ h3{ margin:0 0 8px }
   .rp-table{ min-width: 560px; }
   .rp-table th, .rp-table td{ padding: 8px 9px; font-size: .9rem; }
 }
+
+/* ==== CARD & CONTAINER: SEMPRE DENTRO LO SCHERMO ==== */
+.container{
+  max-width: 1000px;
+  margin: 0 auto;
+  padding-inline: 20px;            /* margine interno simmetrico */
+  box-sizing: border-box;
+}
+.card{
+  max-width: 900px;
+  width: 100%;                     /* la card usa sempre 100% dello spazio disponibile */
+  margin: 0 auto 22px;
+  box-sizing: border-box;          /* include padding/border nel calcolo */
+  border-radius: 16px;
+  overflow: visible;               /* non taglia lo scroll orizzontale interno */
+}
+
+/* ==== TABELLA: SCROLL SOLO DENTRO IL BOX, MARGINE 2px ==== */
+.table-wrap{
+  width: calc(100% - 4px);         /* 2px per lato */
+  margin: 2px auto;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
+  overscroll-behavior-x: contain;
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 12px;
+  background: rgba(255,255,255,.04);
+  padding: 0;
+  position: relative;
+}
+.rp-table{
+  display: table;
+  border-collapse: collapse;
+  width: max-content;              /* si allarga quanto serve */
+  min-width: 760px;                /* forza comparsa scroll su schermi piccoli */
+  table-layout: auto;
+}
+.rp-table th, .rp-table td{
+  white-space: nowrap;
+  padding: 12px 14px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255,255,255,.12);
+  font-size: 1rem;
+}
+.rp-table thead th{
+  font-weight: 800;
+  background: rgba(255,255,255,.08);
+  position: sticky; top: 0; z-index: 1;
+}
+
+/* ==== MOBILE FIRST (≤ 640px): card dentro, testi compatti ==== */
+@media (max-width: 640px){
+  .container{ padding-inline: 14px; }       /* un po’ meno padding laterale */
+  .card{
+    padding: 16px 14px;                      /* card più compatta */
+    border-radius: 14px;
+    width: 100%;
+    max-width: 100%;                         /* impedisce di “sporgere” */
+  }
+
+  /* tipografia più piccola ma leggibile */
+  body{ font-size: 15px; }
+  .hero h1{ font-size: clamp(22px, 6vw, 28px); }
+  h2{ font-size: clamp(18px, 4.8vw, 22px); margin-bottom: 10px; }
+  .lead{ font-size: .95rem; }
+
+  /* bottoni un filo più stretti */
+  .btn{ padding: 10px 14px; border-radius: 10px; }
+
+  /* tabella più compatta e SEMPRE scrollabile dentro il box */
+  .rp-table{ min-width: 600px; }
+  .rp-table th, .rp-table td{ padding: 9px 10px; font-size: .92rem; }
+
+  /* sicurezza: niente overflow orizzontale della pagina */
+  html, body{ overflow-x: hidden; }
+}
+
+/* ==== TELEFONI PICCOLI (≤ 400px) ==== */
+@media (max-width: 400px){
+  .container{ padding-inline: 12px; }
+  .card{ padding: 14px 12px; border-radius: 12px; }
+  .rp-table{ min-width: 560px; }
+  .rp-table th, .rp-table td{ padding: 8px 9px; font-size: .9rem; }
+}
