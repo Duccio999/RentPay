@@ -245,3 +245,12 @@ html, body { overflow-x: hidden; }
 
 .table-wrap.wide  .rp-table{ min-width: max(100%, 820px); }
 .table-wrap.xwide .rp-table{ min-width: max(100%, 980px); }
+
+/* Extra-compact su telefoni molto piccoli */
+@media (max-width: 360px){
+  .rp-table{ min-width: max(100%, 500px); }
+  .rp-table th, .rp-table td{ padding: 7px 8px; font-size: .85rem; }
+}
+
+/* Spazio extra sopra/sotto il bottone "Crea nuovo contratto" */
+.btn.create{ margin: 14px 0 18px !important; }
