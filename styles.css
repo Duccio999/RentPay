@@ -285,3 +285,91 @@ input:-webkit-autofill:focus{
   .input{ padding:9px 11px; }
   .input input,.input select{ padding:6px 0; }
 }
+
+/* ===== LOGIN: forzo stile scuro su input/select ===== */
+
+/* reset generale dei controlli testo in form-card */
+.form-card input[type="text"],
+.form-card input[type="email"],
+.form-card input[type="password"],
+.form-card input[type="search"],
+.form-card input[type="tel"],
+.form-card input[type="url"],
+.form-card textarea,
+.form-card select{
+  display:block;
+  width:100%;
+  background:#0e1b2b;                     /* fondo scuro */
+  color:var(--text);
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:12px;
+  padding:10px 12px;
+  font:inherit;
+  line-height:1.25;
+  outline:none;
+  box-shadow:none;
+  -webkit-appearance:none;
+  -moz-appearance:none;
+  appearance:none;
+}
+
+/* focus coerente con i bottoni */
+.form-card input:focus,
+.form-card textarea:focus,
+.form-card select:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px rgba(46,160,255,.22);
+}
+
+/* placeholder più tenue */
+.form-card ::placeholder{ color:rgba(234,242,255,.65) }
+
+/* readonly/disabled */
+.form-card input[readonly],
+.form-card input:disabled,
+.form-card select:disabled{
+  opacity:.9;
+  cursor:not-allowed;
+}
+
+/* SELECT: caret custom (senza cambiare l'HTML) */
+.form-card select{
+  padding-right:34px;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24'%3E%3Cpath fill='%23eaf2ff' d='M12 15.5 6 9.5h12z'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right 12px center;
+  background-size:16px 16px;
+}
+
+/* Chrome autofill (niente giallo) */
+.form-card input:-webkit-autofill,
+.form-card input:-webkit-autofill:hover,
+.form-card input:-webkit-autofill:focus{
+  -webkit-text-fill-color: var(--text);
+  -webkit-box-shadow: 0 0 0px 1000px #0e1b2b inset;
+  transition: background-color 9999s ease-in-out 0s;
+}
+
+/* Se nel markup usi anche il wrapper .input, non voglio doppio bordo */
+.form-card .input{
+  background:transparent;
+  border:none;
+  padding:0;
+}
+.form-card .input > span{ opacity:.9; margin-right:6px }
+
+/* label più pulite/compatte */
+.form-card .field > label{
+  display:block;
+  color:var(--muted);
+  font-weight:700;
+  margin:8px 2px 6px;
+}
+
+/* mobile un filo più compatto */
+@media (max-width:640px){
+  .form-card input,
+  .form-card select,
+  .form-card textarea{ padding:9px 11px; border-radius:10px }
+}
