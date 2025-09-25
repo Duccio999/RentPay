@@ -1,139 +1,109 @@
 <!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RentPay</title>
+  <meta name="description" content="Affitti automatici, contratti digitali, KYC e garanzie.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
 
-<html lang="it">  
-<head>  
-  <meta charset="utf-8">  
-  <meta name="viewport" content="width=device-width, initial-scale=1">  
-  <title>RentPay</title>  
-  <meta name="description" content="Affitti automatici, contratti digitali, KYC e garanzie.">  
-  <link rel="stylesheet" href="styles.css">    <!-- Cookiebot -->    <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js"  
-          data-cbid="5bcf64ab-7ce1-4b46-958c-548ecf3d9c05" data-blockingmode="auto" type="text/javascript"></script>    <!-- GA4 (consenso 'statistics') -->    <script type="text/plain" data-cookieconsent="statistics" async src="https://www.googletagmanager.com/gtag/js?id=G-ELHNQ36D70"></script>    <script type="text/plain" data-cookieconsent="statistics">  
-    window.dataLayer = window.dataLayer || [];  
-    function gtag(){dataLayer.push(arguments);}  
-    gtag('js', new Date());  
-    gtag('config', 'G-ELHNQ36D70');  
-  </script>    <!-- Clarity (consenso 'statistics') -->    <script type="text/plain" data-cookieconsent="statistics">  
-    (function(c,l,a,r,i,t,y){  
-      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};  
-      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;  
-      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);  
-    })(window, document, "clarity", "script", "tb7r154uwi");  
-  </script>  </head>  
-<body>  <!-- NAVBAR -->  <nav class="rp-nav">  
-  <a class="rp-brand" href="./index.html" aria-label="RentPay Home">  
-    <span class="rp-house" aria-hidden="true">🏠</span>  
-    <span class="rp-brand-text">RentPay</span>  
-  </a>  
-  <div class="rp-menu-desktop">  
-    <a href="./index.html" class="active">Home</a>  
-    <a href="./vision.html">Visione</a>  
-    <a href="./funzioni.html">Funzioni</a>  
-    <a href="./garanzia.html">Garanzia</a>  
-    <a href="./prezzi.html">Prezzi</a>  
-    <a href="./firma.html">Firma (demo)</a>  
-    <a class="rp-accent" href="./login.html">Accedi</a>  
-  </div>  
-  <button id="rpHamburger" class="rp-hamburger" aria-label="Apri menu" aria-expanded="false">☰</button>  
-</nav>  <aside id="rpDrawer" class="rp-drawer" aria-hidden="true">  
-  <div class="rp-drawer-head">  
-    <span class="rp-drawer-title">Menù</span>  
-    <button id="rpDrawerClose" class="rp-close" aria-label="Chiudi menu">×</button>  
-  </div>  
-  <a href="./index.html" class="active">Home</a>  
-  <a href="./vision.html">Visione</a>  
-  <a href="./funzioni.html">Funzioni</a>  
-  <a href="./garanzia.html">Garanzia</a>  
-  <a href="./prezzi.html">Prezzi</a>  
-  <a href="./firma.html">Firma (demo)</a>  
-  <a class="rp-accent" href="./login.html">Accedi</a>  
-</aside>  
-<div id="rpBackdrop" class="rp-backdrop" hidden></div>  <!-- HERO -->  <section class="hero container center">  
-  <h1>Affitti automatici, zero pensieri</h1>  
-  <p class="lead">  
-    Contratti digitali, KYC e addebiti ricorrenti in un’unica app.<br>  
-    Pagamenti puntuali e garanzie contro i mancati affitti.  
-  </p>  
-<div class="actions" style="justify-content:center;">  
-    <a class="btn primary" href="./login.html">Prova la demo</a>  
-  </div>  
-</section>  
- <div class="actions">  
-  <a href="login.html" class="btn primary">Prova la demo</a>  
-</div>  <!-- SEZIONE RUOLI (tab stile login) -->  <section class="container center">  
-<div class="tabs">  
-  <button id="tab-landlord" class="tab active" data-target="landlord">👤 Proprietario</button>  
-  <button id="tab-tenant" class="tab" data-target="tenant">🏠 Inquilino</button>  
-<div class="role-toggle">  
-  <button class="pill active" onclick="location.href='login-prop.html'">Proprietario</button>  
-  <button class="pill" onclick="location.href='login-inq.html'">Inquilino</button>  
-</div>    <div id="roleContent" class="card role-box" style="margin-top:20px;">  
-    <h2> Vantaggi per Proprietari</h2>  
-    <ul class="role-list" style="list-style:none;padding:0;margin:0;line-height:1.8">  
-      <li>💸 Incassi puntuali con addebiti automatici.</li>  
-      <li>🖊️ Contratti digitali firmati online.</li>  
-      <li>🛡️ Garanzie contro i mancati pagamenti.</li>  
-      <li>📊 Dashboard per gestire più immobili.</li>  
-    </ul>  
-  </div>  
-</section>  <!-- FOOTER -->  <footer class="footer container">  
-  <div class="f-links">  
-    <a href="terms.html">Termini di servizio</a>  
-    <a href="privacy.html">Privacy Policy</a>  
-    <a href="cookie.html">Cookie Policy</a>  
-    <a href="vision.html">Visione</a>  
-    <a href="https://forms.gle/INSERISCI-LINK-FORM" target="_blank" rel="noopener">Questionario investitori</a>  
-  </div>  
-  <div class="copy">©️ 2025 RentPay — PWA</div>  
-</footer>  <!-- SCRIPT NAV -->  <script type="text/javascript" data-cookieconsent="ignore">  
-(function(){  
-  const btn=document.getElementById('rpHamburger'),  
-        drawer=document.getElementById('rpDrawer'),  
-        closeBtn=document.getElementById('rpDrawerClose'),  
-        backdrop=document.getElementById('rpBackdrop');  
-  function openD(){drawer.classList.add('open');backdrop.hidden=false;backdrop.classList.add('show');document.body.style.overflow='hidden'}  
-  function closeD(){drawer.classList.remove('open');backdrop.classList.remove('show');backdrop.hidden=true;document.body.style.overflow=''}  
-  btn&&btn.addEventListener('click',openD);  
-  closeBtn&&closeBtn.addEventListener('click',closeD);  
-  backdrop&&backdrop.addEventListener('click',closeD);  
-  window.addEventListener('keydown',e=>{if(e.key==='Escape')closeD()});  
-  drawer.querySelectorAll('a').forEach(a=>a.addEventListener('click',closeD));  
-})();  
-</script>  <!-- SCRIPT TABS -->  <script>  
-  // Bottoni: funziona sia con .tab che con .pill  
-  const tabButtons = document.querySelectorAll('.tab[data-target], .pill[data-target]');  
-  const roleContent = document.getElementById('roleContent');  
-  
-  const contents = {  
-    landlord: `  
-      <h2>👤 Vantaggi per Proprietari</h2>  
-      <ul class="role-list">  
-        <li>✅ Incassi puntuali con addebiti automatici.</li>  
-        <li>✅ Contratti digitali firmati online.</li>  
-        <li>✅ Garanzie contro i mancati pagamenti.</li>  
-        <li>✅ Dashboard chiara per gestire più immobili.</li>  
-      </ul>  
-    `,  
-    tenant: `  
-      <h2>🏠 Vantaggi per Inquilini</h2>  
-      <ul class="role-list">  
-        <li>✅ Pagamenti automatici, senza pensieri e ritardi.</li>  
-        <li>✅ Contratto digitale sicuro e sempre accessibile.</li>  
-        <li>✅ Storico dei pagamenti consultabile h24.</li>  
-        <li>✅ Possibilità di garanzie e assicurazioni dedicate.</li>  
-      </ul>  
-    `  
-  };  
-  
-  function activate(btn){  
-    tabButtons.forEach(b => b.classList.remove('active'));  
-    btn.classList.add('active');  
-    roleContent.innerHTML = contents[btn.dataset.target] || '';  
-  }  
-  
-  tabButtons.forEach(btn => btn.addEventListener('click', () => activate(btn)));  
-  
-  // Stato iniziale: se c'è già un pulsante attivo lo usa, altrimenti prende il primo  
-  const current = document.querySelector('.tab.active[data-target], .pill.active[data-target]') || tabButtons[0];  
-  if (current) activate(current);  
-</script>  </body>  
-</html> 
+<!-- NAVBAR -->
+<nav class="rp-nav">
+  <a class="rp-brand" href="./index.html" aria-label="RentPay Home">
+    <span class="rp-house" aria-hidden="true">🏠</span>
+    <span class="rp-brand-text">RentPay</span>
+  </a>
+  <div class="rp-menu-desktop">
+    <a href="./index.html" class="active">Home</a>
+    <a href="./vision.html">Visione</a>
+    <a href="./funzioni.html">Funzioni</a>
+    <a href="./garanzia.html">Garanzia</a>
+    <a href="./prezzi.html">Prezzi</a>
+    <a href="./firma.html">Firma (demo)</a>
+    <a class="rp-accent" href="./login.html">Accedi</a>
+  </div>
+  <button id="rpHamburger" class="rp-hamburger" aria-label="Apri menu">☰</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero container center">
+  <h1>Affitti automatici, zero pensieri</h1>
+  <p class="lead">
+    Contratti digitali, KYC e addebiti ricorrenti in un’unica app.<br>
+    Pagamenti puntuali e garanzie contro i mancati affitti.
+  </p>
+  <div class="actions">
+    <a class="btn primary" href="./login.html">Prova la demo</a>
+  </div>
+</section>
+
+<!-- RUOLI: TOGGLE -->
+<section class="container center">
+  <div class="role-toggle" role="tablist" aria-label="Seleziona ruolo">
+    <button id="btnProp" class="pill" role="tab" aria-pressed="true"  aria-selected="true"  data-role="landlord">Proprietario</button>
+    <button id="btnInq"  class="pill" role="tab" aria-pressed="false" aria-selected="false" data-role="tenant">Inquilino</button>
+  </div>
+
+  <div id="roleBox" class="card" aria-live="polite" aria-atomic="true">
+    <!-- popolato via JS -->
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer container">
+  <div class="f-links">
+    <a href="terms.html">Termini di servizio</a>
+    <a href="privacy.html">Privacy Policy</a>
+    <a href="cookie.html">Cookie Policy</a>
+    <a href="vision.html">Visione</a>
+  </div>
+  <div class="copy">© 2025 RentPay — PWA</div>
+</footer>
+
+<script>
+/* === Toggle ruoli: aggiorna il box senza cambiare pagina === */
+const roleBox = document.getElementById('roleBox');
+const btnProp = document.getElementById('btnProp');
+const btnInq  = document.getElementById('btnInq');
+
+const CONTENT = {
+  landlord: `
+    <h2>👤 Vantaggi per Proprietari</h2>
+    <ul class="role-list">
+      <li>✅ Incassi puntuali con addebiti automatici.</li>
+      <li>✅ Contratti digitali firmati online.</li>
+      <li>✅ Garanzie contro i mancati pagamenti.</li>
+      <li>✅ Dashboard chiara per gestire più immobili.</li>
+    </ul>
+  `,
+  tenant: `
+    <h2>🏠 Vantaggi per Inquilini</h2>
+    <ul class="role-list">
+      <li>✅ Pagamenti automatici senza pensieri.</li>
+      <li>✅ Contratto digitale sicuro e sempre accessibile.</li>
+      <li>✅ Storico pagamenti consultabile h24.</li>
+      <li>✅ Opzioni di garanzie e assicurazioni dedicate.</li>
+    </ul>
+  `
+};
+
+function setRole(role){
+  const landlord = role === 'landlord';
+  btnProp.setAttribute('aria-pressed', landlord);
+  btnProp.setAttribute('aria-selected', landlord);
+  btnInq.setAttribute('aria-pressed', !landlord);
+  btnInq.setAttribute('aria-selected', !landlord);
+  roleBox.innerHTML = CONTENT[role];
+}
+
+btnProp.addEventListener('click', ()=>setRole('landlord'));
+btnInq .addEventListener('click', ()=>setRole('tenant'));
+
+// stato iniziale
+setRole('landlord');
+</script>
+
+</body>
+</html>
