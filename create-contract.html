@@ -1,13 +1,4 @@
 <script>
-/* ===== Nav mobile ===== */
-(function(){
-  const b=document.getElementById('rpHamburger'),d=document.getElementById('rpDrawer'),x=document.getElementById('rpDrawerClose'),o=document.getElementById('rpBackdrop');
-  function open(){d.classList.add('open');o.hidden=false;o.classList.add('show');document.body.style.overflow='hidden'}
-  function close(){d.classList.remove('open');o.classList.remove('show');o.hidden=true;document.body.style.overflow=''}
-  b&&b.addEventListener('click',open); x&&x.addEventListener('click',close); o&&o.addEventListener('click',close); window.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
-})();
-
-/* ===== Logica pagina ===== */
 (function(){
   if(!window.RP){ alert('Errore di caricamento store'); location.href='login.html'; return; }
   const me = RP.me();
@@ -25,13 +16,10 @@
 
   const db = RP.read();
 
-  // --- PRESET per-tenant: riconosco per email/nome/id in modo robusto
-  //   (modifica liberamente i valori qui sotto)
+  // Preset hardcoded (puoi aggiungere altri tenant se vuoi)
   const TENANT_PRESETS = {
-    // Giulia Neri
-    'giulia':  { address:'Via Po 8, Torino',  rent:720, start:'2025-10-01', months:12 },
-    // Luca Bianchi
-    'luca':    { address:'Via Roma 12, Milano', rent:850, start:'2025-06-01', months:18 }
+    giulia: { address:'Via Po 8, Torino', rent:720, start:'2025-10-01', months:12 },
+    luca:   { address:'Via Roma 12, Milano', rent:850, start:'2025-06-01', months:18 }
   };
 
   function findPreset(t){
@@ -49,40 +37,35 @@
     tenantSel.appendChild(opt);
   });
 
-  // Applica SEMPRE i default del tenant selezionato (l’utente può poi modificarli)
+  // Applica preset
   function applyTenantDefaults(){
     const t = db.utenti.inquilini.find(x=>x.id===tenantSel.value);
     if(!t) return;
-
-    const p = findPreset(t) || {
-      address: t.indirizzo || '',
-      rent:    (typeof t.affitto !== 'undefined') ? t.affitto : '',
-      start:   '',
-      months:  12
-    };
-
-    addr.value   = p.address || '';
-    rent.value   = p.rent    ?? '';
-    months.value = p.months  ?? 12;
-
-    if(p.start){
-      start.value = p.start;
+    const p = findPreset(t);
+    if(p){
+      addr.value   = p.address;
+      rent.value   = p.rent;
+      start.value  = p.start;
+      months.value = p.months;
     }else{
-      // fallback: oggi
+      addr.value   = t.indirizzo || '';
+      rent.value   = t.affitto || '';
       const today=new Date();
       const y=today.getFullYear(), m=String(today.getMonth()+1).padStart(2,'0'), d=String(today.getDate()).padStart(2,'0');
-      start.value = `${y}-${m}-${d}`;
+      start.value  = `${y}-${m}-${d}`;
+      months.value = 12;
     }
   }
 
   tenantSel.addEventListener('change', applyTenantDefaults);
 
-  // Inizializzazione: seleziona primo inquilino e applica preset
+  // ⚡ Applica subito il preset al primo inquilino
   if(tenantSel.options.length){
     tenantSel.selectedIndex = 0;
     applyTenantDefaults();
   }
 
+  // Salvataggio demo
   btn.addEventListener('click', (e)=>{
     e.preventDefault();
     const tenantId = tenantSel.value;
@@ -92,8 +75,7 @@
     const monthsNum= parseInt(months.value||'12') || 12;
 
     if(!tenantId || !address || !startIso){
-      alert('Compila inquilino, indirizzo e data inizio.');
-      return;
+      alert('Compila inquilino, indirizzo e data inizio.'); return;
     }
 
     const dbNow = RP.read();
