@@ -10,7 +10,7 @@
     .form-card .actions{ justify-content:flex-start }
   </style>
 </head>
-<body class="auth">
+<body>
 <!-- NAV -->
 <nav class="rp-nav">
   <a class="rp-brand" href="./index.html"><span class="rp-house">🏠</span><span class="rp-brand-text">RentPay</span></a>
@@ -110,7 +110,7 @@ function fillOptions(){
   list.forEach(u=>{
     const opt = document.createElement('option');
     opt.value = u.id;
-    opt.textContent = `${u.name} — ${u.email}`;
+    opt.textContent = ${u.name} — ${u.email};
     sel.appendChild(opt);
   });
   sel.selectedIndex = 0;
