@@ -126,7 +126,7 @@
 
 <script src="rp-store.js"></script>
 <script>
-/* ===== Nav mobile ===== */
+/* ===== Nav mobile (come già hai) ===== */
 (function(){
   const b=document.getElementById('rpHamburger'),d=document.getElementById('rpDrawer'),
         x=document.getElementById('rpDrawerClose'),o=document.getElementById('rpBackdrop');
@@ -150,38 +150,55 @@
   const months   = document.getElementById('months');
   const btn      = document.getElementById('btnSubmit');
 
-  owner.value = `${me.name || me.nome} — ${me.email}`;   // <-- backtick CORRETTO
+  owner.value = `${me.name || me.nome} — ${me.email}`;
+
+  /* Preset DEMO diversi per ciascun inquilino */
+  const PRESETS_BY_ID = {
+    /* id ipotetici del tuo rp-store.js (adatta se diversi) */
+    inq1: { address:'Via Roma 12', rent:850, start:'2025-06-01', months:12 },
+    inq2: { address:'Via Po 8',    rent:720, start:'2025-09-01', months:18 }
+  };
 
   const db = RP.read();
   db.utenti.inquilini.forEach(t=>{
     const opt=document.createElement('option');
-    opt.value=t.id;
-    opt.textContent = `${t.nome || t.name} — ${t.email}`;  // <-- backtick CORRETTO
+    opt.value=t.id;                                    // useremo l'id per i preset
+    opt.textContent = `${t.nome || t.name} — ${t.email}`;
     tenantSel.appendChild(opt);
   });
 
-  function applyTenantDefaults(){
+  function applyTenantDefaults(force = true){
     const t = db.utenti.inquilini.find(x=>x.id===tenantSel.value);
     if(!t) return;
 
-    // se nello store esistono questi campi li usiamo come default
-    if(!addr.value) addr.value = t.indirizzo || '';
-    if(!rent.value) rent.value = (t.affitto != null ? t.affitto : '');
+    // 1) preset specifico se esiste
+    const p = PRESETS_BY_ID[t.id];
 
-    // esempio: durata diversa per i due demo
-    if (t.id === 'inq1')      months.value = 12;
-    else if (t.id === 'inq2') months.value = 18;
+    // 2) altrimenti fallback a eventuali campi già nello store
+    const fallbackAddr = t.indirizzo || '';
+    const fallbackRent = (t.affitto != null ? t.affitto : '');
+    const today = new Date(); const y=today.getFullYear();
+    const m=String(today.getMonth()+1).padStart(2,'0'); const d=String(today.getDate()).padStart(2,'0');
+
+    const val = {
+      address: p?.address ?? fallbackAddr,
+      rent:    p?.rent    ?? fallbackRent,
+      start:   p?.start   ?? `${y}-${m}-${d}`,
+      months:  p?.months  ?? 12
+    };
+
+    // Se force=false non sovrascrivo campi già modificati a mano
+    if (force || !addr.value)   addr.value   = val.address;
+    if (force || !rent.value)   rent.value   = val.rent;
+    if (force || !start.value)  start.value  = val.start;
+    if (force || !months.value) months.value = val.months;
   }
-  tenantSel.addEventListener('change', applyTenantDefaults);
 
+  tenantSel.addEventListener('change', ()=>applyTenantDefaults(true));
+
+  // Seleziona il primo inquilino e applica preset
   if (tenantSel.options.length) tenantSel.value = tenantSel.options[0].value;
-  applyTenantDefaults();
-
-  if(!start.value){
-    const today=new Date();
-    const y=today.getFullYear(), m=String(today.getMonth()+1).padStart(2,'0'), d=String(today.getDate()).padStart(2,'0');
-    start.value = `${y}-${m}-${d}`;   // <-- backtick CORRETTO
-  }
+  applyTenantDefaults(true);
 
   btn.addEventListener('click', (e)=>{
     e.preventDefault();
