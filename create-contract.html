@@ -102,21 +102,22 @@
   const me = RP.me();
   if(!me || (me.role!=='landlord' && me.ruolo!=='proprietario')){ location.href='login.html'; return; }
 
-  const owner   = document.getElementById('owner');
-  const tenantSel = document.getElementById('tenantSel');
-  const addr    = document.getElementById('addr');
-  const rent    = document.getElementById('rent');
-  const start   = document.getElementById('start');
-  const months  = document.getElementById('months');
-  const btn     = document.getElementById('btnSubmit');
+  const owner    = document.getElementById('owner');
+  const tenantSel= document.getElementById('tenantSel');
+  const addr     = document.getElementById('addr');
+  const rent     = document.getElementById('rent');
+  const start    = document.getElementById('start');
+  const months   = document.getElementById('months');
+  const btn      = document.getElementById('btnSubmit');
 
-  owner.value = ${me.name || me.nome} — ${me.email};
+  /* backtick CORRETTO */
+  owner.value = `${me.name || me.nome} — ${me.email}`;
 
   const db = RP.read();
   db.utenti.inquilini.forEach(t=>{
     const opt=document.createElement('option');
     opt.value=t.id;
-    opt.textContent=${t.nome || t.name} — ${t.email};
+    opt.textContent = `${t.nome || t.name} — ${t.email}`;  /* backtick CORRETTO */
     tenantSel.appendChild(opt);
   });
 
@@ -124,14 +125,24 @@
     const t = db.utenti.inquilini.find(x=>x.id===tenantSel.value);
     if(!t) return;
     if(!addr.value) addr.value = t.indirizzo || '';
-    if(!rent.value) rent.value = t.affitto != null ? t.affitto : '';
+    if(!rent.value) rent.value = (t.affitto != null ? t.affitto : '');
+    /* extra: durata diversa per i due demo */
+    if(t.id==='inq1')      { months.value = 12; }
+    else if(t.id==='inq2') { months.value = 18; }
   }
   tenantSel.addEventListener('change', applyTenantDefaults);
+
+  /* inizializza valori al primo inquilino */
+  if(tenantSel.options.length){ tenantSel.value = tenantSel.options[0].value; }
   applyTenantDefaults();
 
+  /* data inizio default = oggi */
   if(!start.value){
-    const today = new Date(); const y=today.getFullYear(); const m=String(today.getMonth()+1).padStart(2,'0'); const d=String(today.getDate()).padStart(2,'0');
-    start.value = ${y}-${m}-${d};
+    const today = new Date();
+    const y=today.getFullYear();
+    const m=String(today.getMonth()+1).padStart(2,'0');
+    const d=String(today.getDate()).padStart(2,'0');
+    start.value = `${y}-${m}-${d}`;    /* backtick CORRETTO */
   }
 
   btn.addEventListener('click', (e)=>{
