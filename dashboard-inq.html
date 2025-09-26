@@ -3,186 +3,182 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Dashboard Inquilino — RentPay (DEMO)</title>
- <link rel="stylesheet" href="styles.css?v=fix9">
-  <style>
-    .stack{display:flex;flex-direction:column;gap:36px}
-    @media(min-width:900px){.stack{gap:40px}}
-    .kv{display:grid;grid-template-columns:1fr 2fr;gap:8px 16px}
-    @media(max-width:560px){.kv{grid-template-columns:1fr}}
-  </style>
+  <title>Dashboard Inquilino — RentPay</title>
+  <link rel="stylesheet" href="styles.css?v=fix9">
 </head>
 <body>
+<!-- NAV -->
 <nav class="rp-nav">
-  <a class="rp-brand" href="./index.html"><span class="rp-house">🏠</span><span class="rp-brand-text">RentPay</span></a>
+  <a class="rp-brand" href="./index.html" aria-label="RentPay Home">
+    <span class="rp-house">🏠</span><span class="rp-brand-text">RentPay</span>
+  </a>
   <div class="rp-menu-desktop">
+    <a href="index.html">Home</a>
     <a href="funzioni.html">Funzioni</a>
+    <a href="prezzi.html">Prezzi</a>
     <a class="rp-accent" href="login.html">Cambia account</a>
   </div>
-  <button id="rpHamburger" class="rp-hamburger" aria-label="Apri menu">☰</button>
+  <button id="rpHamburger" class="rp-hamburger" aria-label="Apri menu" aria-expanded="false">☰</button>
 </nav>
 <aside id="rpDrawer" class="rp-drawer" aria-hidden="true">
-  <div class="rp-drawer-head"><span>Menù</span><button id="rpDrawerClose" class="rp-close">×</button></div>
+  <div class="rp-drawer-head">
+    <span>Menù</span>
+    <button id="rpDrawerClose" class="rp-close" aria-label="Chiudi menu">×</button>
+  </div>
+  <a href="index.html">Home</a>
   <a href="funzioni.html">Funzioni</a>
+  <a href="prezzi.html">Prezzi</a>
   <a class="rp-accent" href="login.html">Cambia account</a>
 </aside>
 <div id="rpBackdrop" class="rp-backdrop" hidden></div>
 
-<main class="container stack">
-  <section class="hero card">
-    <h1 id="welcome">Dashboard Inquilino</h1>
-    <p class="lead">Contratti, firme e addebiti ricorrenti. (DEMO)</p>
+<main class="container narrow">
+  <!-- HERO -->
+  <section class="hero card center">
+    <h1>I miei contratti</h1>
+    <p class="lead">Scarica il PDF, firma quando sei pronto. Dopo la firma, il contratto passa tra i firmati.</p>
   </section>
 
-  <section class="card">
-    <h2>Dati profilo</h2>
-    <div class="kv" id="tenantKV"></div>
+  <!-- CONTRATTI DA FIRMARE -->
+  <section class="card section">
+    <div class="section-head">
+      <h2>Contratti da firmare</h2>
+    </div>
+    <div class="table-wrap edge">
+      <table class="rp-table">
+        <thead>
+          <tr>
+            <th>Immobile</th>
+            <th>Canone</th>
+            <th>Dal</th>
+            <th>Durata</th>
+            <th>Azioni</th>
+          </tr>
+        </thead>
+        <tbody id="toSign"></tbody>
+      </table>
+    </div>
   </section>
 
- <section class="card">
-  <h2>Contratti da firmare</h2>
-  <div class="table-wrap edge">
-    <table class="rp-table" id="tblToSign">
-      <thead><tr><th>Immobile</th><th>Proprietario</th><th>Canone</th><th>Stato</th></tr></thead>
-      <tbody></tbody>
-    </table>
-  </div>
-</section>
-
-<section class="card">
-  <h2>Contratti attivi</h2>
-  <div class="table-wrap edge">
-    <table class="rp-table" id="tblActive">
-      <thead><tr><th>Immobile</th><th>Proprietario</th><th>Dal</th><th>Canone</th></tr></thead>
-      <tbody></tbody>
-    </table>
-  </div>
-</section>
-
-<section class="card">
-  <h2>Pagamenti recenti</h2>
-  <div class="table-wrap edge">
-    <table class="rp-table" id="tblPays">
-      <thead><tr><th>Data</th><th>Contratto</th><th>Importo</th><th>Stato</th></tr></thead>
-      <tbody></tbody>
-    </table>
-  </div>
-</section>
-  
+  <!-- CONTRATTI FIRMATI -->
+  <section class="card section">
+    <div class="section-head">
+      <h2>Contratti firmati</h2>
+    </div>
+    <div class="table-wrap edge">
+      <table class="rp-table">
+        <thead>
+          <tr>
+            <th>Immobile</th>
+            <th>Canone</th>
+            <th>Dal</th>
+            <th>Durata</th>
+            <th>Azioni</th>
+          </tr>
+        </thead>
+        <tbody id="signed"></tbody>
+      </table>
+    </div>
+  </section>
 </main>
 
 <footer class="footer container">
-  <div class="f-links"><a href="terms.html">Termini</a><a href="privacy.html">Privacy</a><a href="cookie.html">Cookie</a></div>
+  <div class="f-links">
+    <a href="terms.html">Termini</a>
+    <a href="privacy.html">Privacy</a>
+    <a href="cookie.html">Cookie</a>
+  </div>
   <div class="copy">© 2025 RentPay — PWA</div>
 </footer>
 
+<!-- Store -->
 <script src="rp-store.js"></script>
-<script>
-/* nav mobile */
-(function(){
-  const b=document.getElementById('rpHamburger'),d=document.getElementById('rpDrawer'),x=document.getElementById('rpDrawerClose'),o=document.getElementById('rpBackdrop');
-  function open(){d.classList.add('open');o.hidden=false;o.classList.add('show');document.body.style.overflow='hidden'}
-  function close(){d.classList.remove('open');o.classList.remove('show');o.hidden=true;document.body.style.overflow=''}
-  b&&b.addEventListener('click',open); x&&x.addEventListener('click',close); o&&o.addEventListener('click',close); window.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
-})();
-</script>
 
 <script>
-/* dati + tabelle + firma DEMO */
+/* ===== Nav mobile ===== */
 (function(){
-  if(!window.RP){ location.href='login.html'; return; }
+  const btn=document.getElementById('rpHamburger'),
+        drawer=document.getElementById('rpDrawer'),
+        closeBtn=document.getElementById('rpDrawerClose'),
+        backdrop=document.getElementById('rpBackdrop');
+  function openD(){drawer.classList.add('open');backdrop.hidden=false;backdrop.classList.add('show');document.body.style.overflow='hidden'}
+  function closeD(){drawer.classList.remove('open');backdrop.classList.remove('show');backdrop.hidden=true;document.body.style.overflow=''}
+  btn&&btn.addEventListener('click',openD);
+  closeBtn&&closeBtn.addEventListener('click',closeD);
+  backdrop&&backdrop.addEventListener('click',closeD);
+  window.addEventListener('keydown',e=>{if(e.key==='Escape')closeD()});
+})();
+
+/* ===== Dashboard Inquilino ===== */
+(function(){
+  const DEFAULT_PDF = 'contratto_locazione.pdf'; // <-- cambia se lo metti in /assets/
+  if(!window.RP){ alert('Errore caricamento store'); location.href='login.html'; return; }
+
   const me = RP.me();
   if(!me || (me.role!=='tenant' && me.ruolo!=='inquilino')){ location.href='login.html'; return; }
 
-  const nameOf = u => u.name || u.nome;
-  const emailOf= u => u.email;
-  const fmtEur = n => new Intl.NumberFormat('it-IT',{style:'currency',currency:'EUR'}).format(n);
-  const fmtDMY = d => { if(!d) return ''; const [y,m,dd]=d.split('-'); return `${dd}/${m}/${y}`; };
+  const toSignTB = document.getElementById('toSign');
+  const signedTB = document.getElementById('signed');
 
-  function refresh(){
-    const db = RP.read();
-    const landlordsMap = Object.fromEntries(db.utenti.proprietari.map(l=>[l.id,l]));
-    const myContracts = db.contratti.filter(c=>c.tenantId===me.id);
+  const fmtEUR = (n)=> new Intl.NumberFormat('it-IT', {style:'currency', currency:'EUR', maximumFractionDigits:0}).format(n);
 
-    document.getElementById('welcome').textContent = `Benvenuto, ${nameOf(me)}`;
-    document.getElementById('tenantKV').innerHTML = `
-      <b>Nome</b><div>${nameOf(me)}</div>
-      <b>Email</b><div>${emailOf(me)}</div>
-      <b>Indirizzo (dal contratto)</b><div>${myContracts[0]?.address || myContracts[0]?.indirizzo || '—'}</div>
-      <b>Canone (dal contratto)</b><div>${myContracts[0]? fmtEur(myContracts[0].rent || myContracts[0].affitto) : '—'}</div>
+  function rowHTML(c){
+    const pdf = c.pdfUrl || DEFAULT_PDF;
+    const months = (c.months != null) ? `${c.months} mesi` : '-';
+    const isPending = (c.status === 'pending_tenant') || (c.signed && c.signed.tenant === false);
+
+    return `
+      <tr>
+        <td>${c.address || '-'}</td>
+        <td>${fmtEUR(c.rent||0)}</td>
+        <td>${c.start || '-'}</td>
+        <td>${months}</td>
+        <td style="white-space:nowrap">
+          <a class="btn ghost" href="${pdf}" target="_blank" rel="noopener">📄 PDF</a>
+          ${isPending
+            ? `<button class="btn primary" data-sign="${c.id}">✍️ Firma</button>`
+            : `<a class="btn primary" href="${pdf}" target="_blank" rel="noopener">📄 PDF firmato</a>`
+          }
+        </td>
+      </tr>
     `;
-
-    // Da firmare
-    const toSign = myContracts.filter(c => (c.status||c.stato)==='pending_tenant');
-    document.querySelector('#tblToSign tbody').innerHTML = toSign.length ? toSign.map(c=>`
-      <tr>
-        <td>${c.address||c.indirizzo}</td>
-        <td>${nameOf(landlordsMap[c.landlordId])}</td>
-        <td>${fmtEur(c.rent||c.affitto)}</td>
-        <td>In attesa firma</td>
-        <td><button class="btn primary" data-sign="${c.id}">Firma (DEMO)</button></td>
-      </tr>
-    `).join('') : `<tr><td colspan="5">Nessun contratto da firmare.</td></tr>`;
-
-    // Attivi
-    const active = myContracts.filter(c => (c.status||c.stato)==='active');
-    document.querySelector('#tblActive tbody').innerHTML = active.length ? active.map(c=>`
-      <tr>
-        <td>${c.address||c.indirizzo}</td>
-        <td>${nameOf(landlordsMap[c.landlordId])}</td>
-        <td>${fmtDMY(c.start||c.dataInizio)}</td>
-        <td>${fmtEur(c.rent||c.affitto)}</td>
-      </tr>
-    `).join('') : `<tr><td colspan="4">Nessun contratto attivo.</td></tr>`;
-
-    // Pagamenti
-    const myIds = new Set(myContracts.map(c=>c.id));
-    const pays = db.pagamenti.filter(p=> myIds.has(p.contractId||p.contrattoId));
-    const cmap = Object.fromEntries(myContracts.map(c=>[c.id,c]));
-    document.querySelector('#tblPays tbody').innerHTML = pays.length ? pays.map(p=>`
-      <tr>
-        <td>${fmtDMY(p.data||p.date)}</td>
-        <td>${(cmap[p.contractId||p.contrattoId]?.address) || (cmap[p.contractId||p.contrattoId]?.indirizzo) || '-'}</td>
-        <td>${fmtEur(p.importo||p.amount)}</td>
-        <td>${(p.stato||p.status)==='pagato' ? 'Completato' : (p.stato||p.status)}</td>
-      </tr>
-    `).join('') : `<tr><td colspan="4">Nessun pagamento (DEMO).</td></tr>`;
   }
 
-  // click su “Firma (DEMO)”
-  document.addEventListener('click', (e)=>{
-    const btn = e.target.closest('button[data-sign]');
-    if(!btn) return;
-    const id = btn.getAttribute('data-sign');
+  function render(){
     const db = RP.read();
-    const c = db.contratti.find(x=>x.id===id && x.tenantId===me.id);
+    const mine = db.contratti.filter(c => c.tenantId === me.id);
+
+    const pending = mine.filter(c => (c.status === 'pending_tenant') || (c.signed && c.signed.tenant === false));
+    const active  = mine.filter(c => !pending.includes(c));
+
+    toSignTB.innerHTML = pending.length ? pending.map(rowHTML).join('') : `<tr><td colspan="5">Nessun contratto in attesa di firma.</td></tr>`;
+    signedTB.innerHTML = active.length  ? active.map(rowHTML).join('')  : `<tr><td colspan="5">Nessun contratto firmato.</td></tr>`;
+  }
+
+  // click delegato per FIRMA
+  document.addEventListener('click', (e)=>{
+    const id = e.target && e.target.dataset && e.target.dataset.sign;
+    if(!id) return;
+
+    const db = RP.read();
+    const c = db.contratti.find(x => x.id === id);
     if(!c) return;
-    c.status = 'active';
-    // aggiungo una “prima rata” demo
-    db.pagamenti.push({
-      id:'P'+Date.now(),
-      contractId:c.id,
-      data:c.start || new Date().toISOString().slice(0,10),
-      importo:c.rent || c.affitto || 0,
-      stato:'pagato'
-    });
+
+    // inizializza se mancano i campi
+    c.signed = c.signed || { landlord:false, tenant:false };
+    c.pdfUrl = c.pdfUrl || DEFAULT_PDF;
+
+    c.signed.tenant = true;
+    c.status = 'active'; // ora il contratto risulta attivo
+
     RP.write(db);
-    refresh();
-    alert('Contratto firmato (DEMO).');
+    alert('Hai firmato il contratto! Puoi scaricare il PDF tra i Contratti firmati.');
+    render();
   });
 
-  refresh();
+  // prima render
+  render();
 })();
-</script>
-
-<script>
-/* drag-to-scroll orizzontale per le tabelle */
-document.querySelectorAll('.table-wrap').forEach(w=>{
-  let down=false, startX=0, startScroll=0;
-  w.addEventListener('pointerdown',e=>{down=true; startX=e.clientX; startScroll=w.scrollLeft; w.setPointerCapture?.(e.pointerId);});
-  w.addEventListener('pointermove',e=>{if(!down)return; w.scrollLeft = startScroll - (e.clientX - startX);});
-  ['pointerup','pointercancel','mouseleave'].forEach(ev=>w.addEventListener(ev,()=>{down=false;}));
-});
 </script>
 </body>
 </html>
