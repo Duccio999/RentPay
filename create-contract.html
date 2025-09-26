@@ -6,13 +6,51 @@
   <title>Crea nuovo contratto (DEMO) — RentPay</title>
   <link rel="stylesheet" href="styles.css?v=fix9">
   <style>
-    .stack{display:flex;flex-direction:column;gap:32px}
-    @media(min-width:900px){.stack{gap:36px}}
-    .form-card{max-width:900px;margin:0 auto}
-    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    @media(max-width:720px){.grid2{grid-template-columns:1fr}}
-    .actions{justify-content:center}
-  </style>
+  /* ...il tuo stile esistente... */
+
+  /* Celle ben visibili nella form */
+  .form-card .field label{ opacity:.95; margin-bottom:6px; display:block }
+
+  .form-card .input{
+    display:flex; align-items:center; gap:10px;
+    background:#0f2238;                    /* più pieno */
+    border:1px solid rgba(255,255,255,.28);/* più visibile */
+    border-radius:12px;
+    padding:10px 12px;
+  }
+  .form-card .input:focus-within{
+    border-color:var(--accent);
+    box-shadow:0 0 0 3px rgba(46,160,255,.22);
+  }
+  .form-card .input span{ opacity:.9 }
+
+  .form-card .input input,
+  .form-card .input select{
+    background:rgba(255,255,255,.04);      /* “cella” interna */
+    border:1px solid rgba(255,255,255,.18);
+    color:var(--text);
+    outline:none;
+    width:100%;
+    height:38px;
+    line-height:38px;
+    border-radius:10px;
+    padding:0 10px;
+  }
+  .form-card .input input::placeholder{ color:rgba(234,242,255,.55) }
+
+  /* Select e input date coerenti */
+  .form-card .input select{
+    appearance:none; -webkit-appearance:none; -moz-appearance:none;
+    background-image: linear-gradient(45deg, transparent 50%, #a8c7ff 50%),
+                      linear-gradient(135deg, #a8c7ff 50%, transparent 50%),
+                      linear-gradient(to right, transparent, transparent);
+    background-position: calc(100% - 18px) calc(50% - 3px),
+                         calc(100% - 12px) calc(50% - 3px),
+                         100% 0;
+    background-size: 6px 6px, 6px 6px, 2.5em 2.5em;
+    background-repeat: no-repeat;
+  }
+</style>
 </head>
 <body>
 <!-- NAV -->
