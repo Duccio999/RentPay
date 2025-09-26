@@ -90,10 +90,12 @@
 <script>
 /* ===== Nav mobile ===== */
 (function(){
-  const b=document.getElementById('rpHamburger'),d=document.getElementById('rpDrawer'),x=document.getElementById('rpDrawerClose'),o=document.getElementById('rpBackdrop');
+  const b=document.getElementById('rpHamburger'),d=document.getElementById('rpDrawer'),
+        x=document.getElementById('rpDrawerClose'),o=document.getElementById('rpBackdrop');
   function open(){d.classList.add('open');o.hidden=false;o.classList.add('show');document.body.style.overflow='hidden'}
   function close(){d.classList.remove('open');o.classList.remove('show');o.hidden=true;document.body.style.overflow=''}
-  b&&b.addEventListener('click',open); x&&x.addEventListener('click',close); o&&o.addEventListener('click',close); window.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
+  b&&b.addEventListener('click',open); x&&x.addEventListener('click',close);
+  o&&o.addEventListener('click',close); window.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
 })();
 
 /* ===== Logica pagina ===== */
@@ -110,39 +112,37 @@
   const months   = document.getElementById('months');
   const btn      = document.getElementById('btnSubmit');
 
-  /* backtick CORRETTO */
-  owner.value = `${me.name || me.nome} — ${me.email}`;
+  owner.value = `${me.name || me.nome} — ${me.email}`;   // <-- backtick CORRETTO
 
   const db = RP.read();
   db.utenti.inquilini.forEach(t=>{
     const opt=document.createElement('option');
     opt.value=t.id;
-    opt.textContent = `${t.nome || t.name} — ${t.email}`;  /* backtick CORRETTO */
+    opt.textContent = `${t.nome || t.name} — ${t.email}`;  // <-- backtick CORRETTO
     tenantSel.appendChild(opt);
   });
 
   function applyTenantDefaults(){
     const t = db.utenti.inquilini.find(x=>x.id===tenantSel.value);
     if(!t) return;
+
+    // se nello store esistono questi campi li usiamo come default
     if(!addr.value) addr.value = t.indirizzo || '';
     if(!rent.value) rent.value = (t.affitto != null ? t.affitto : '');
-    /* extra: durata diversa per i due demo */
-    if(t.id==='inq1')      { months.value = 12; }
-    else if(t.id==='inq2') { months.value = 18; }
+
+    // esempio: durata diversa per i due demo
+    if (t.id === 'inq1')      months.value = 12;
+    else if (t.id === 'inq2') months.value = 18;
   }
   tenantSel.addEventListener('change', applyTenantDefaults);
 
-  /* inizializza valori al primo inquilino */
-  if(tenantSel.options.length){ tenantSel.value = tenantSel.options[0].value; }
+  if (tenantSel.options.length) tenantSel.value = tenantSel.options[0].value;
   applyTenantDefaults();
 
-  /* data inizio default = oggi */
   if(!start.value){
-    const today = new Date();
-    const y=today.getFullYear();
-    const m=String(today.getMonth()+1).padStart(2,'0');
-    const d=String(today.getDate()).padStart(2,'0');
-    start.value = `${y}-${m}-${d}`;    /* backtick CORRETTO */
+    const today=new Date();
+    const y=today.getFullYear(), m=String(today.getMonth()+1).padStart(2,'0'), d=String(today.getDate()).padStart(2,'0');
+    start.value = `${y}-${m}-${d}`;   // <-- backtick CORRETTO
   }
 
   btn.addEventListener('click', (e)=>{
@@ -176,5 +176,3 @@
   });
 })();
 </script>
-</body>
-</html>
