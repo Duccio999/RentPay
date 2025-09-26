@@ -91,26 +91,28 @@
 
 <!-- Login logic -->
 <script>
-if(!window.RP){ alert('Errore di caricamento rp-store.js'); }
+if (!window.RP) { alert('Errore di caricamento rp-store.js'); }
 
 let ruolo = 'landlord';
 const sel    = document.getElementById('profileSel');
 const emailI = document.getElementById('email');
 
-function normUser(u){ return { id:u.id, role:u.role||u.ruolo, name:u.name||u.nome, email:u.email }; }
+function normUser(u){
+  return { id:u.id, role:u.role||u.ruolo, name:u.name||u.nome, email:u.email };
+}
 function listForRole(){
   const db = RP.read();
-  const list = (ruolo==='landlord') ? db.utenti.proprietari : db.utenti.inquilini;
+  const list = (ruolo === 'landlord') ? db.utenti.proprietari : db.utenti.inquilini;
   return list.map(normUser);
 }
 
 function fillOptions(){
   const list = listForRole();
   sel.innerHTML = '';
-  list.forEach(u=>{
+  list.forEach(u => {
     const opt = document.createElement('option');
     opt.value = u.id;
-    opt.textContent = `${u.name} — ${u.email}`;   /* <-- backtick CORRETTO */
+    opt.textContent = `${u.name} — ${u.email}`;   // <-- backtick CORRETTO
     sel.appendChild(opt);
   });
   sel.selectedIndex = 0;
@@ -118,32 +120,32 @@ function fillOptions(){
 }
 
 function showDetail(){
-  const u = listForRole().find(x=>x.id===sel.value);
+  const u = listForRole().find(x => x.id === sel.value);
   emailI.value = u ? (u.email || '') : '';
 }
 
 /* Toggle ruolo */
-document.getElementById('btnProp').onclick = ()=>{
+document.getElementById('btnProp').onclick = () => {
   document.getElementById('btnProp').classList.add('active');
   document.getElementById('btnInq').classList.remove('active');
-  ruolo='landlord'; fillOptions();
+  ruolo = 'landlord';
+  fillOptions();
 };
-document.getElementById('btnInq').onclick = ()=>{
+document.getElementById('btnInq').onclick = () => {
   document.getElementById('btnInq').classList.add('active');
   document.getElementById('btnProp').classList.remove('active');
-  ruolo='tenant'; fillOptions();
+  ruolo = 'tenant';
+  fillOptions();
 };
 
 sel.onchange = showDetail;
 
-document.getElementById('btnLogin').onclick = ()=>{
-  if(!sel.value && sel.options.length){ sel.value = sel.options[0].value; }
+document.getElementById('btnLogin').onclick = () => {
+  if (!sel.value && sel.options.length) sel.value = sel.options[0].value;
   const ok = RP.loginById(ruolo, sel.value);
-  if(ok){ location.href = (ruolo==='landlord') ? 'dashboard-prop.html' : 'dashboard-inq.html'; }
+  if (ok) location.href = (ruolo === 'landlord') ? 'dashboard-prop.html' : 'dashboard-inq.html';
 };
 
 /* init */
 fillOptions();
 </script>
-</body>
-</html>
