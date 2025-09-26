@@ -110,7 +110,7 @@ function fillOptions(){
   list.forEach(u=>{
     const opt = document.createElement('option');
     opt.value = u.id;
-    opt.textContent = ${u.name} — ${u.email};
+    opt.textContent = `${u.name} — ${u.email}`;   /* <-- backtick CORRETTO */
     sel.appendChild(opt);
   });
   sel.selectedIndex = 0;
@@ -122,6 +122,7 @@ function showDetail(){
   emailI.value = u ? (u.email || '') : '';
 }
 
+/* Toggle ruolo */
 document.getElementById('btnProp').onclick = ()=>{
   document.getElementById('btnProp').classList.add('active');
   document.getElementById('btnInq').classList.remove('active');
@@ -132,6 +133,7 @@ document.getElementById('btnInq').onclick = ()=>{
   document.getElementById('btnProp').classList.remove('active');
   ruolo='tenant'; fillOptions();
 };
+
 sel.onchange = showDetail;
 
 document.getElementById('btnLogin').onclick = ()=>{
@@ -140,6 +142,7 @@ document.getElementById('btnLogin').onclick = ()=>{
   if(ok){ location.href = (ruolo==='landlord') ? 'dashboard-prop.html' : 'dashboard-inq.html'; }
 };
 
+/* init */
 fillOptions();
 </script>
 </body>
