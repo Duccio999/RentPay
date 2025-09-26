@@ -63,4 +63,17 @@
   }
 
   w.RP = { read, write, reset, me, setMe, users: { landlords, tenants }, loginById };
+
+  dbNow.contratti.push({
+  id: newId,
+  landlordId: me.id,
+  tenantId,
+  address,
+  rent: rentNum,
+  start: startIso,
+  months: monthsNum,
+  status: 'pending_tenant',   // in attesa firma inquilino
+  pdfUrl: 'contratti/contratto_locazione.pdf', // link al PDF DEMO
+  signed: { landlord: true, tenant: false }    // proprietario ha già firmato
+});
 })(window);
