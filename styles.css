@@ -373,3 +373,8 @@ input:-webkit-autofill:focus{
   .form-card select,
   .form-card textarea{ padding:9px 11px; border-radius:10px }
 }
+
+    .contenitore-img {
+      width: 100px;
+      height: 100px;
+    }
