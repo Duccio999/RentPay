@@ -276,7 +276,7 @@
         pdfParsed = RPContractAssistant.parseFieldsFromPdfText(text);
         if (!pdfParsed || !pdfParsed.hasText) pdfParsed = { hasText:false };
       } catch (e) {
-        pdfParsed = { hasText:false };
+        pdfParsed = { hasText:false, error: (e && e.message) ? e.message : 'Errore lettura PDF' };
       }
     }
 
@@ -358,7 +358,11 @@
       status: 'pending_tenant',
       pdfUrl: 'contratto_locazione.pdf',
       pdfFileName: pdfName,
-      signed: { landlord: true, tenant: false }
+      signed: { landlord: true, tenant: false },
+
+      // DEMO: l'autopay può essere pre-configurato già da contratto.
+      // Diventerà effettivo quando il contratto passa "active" (dopo la firma dell'inquilino).
+      autopay: { enabled: true, day: 1 }
     });
     RP.write(dbNow);
 
