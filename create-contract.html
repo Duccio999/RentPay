@@ -109,12 +109,41 @@
       <div class="input"><span>🗓️</span><input id="months" type="number" step="1" value="12"></div>
     </div>
 
+    <div class="grid2">
+      <div class="field">
+        <label>Deposito cauzionale (€) <span style="opacity:.75">(opz.)</span></label>
+        <div class="input"><span>🧾</span><input id="deposit" type="number" inputmode="decimal" step="1" placeholder="es. 1700"></div>
+      </div>
+      <div class="field">
+        <label>Data fine (calcolata)</label>
+        <div class="input"><span>🏁</span><input id="end" type="date" readonly></div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Carica contratto PDF <span style="opacity:.75">(opz.)</span></label>
+      <div class="input"><span>📄</span><input id="pdf" type="file" accept="application/pdf"></div>
+      <p class="micro" style="opacity:.75;margin:.45rem 0 0">DEMO: il file non viene inviato online; serve solo per mostrare l’analisi “AI”.</p>
+    </div>
+
     <p class="notice" style="margin-top:12px;padding:10px 12px;border-radius:10px">
       <strong>DEMO:</strong> il contratto viene salvato localmente e risulta “In attesa firma” nella dashboard dell’inquilino.
     </p>
 
     <div class="actions" style="margin-top:10px">
       <button class="btn primary" id="btnSubmit" type="button">Firma &amp; invia (DEMO)</button>
+    </div>
+  </section>
+
+  <section class="card" style="margin-top:14px">
+    <h2 style="margin:0 0 6px">Contract &amp; Data Assistant (DEMO)</h2>
+    <p class="lead" style="margin:0 0 12px">Controlla campi mancanti, incoerenze (date/importi) e suggerimenti di correzione.</p>
+    <div class="actions" style="margin:0 0 10px">
+      <button class="btn" id="btnAnalyze" type="button">🤖 Analizza contratto</button>
+      <span class="micro" style="opacity:.8">Suggerimento: prova a lasciare un campo vuoto o a cambiare i mesi.</span>
+    </div>
+    <div id="aiOut" class="ai-box">
+      <p class="ai-muted">Premi <strong>Analizza</strong> per vedere l’output (demo).</p>
     </div>
   </section>
 </main>
@@ -125,6 +154,7 @@
 </footer>
 
 <script src="rp-store.js"></script>
+<script src="contract-assistant.js"></script>
 <script>
 /* ===== Nav mobile (come già hai) ===== */
 (function(){
@@ -148,7 +178,12 @@
   const rent     = document.getElementById('rent');
   const start    = document.getElementById('start');
   const months   = document.getElementById('months');
+  const deposit  = document.getElementById('deposit');
+  const end      = document.getElementById('end');
+  const pdf      = document.getElementById('pdf');
   const btn      = document.getElementById('btnSubmit');
+  const btnAnalyze = document.getElementById('btnAnalyze');
+  const aiOut    = document.getElementById('aiOut');
 
   owner.value = `${me.name || me.nome} — ${me.email}`;
 
@@ -192,6 +227,51 @@
     if (force || !rent.value)   rent.value   = val.rent;
     if (force || !start.value)  start.value  = val.start;
     if (force || !months.value) months.value = val.months;
+    // deposito suggerito (2 mensilità) se il canone è presente
+    const r = Number(val.rent);
+    if ((force || !deposit.value) && isFinite(r) && r>0) deposit.value = String(Math.round(r*2));
+  }
+
+  function computeEndDate(){
+    const s = start.value;
+    const m = parseInt(months.value||'0',10);
+    if(!s || !isFinite(m) || m<=0){ end.value=''; return; }
+    const d = new Date(s+'T00:00:00');
+    if(isNaN(d.getTime())){ end.value=''; return; }
+    // calcolo “start + mesi” (demo)
+    const day = d.getDate();
+    d.setDate(1);
+    d.setMonth(d.getMonth()+m);
+    const last = new Date(d.getFullYear(), d.getMonth()+1, 0).getDate();
+    d.setDate(Math.min(day,last));
+    const y=d.getFullYear(), mo=String(d.getMonth()+1).padStart(2,'0'), da=String(d.getDate()).padStart(2,'0');
+    end.value = `${y}-${mo}-${da}`;
+  }
+
+  function runAssistant(){
+    if(!window.RPContractAssistant){
+      aiOut.innerHTML = '<p class="ai-muted">Assistant non disponibile (script mancante).</p>';
+      return;
+    }
+
+    const dbNow = RP.read();
+    const t = dbNow.utenti.inquilini.find(x=>x.id===tenantSel.value);
+
+    const payload = {
+      address: addr.value,
+      rent: rent.value,
+      startIso: start.value,
+      months: months.value,
+      deposit: deposit.value,
+      endIso: end.value,
+      iban: (me.iban || me.IBAN || ''),
+      landlordEmail: me.email,
+      tenantEmail: t?.email,
+      pdfFileName: pdf?.files?.[0]?.name || ''
+    };
+
+    const res = RPContractAssistant.analyze(payload);
+    RPContractAssistant.render(aiOut, res);
   }
 
   tenantSel.addEventListener('change', ()=>applyTenantDefaults(true));
@@ -199,6 +279,20 @@
   // Seleziona il primo inquilino e applica preset
   if (tenantSel.options.length) tenantSel.value = tenantSel.options[0].value;
   applyTenantDefaults(true);
+  computeEndDate();
+
+  // ricalcolo end date e (opzionale) analisi automatica
+  start.addEventListener('change', ()=>{ computeEndDate(); });
+  months.addEventListener('input', ()=>{ computeEndDate(); });
+  rent.addEventListener('input', ()=>{ /* aggiornare suggerimento deposito solo se l'utente non ha scritto */
+    if(!deposit.value){
+      const r = Number(rent.value);
+      if(isFinite(r) && r>0) deposit.value = String(Math.round(r*2));
+    }
+  });
+  pdf && pdf.addEventListener('change', ()=>{});
+
+  btnAnalyze.addEventListener('click', (e)=>{ e.preventDefault(); runAssistant(); });
 
   btn.addEventListener('click', (e)=>{
     e.preventDefault();
@@ -207,6 +301,9 @@
     const rentNum  = parseFloat(rent.value||'0') || 0;
     const startIso = start.value;
     const monthsNum= parseInt(months.value||'12') || 12;
+    const depositNum = parseFloat(deposit.value||'0') || 0;
+    const endIso   = end.value;
+    const pdfName  = pdf?.files?.[0]?.name || '';
 
     if(!tenantId || !address || !startIso){
       alert('Compila inquilino, indirizzo e data inizio.'); return;
@@ -222,8 +319,11 @@
       rent: rentNum,
       start: startIso,
       months: monthsNum,
+      deposit: depositNum,
+      end: endIso,
       status: 'pending_tenant',
       pdfUrl: 'contratto_locazione.pdf',
+      pdfFileName: pdfName,
       signed: { landlord: true, tenant: false }
     });
     RP.write(dbNow);
