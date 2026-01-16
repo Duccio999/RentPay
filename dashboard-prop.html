@@ -286,7 +286,11 @@
 /* drag-to-scroll orizzontale per le tabelle */
 document.querySelectorAll('.table-wrap').forEach(w=>{
   let down=false, startX=0, startScroll=0;
-  w.addEventListener('pointerdown',e=>{down=true; startX=e.clientX; startScroll=w.scrollLeft; w.setPointerCapture?.(e.pointerId);});
+  // Non interferire con click su elementi interattivi (bottoni/links)
+  w.addEventListener('pointerdown',e=>{
+    if(e.target && e.target.closest && e.target.closest('button, a, input, textarea, select, label')) return;
+    down=true; startX=e.clientX; startScroll=w.scrollLeft; w.setPointerCapture?.(e.pointerId);
+  });
   w.addEventListener('pointermove',e=>{if(!down)return; w.scrollLeft = startScroll - (e.clientX - startX);});
   ['pointerup','pointercancel','mouseleave'].forEach(ev=>w.addEventListener(ev,()=>{down=false;}));
 });
