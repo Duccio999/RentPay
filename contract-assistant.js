@@ -183,6 +183,9 @@
       issues.push({ level:'info', text:`PDF caricato: ${payload.pdfFileName}` });
       if (payload.pdfParsed && payload.pdfParsed.hasText === false){
         issues.push({ level:'warn', text:'PDF non leggibile: potrebbe essere una scansione (senza testo selezionabile).' });
+        if (payload.pdfParsed.error){
+          issues.push({ level:'info', text:`Dettaglio tecnico (demo): ${payload.pdfParsed.error}` });
+        }
         suggestions.push('Se il PDF è scannerizzato: compila i dati nel form (oppure usa un PDF testuale per la demo).');
       }
       if (payload.pdfParsed && payload.pdfParsed.hasText){
