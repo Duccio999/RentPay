@@ -153,6 +153,16 @@
   <div class="copy">© 2025 RentPay — PWA</div>
 </footer>
 
+<!-- PDF.js (solo client-side). Nota: estrae testo solo da PDF con testo selezionabile. -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.js"></script>
+<script>
+  // Worker per PDF.js
+  window.pdfjsWorkerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.js";
+  if (window.pdfjsLib && window.pdfjsWorkerSrc) {
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc = window.pdfjsWorkerSrc;
+  }
+</script>
+
 <script src="rp-store.js"></script>
 <script src="contract-assistant.js"></script>
 <script>
@@ -248,7 +258,7 @@
     end.value = `${y}-${mo}-${da}`;
   }
 
-  function runAssistant(){
+  async function runAssistant(){
     if(!window.RPContractAssistant){
       aiOut.innerHTML = '<p class="ai-muted">Assistant non disponibile (script mancante).</p>';
       return;
@@ -256,6 +266,19 @@
 
     const dbNow = RP.read();
     const t = dbNow.utenti.inquilini.find(x=>x.id===tenantSel.value);
+
+    // Se è stato caricato un PDF, proviamo a leggerne il testo (DEMO).
+    let pdfParsed = null;
+    const pdfFile = pdf?.files?.[0] || null;
+    if (pdfFile && window.RPContractAssistant && typeof RPContractAssistant.extractPdfText === 'function'){
+      try {
+        const text = await RPContractAssistant.extractPdfText(pdfFile);
+        pdfParsed = RPContractAssistant.parseFieldsFromPdfText(text);
+        if (!pdfParsed || !pdfParsed.hasText) pdfParsed = { hasText:false };
+      } catch (e) {
+        pdfParsed = { hasText:false };
+      }
+    }
 
     const payload = {
       address: addr.value,
@@ -267,7 +290,8 @@
       iban: (me.iban || me.IBAN || ''),
       landlordEmail: me.email,
       tenantEmail: t?.email,
-      pdfFileName: pdf?.files?.[0]?.name || ''
+      pdfFileName: pdfFile?.name || '',
+      pdfParsed
     };
 
     const res = RPContractAssistant.analyze(payload);
@@ -292,7 +316,17 @@
   });
   pdf && pdf.addEventListener('change', ()=>{});
 
-  btnAnalyze.addEventListener('click', (e)=>{ e.preventDefault(); runAssistant(); });
+  btnAnalyze.addEventListener('click', async (e)=>{
+    e.preventDefault();
+    const old = btnAnalyze.textContent;
+    btnAnalyze.disabled = true;
+    btnAnalyze.textContent = '🤖 Analizzo…';
+    try { await runAssistant(); }
+    finally {
+      btnAnalyze.disabled = false;
+      btnAnalyze.textContent = old;
+    }
+  });
 
   btn.addEventListener('click', (e)=>{
     e.preventDefault();
