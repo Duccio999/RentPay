@@ -82,12 +82,12 @@
   </section>
 
 
-  <!-- PROSSIME RATE -->
+  <!-- RATE (AUTO) -->
   <section class="card section">
     <div class="section-head">
-      <h2>Prossime rate</h2>
+      <h2>Rate (pagamento automatico)</h2>
     </div>
-    <p class="lead" style="margin-top:-6px">DEMO: qui vedi le prossime scadenze del tuo contratto attivo. Puoi simulare il pagamento per mostrare il flusso end-to-end.</p>
+    <p class="lead" style="margin-top:-6px">DEMO: l’addebito ricorrente è <strong>automatico</strong>. Quando apri la dashboard, eventuali rate scadute vengono processate (pagato / in ritardo / fallito) senza premere “Paga”.</p>
     <div class="table-wrap edge">
       <table class="rp-table">
         <thead>
@@ -96,7 +96,7 @@
             <th>Immobile</th>
             <th>Importo</th>
             <th>Stato</th>
-            <th>Azioni</th>
+            <th>Azioni (demo)</th>
           </tr>
         </thead>
         <tbody id="tblUpcoming"></tbody>
@@ -140,6 +140,10 @@
 
   const me = RP.me();
   if(!me || (me.role!=='tenant' && me.ruolo!=='inquilino')){ location.href='login.html'; return; }
+
+  // DEMO: pagamenti automatici.
+  // Processiamo eventuali rate scadute automaticamente all'apertura (senza click su "Paga").
+  try { RP.runAutoPayCron(); } catch(e) {}
 
   const toSignTB = document.getElementById('toSign');
   const signedTB = document.getElementById('signed');
@@ -197,9 +201,21 @@
   function renderUpcoming(){
     const db = RP.read();
     const contractsById = { ...Object.fromEntries(db.contratti.map(c=>[c.id,c])) };
-    const upcoming = RP.upcomingRatesForTenant(me.id, 10);
 
-    upTB.innerHTML = upcoming.length ? upcoming.map(r=>{
+    // Mostriamo un "range" credibile per demo: ultimi 2 mesi + prossimi 4 mesi
+    const today = new Date();
+    const from = new Date(today.getFullYear(), today.getMonth()-2, 1);
+    const to   = new Date(today.getFullYear(), today.getMonth()+4, 1);
+    const fromIso = `${from.getFullYear()}-${String(from.getMonth()+1).padStart(2,'0')}-01`;
+    const toIso   = `${to.getFullYear()}-${String(to.getMonth()+1).padStart(2,'0')}-31`;
+
+    const mineContractIds = new Set(db.contratti.filter(c=>c.tenantId===me.id && c.status==='active').map(c=>c.id));
+    const rows = db.rate
+      .filter(r=> mineContractIds.has(r.contractId) && r.dueDate >= fromIso && r.dueDate <= toIso)
+      .sort((a,b)=>a.dueDate.localeCompare(b.dueDate))
+      .slice(0, 10);
+
+    upTB.innerHTML = rows.length ? rows.map(r=>{
       const c = contractsById[r.contractId] || {};
       const imm = c.address || c.indirizzo || '-';
       const amount = fmtEUR(r.amount||0);
@@ -210,24 +226,25 @@
           <td>${amount}</td>
           <td>${badge(r.status)}</td>
           <td style="white-space:nowrap">
-            <button class="btn primary" data-pay-ok="${r.id}">✅ Paga (demo)</button>
-            <button class="btn ghost" data-pay-late="${r.id}">⏱️ Ritardo</button>
+            <span class="micro" style="opacity:.85">Autopay ${c.autopay?.enabled ? 'attivo' : 'spento'}</span>
+            <button class="btn ghost" data-pay-late="${r.id}">⏱️ Simula ritardo</button>
+            <button class="btn" data-pay-fail="${r.id}">❌ Simula fallito</button>
           </td>
         </tr>
       `;
-    }).join('') : `<tr><td colspan="5">Nessuna rata in programma.</td></tr>`;
+    }).join('') : `<tr><td colspan="5">Nessuna rata nel range selezionato.</td></tr>`;
   }
 
   document.addEventListener('click', (e)=>{
-    const ok = e.target?.getAttribute?.('data-pay-ok');
     const late = e.target?.getAttribute?.('data-pay-late');
-    if(ok){
-      RP.setRateStatus(ok, 'paid');
+    const fail = e.target?.getAttribute?.('data-pay-fail');
+    if(late){
+      RP.setRateStatus(late, 'late');
       renderUpcoming();
       return;
     }
-    if(late){
-      RP.setRateStatus(late, 'late');
+    if(fail){
+      RP.setRateStatus(fail, 'failed');
       renderUpcoming();
       return;
     }
