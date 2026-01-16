@@ -6,6 +6,11 @@
   const DB_KEY  = 'rp_demo_store_v3';
   const CUR_KEY = 'rpCurrentUser';
 
+  // Nota demo (importantissimo):
+  // - In produzione i pagamenti "automatici" richiedono backend/job scheduler + PSP/SDD.
+  // - In questa demo (solo sito statico) simuliamo l'automatismo eseguendo un "cron"
+  //   all'apertura delle dashboard (e, se vuoi, anche a intervalli mentre la pagina è aperta).
+
   // SEED compatibile con chiavi IT/EN
   const SEED = {
     utenti: {
@@ -19,23 +24,14 @@
       ]
     },
     contratti: [
-      { id:'C1', landlordId:'L1', tenantId:'T1', address:'Via Roma 12', rent:850, start:'2025-06-01', months:12, status:'active', pdfUrl:'contratto_locazione.pdf', signed:{ landlord:true, tenant:true } },
-      { id:'C2', landlordId:'L2', tenantId:'T2', address:'Via Po 8',   rent:720, start:'2025-07-01', months:12, status:'active', pdfUrl:'contratto_locazione.pdf', signed:{ landlord:true, tenant:true } },
-      { id:'C3', landlordId:'L1', tenantId:'T2', address:'Via Po 8',   rent:720, start:'2025-09-01', months:12, status:'pending_tenant', pdfUrl:'contratto_locazione.pdf', signed:{ landlord:true, tenant:false } }
+      // Start aggiornato per rendere la demo coerente nel 2026
+      { id:'C1', landlordId:'L1', tenantId:'T1', address:'Via Roma 12', rent:850, start:'2026-01-01', months:12, status:'active', pdfUrl:'contratto_locazione.pdf', signed:{ landlord:true, tenant:true }, autopay:{ enabled:true, day:1 } },
+      { id:'C2', landlordId:'L2', tenantId:'T2', address:'Via Po 8',   rent:720, start:'2026-01-01', months:12, status:'active', pdfUrl:'contratto_locazione.pdf', signed:{ landlord:true, tenant:true }, autopay:{ enabled:true, day:1 } },
+      { id:'C3', landlordId:'L1', tenantId:'T2', address:'Via Po 8',   rent:720, start:'2026-02-01', months:12, status:'pending_tenant', pdfUrl:'contratto_locazione.pdf', signed:{ landlord:true, tenant:false }, autopay:{ enabled:true, day:1 } }
     ],
-    // rate future + stati
-    rate: [
-      { id:'R1', contractId:'C1', dueDate:'2025-10-01', amount:850, status:'scheduled' },
-      { id:'R2', contractId:'C1', dueDate:'2025-09-01', amount:850, status:'paid' },
-      { id:'R3', contractId:'C2', dueDate:'2025-10-01', amount:720, status:'scheduled' },
-      { id:'R4', contractId:'C2', dueDate:'2025-09-01', amount:720, status:'paid' }
-    ],
-    // storico pagamenti (solo eventi 'paid' / 'failed')
-    pagamenti: [
-      { id:'P1', contractId:'C1', date:'2025-09-01', amount:850, status:'paid' },
-      { id:'P2', contractId:'C2', date:'2025-09-01', amount:720, status:'paid' },
-      { id:'P3', contractId:'C1', date:'2025-08-01', amount:850, status:'paid' }
-    ],
+    // rate/pagamenti verranno generati automaticamente da ensureRates()
+    rate: [],
+    pagamenti: [],
     // eventi legati a mancati incassi / garanzia
     eventi: [
       // { id:'E1', type:'payment_failed', contractId:'C1', date:'2025-10-01', note:'Addebito fallito (demo)' }
@@ -69,6 +65,12 @@
       c.months = (c.months != null) ? c.months : 12;
       c.pdfUrl = c.pdfUrl || 'contratto_locazione.pdf';
       c.signed = c.signed || { landlord: (c.status==='active'), tenant: (c.status==='active') };
+
+      // Autopay (demo)
+      // di default attivo per i contratti "active" creati nella demo.
+      if(!c.autopay) c.autopay = { enabled: (c.status==='active'), day: 1 };
+      if(typeof c.autopay.enabled !== 'boolean') c.autopay.enabled = !!c.autopay.enabled;
+      if(!c.autopay.day || !Number.isFinite(Number(c.autopay.day))) c.autopay.day = 1;
     });
 
     // auto-genera rate future se mancano
@@ -166,15 +168,18 @@
         const k = `${c.id}|${dueIso}`;
         if(existingKey.has(k)) continue;
 
-        // Se è nel passato: di default paid (demo), altrimenti scheduled
-        const status = (due < now) ? 'paid' : 'scheduled';
+        // Se è nel passato recente: lasciala "scheduled" così il cron autopay può processarla.
+        // Se è molto vecchia (oltre 2 mesi), la consideriamo già sistemata per non sporcare la demo.
+        let status = 'scheduled';
+        if (monthsFromNow < -2) status = 'paid';
 
         db.rate.push({
           id: `R${Date.now()}_${Math.random().toString(16).slice(2,8)}`,
           contractId: c.id,
           dueDate: dueIso,
           amount: Number(c.rent||0),
-          status
+          status,
+          processedAt: (status==='paid') ? now.toISOString() : null
         });
         existingKey.add(k);
 
@@ -197,6 +202,83 @@
     // sort
     db.rate.sort((a,b)=> (a.dueDate||'').localeCompare(b.dueDate||''));
     db.pagamenti.sort((a,b)=> (b.date||'').localeCompare(a.date||''));
+  }
+
+  // ===== Autopay "cron" (DEMO) =====
+  function _todayIso(d=new Date()){
+    return iso(d);
+  }
+
+  function _simulateOutcome(){
+    // Distribuzione demo: 90% pagato, 8% in ritardo, 2% fallito
+    const r = Math.random();
+    if (r < 0.90) return 'paid';
+    if (r < 0.98) return 'late';
+    return 'failed';
+  }
+
+  function runAutoPayCron(opts={}){
+    const now = opts.now ? new Date(opts.now) : new Date();
+    const today = _todayIso(now);
+    const db = read();
+
+    // assicurati che esistano rate coerenti
+    ensureRates(db);
+
+    const contracts = new Map(db.contratti.map(c=>[c.id,c]));
+    let changed = false;
+
+    for (const r of db.rate){
+      if (!r || !r.contractId) continue;
+      if (r.processedAt) continue; // già processata
+      if ((r.status||'') !== 'scheduled') continue;
+      if ((r.dueDate||'') > today) continue; // non ancora dovuta
+
+      const c = contracts.get(r.contractId);
+      if (!c) continue;
+      if ((c.status||c.stato) !== 'active') continue;
+      if (!c.autopay?.enabled) continue;
+
+      const outcome = _simulateOutcome();
+      r.status = outcome;
+      r.processedAt = now.toISOString();
+
+      // aggiorna storico/eventi come setRateStatus, ma senza richiamare read() di nuovo
+      const amount = Number(r.amount||0);
+      const date = r.dueDate;
+      if(outcome==='paid'){
+        db.pagamenti.unshift({
+          id: `P${Date.now()}_${Math.random().toString(16).slice(2,8)}`,
+          contractId: r.contractId,
+          date,
+          amount,
+          status: 'paid'
+        });
+        _addEvent(db, { type:'payment_paid', contractId:r.contractId, date, note:'Addebito automatico completato (demo)' });
+      }
+      if(outcome==='failed'){
+        _addEvent(db, { type:'payment_failed', contractId:r.contractId, date, note:'Addebito automatico fallito (demo) — avvio sollecito/garanzia' });
+      }
+      if(outcome==='late'){
+        _addEvent(db, { type:'payment_late', contractId:r.contractId, date, note:'Addebito automatico in ritardo (demo) — reminder automatico' });
+      }
+
+      changed = true;
+    }
+
+    if (changed) write(db);
+    return { changed };
+  }
+
+  function setAutopay(contractId, enabled, day=1){
+    const db = read();
+    const c = db.contratti.find(x=>x.id===contractId);
+    if(!c) return false;
+    c.autopay = c.autopay || { enabled:false, day:1 };
+    c.autopay.enabled = !!enabled;
+    c.autopay.day = Number.isFinite(Number(day)) ? Number(day) : (c.autopay.day||1);
+    write(db);
+    return true;
   }
 
   function ratesForContract(contractId){
@@ -237,6 +319,7 @@
     const r = db.rate.find(x=>x.id===rateId);
     if(!r) return false;
     r.status = newStatus;
+    r.processedAt = new Date().toISOString();
 
     // storico pagamenti
     const c = db.contratti.find(x=>x.id===r.contractId);
@@ -330,6 +413,10 @@
     upcomingRatesForTenant,
     setRateStatus,
     latestEventsForLandlord,
-    riskScoreForTenant
+    riskScoreForTenant,
+
+    // autopay demo
+    runAutoPayCron,
+    setAutopay
   };
 })(window);
