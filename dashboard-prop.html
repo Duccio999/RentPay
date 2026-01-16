@@ -65,6 +65,39 @@
   </div>
 </section>
 
+
+<section class="card">
+  <h2>Prossime rate</h2>
+  <p class="lead" style="margin-top:-6px">DEMO: simula gli esiti per mostrare il flusso “addebito → incasso → (eventuale) garanzia”.</p>
+  <div class="table-wrap edge">
+    <table class="rp-table" id="tblUpcomingOwner">
+      <thead>
+        <tr><th>Scadenza</th><th>Immobile</th><th>Inquilino</th><th>Importo</th><th>Stato</th><th>Azioni</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</section>
+
+<section class="card">
+  <h2>AI (demo): rischio mancato pagamento</h2>
+  <p class="lead" style="margin-top:-6px">Punteggio indicativo (0–100) basato su storico ritardi e ultime rate (demo).</p>
+  <div class="table-wrap edge">
+    <table class="rp-table" id="tblRisk">
+      <thead>
+        <tr><th>Inquilino</th><th>Immobile</th><th>Rischio</th><th>Motivi</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</section>
+
+<section class="card">
+  <h2>Eventi & garanzia</h2>
+  <p class="lead" style="margin-top:-6px">Quando una rata fallisce, qui compare l’evento (sollecito / avvio copertura) in modalità demo.</p>
+  <div id="evtList"></div>
+</section>
+
 <section class="card">
   <h2>Incassi recenti</h2>
   <div class="table-wrap edge">
@@ -151,9 +184,101 @@
       <td>${fmtDMY(p.data||p.date)}</td>
       <td>${(cmap[p.contractId||p.contrattoId]?.address) || (cmap[p.contractId||p.contrattoId]?.indirizzo) || '-'}</td>
       <td>${fmtEur(p.importo||p.amount)}</td>
-      <td>${(p.stato||p.status)==='pagato' ? 'Completato' : (p.stato||p.status)}</td>
+      <td>${(['pagato','paid'].includes(p.stato||p.status)) ? 'Completato' : (p.stato||p.status)}</td>
     </tr>
   `).join('') : `<tr><td colspan="4">Nessun pagamento (DEMO).</td></tr>`;
+
+
+  // ===== Prossime rate (con simulazioni) =====
+  const fmtDMY2 = (iso)=>{ if(!iso) return ''; const [y,m,d]=iso.split('-'); return `${d}/${m}/${y}`; };
+  const badge = (s)=>{
+    const map = { scheduled:'Programmato', paid:'Pagato', failed:'Fallito', late:'In ritardo' };
+    const lbl = map[s] || s;
+    const cls = (s==='paid') ? 'badge ok' : (s==='failed') ? 'badge bad' : (s==='late') ? 'badge warn' : 'badge';
+    return `<span class="${cls}">${lbl}</span>`;
+  };
+
+  function renderUpcomingOwner(){
+    const up = RP.upcomingRatesForLandlord(me.id, 10);
+    const tbody = document.querySelector('#tblUpcomingOwner tbody');
+    tbody.innerHTML = up.length ? up.map(r=>{
+      const c = cmap[r.contractId] || {};
+      const t = tenantsMap[c.tenantId] || {};
+      const imm = c.address || c.indirizzo || '-';
+      const tn  = t.nome || t.name || '-';
+      return `
+        <tr>
+          <td>${fmtDMY2(r.dueDate)}</td>
+          <td>${imm}</td>
+          <td>${tn}</td>
+          <td>${fmtEur(r.amount||0)}</td>
+          <td>${badge(r.status)}</td>
+          <td style="white-space:nowrap">
+            <button class="btn primary" data-rate-ok="${r.id}">✅ Incassa</button>
+            <button class="btn ghost" data-rate-late="${r.id}">⏱️ Ritardo</button>
+            <button class="btn" data-rate-fail="${r.id}">❌ Fallito</button>
+          </td>
+        </tr>
+      `;
+    }).join('') : `<tr><td colspan="6">Nessuna rata in programma.</td></tr>`;
+  }
+
+  // ===== AI demo: risk score per inquilino =====
+  function renderRisk(){
+    const tbody = document.querySelector('#tblRisk tbody');
+    const rows = active.map(c=>{
+      const t = tenantsMap[c.tenantId] || {};
+      const rs = RP.riskScoreForTenant(c.tenantId);
+      return `
+        <tr>
+          <td>${t.nome || t.name || '-'}</td>
+          <td>${c.address || c.indirizzo || '-'}</td>
+          <td><span class="badge">${rs.label} (${rs.score}/100)</span></td>
+          <td>${rs.reasons.join(' • ')}</td>
+        </tr>
+      `;
+    });
+    tbody.innerHTML = rows.length ? rows.join('') : `<tr><td colspan="4">Nessun contratto attivo.</td></tr>`;
+  }
+
+  // ===== Eventi / garanzia =====
+  function renderEvents(){
+    const box = document.getElementById('evtList');
+    const evs = RP.latestEventsForLandlord(me.id, 8);
+    if(!evs.length){
+      box.innerHTML = `<p style="opacity:.85;margin:0">Nessun evento recente (demo).</p>`;
+      return;
+    }
+    const typeLabel = (t)=>({
+      payment_failed:'Addebito fallito',
+      payment_late:'Pagamento in ritardo',
+      payment_paid:'Pagamento completato'
+    }[t]||t);
+
+    box.innerHTML = `<div class="stack" style="gap:10px">` + evs.map(e=>{
+      const c = cmap[e.contractId] || {};
+      return `<div class="card" style="padding:12px 14px;margin:0">
+        <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap">
+          <b>${typeLabel(e.type)}</b>
+          <span style="opacity:.8">${fmtDMY2(e.date)}</span>
+        </div>
+        <div style="opacity:.9;margin-top:4px">${c.address || c.indirizzo || '-'} — ${e.note||''}</div>
+      </div>`;
+    }).join('') + `</div>`;
+  }
+
+  document.addEventListener('click', (e)=>{
+    const ok = e.target?.getAttribute?.('data-rate-ok');
+    const late = e.target?.getAttribute?.('data-rate-late');
+    const fail = e.target?.getAttribute?.('data-rate-fail');
+    if(ok){ RP.setRateStatus(ok,'paid'); renderUpcomingOwner(); renderEvents(); return; }
+    if(late){ RP.setRateStatus(late,'late'); renderUpcomingOwner(); renderEvents(); return; }
+    if(fail){ RP.setRateStatus(fail,'failed'); renderUpcomingOwner(); renderEvents(); return; }
+  });
+
+  renderUpcomingOwner();
+  renderRisk();
+  renderEvents();
 })();
 </script>
 
