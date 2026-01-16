@@ -7,6 +7,58 @@
   const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/i;
   const IBAN_RE  = /^[A-Z]{2}\d{2}[A-Z0-9]{11,30}$/i;
 
+  // ===== PDF helpers (client-side) =====
+  // Nota: funziona SOLO se il PDF contiene testo selezionabile.
+  // Se il PDF è una scansione, non avremo testo e mostreremo un warning.
+  async function extractPdfText(file){
+    if (!file) return '';
+    const pdfjsLib = window.pdfjsLib;
+    if (!pdfjsLib) throw new Error('PDF.js non caricato');
+
+    // worker
+    if (window.pdfjsWorkerSrc) {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = window.pdfjsWorkerSrc;
+    }
+
+    const buffer = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: buffer }).promise;
+    let fullText = '';
+    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+      const page = await pdf.getPage(pageNum);
+      const content = await page.getTextContent();
+      const pageText = content.items.map(it => it.str).join(' ');
+      fullText += '\n' + pageText;
+    }
+    return fullText.trim();
+  }
+
+  function parseEuroFromText(s){
+    if (!s) return null;
+    const cleaned = String(s).replace(/\s/g,'').replace(/€/g,'').replace(/\./g,'').replace(',', '.');
+    const n = Number(cleaned);
+    return Number.isFinite(n) ? n : null;
+  }
+
+  function parseFieldsFromPdfText(text){
+    const norm = String(text || '').replace(/\s+/g,' ').trim();
+    if (!norm) return { hasText:false, raw:'' };
+
+    // Regex “demo” (tolleranti) — basta per impressionare in pitch.
+    const canoneMatch = norm.match(/canone(?:\s+mensile)?\s*[:\-]?\s*(?:€\s*)?([0-9\.,]{2,10})/i);
+    const depositoMatch = norm.match(/deposito(?:\s+cauzionale)?\s*[:\-]?\s*(?:€\s*)?([0-9\.,]{2,10})/i);
+
+    // date: gg/mm/aaaa o aaaa-mm-gg vicino a “decorrenza” / “data inizio”
+    const startMatch = norm.match(/(?:decorrenza|data\s+inizio|inizio\s+locazione)\s*[:\-]?\s*([0-9]{2}\/[0-9]{2}\/[0-9]{4}|[0-9]{4}-[0-9]{2}-[0-9]{2})/i);
+
+    return {
+      hasText: true,
+      raw: norm,
+      pdfCanone: parseEuroFromText(canoneMatch?.[1] || null),
+      pdfDeposito: parseEuroFromText(depositoMatch?.[1] || null),
+      pdfStartDate: startMatch?.[1] || null
+    };
+  }
+
   function euro(n){
     const x = Number(n);
     if (!isFinite(x)) return '';
@@ -124,12 +176,41 @@
       }
     }
 
-    // PDF
+    // ===== PDF (opzionale) =====
     if (!payload.pdfFileName){
       issues.push({ level:'info', text:'Nessun PDF caricato: la demo funziona anche via form.' });
-      suggestions.push('Se vuoi impressionare un investitore: carica un PDF (anche finto) e mostra che l’assistente segnala campi mancanti/coerenze.');
     } else {
       issues.push({ level:'info', text:`PDF caricato: ${payload.pdfFileName}` });
+      if (payload.pdfParsed && payload.pdfParsed.hasText === false){
+        issues.push({ level:'warn', text:'PDF non leggibile: potrebbe essere una scansione (senza testo selezionabile).' });
+        suggestions.push('Se il PDF è scannerizzato: compila i dati nel form (oppure usa un PDF testuale per la demo).');
+      }
+      if (payload.pdfParsed && payload.pdfParsed.hasText){
+        const p = payload.pdfParsed;
+        // “riassunto”
+        const parts = [];
+        if (p.pdfCanone != null) parts.push(`canone ~ ${euro(p.pdfCanone)}`);
+        if (p.pdfDeposito != null) parts.push(`deposito ~ ${euro(p.pdfDeposito)}`);
+        if (p.pdfStartDate) parts.push(`decorrenza ~ ${p.pdfStartDate}`);
+        if (parts.length) issues.push({ level:'info', text:`Dati letti dal PDF (demo): ${parts.join(', ')}.` });
+
+        // confronti form vs pdf
+        if (p.pdfCanone != null && isFinite(rent) && rent > 0 && Math.abs(p.pdfCanone - rent) > 1){
+          issues.push({ level:'warn', text:`Incoerenza canone: nel PDF ~${euro(p.pdfCanone)}, nel form ${euro(rent)}.` });
+          suggestions.push('Allinea il canone nel form al valore presente nel PDF (o viceversa).');
+        }
+        if (p.pdfDeposito != null && deposit != null && isFinite(deposit) && deposit > 0 && Math.abs(p.pdfDeposito - deposit) > 1){
+          issues.push({ level:'warn', text:`Incoerenza deposito: nel PDF ~${euro(p.pdfDeposito)}, nel form ${euro(deposit)}.` });
+          suggestions.push('Allinea il deposito nel form al valore presente nel PDF (o viceversa).');
+        }
+        if (p.pdfStartDate && payload.startIso){
+          const pdfIso = p.pdfStartDate.includes('/') ? p.pdfStartDate.split('/').reverse().join('-') : p.pdfStartDate;
+          if (pdfIso !== payload.startIso){
+            issues.push({ level:'warn', text:`Incoerenza decorrenza: nel PDF ${p.pdfStartDate}, nel form ${payload.startIso}.` });
+            suggestions.push('Verifica che la data inizio sia la stessa in PDF e form.');
+          }
+        }
+      }
     }
 
     // Score demo: 100 = perfetto, penalità per missing/error/warn
@@ -198,6 +279,8 @@
 
   window.RPContractAssistant = {
     analyze: analyzeContract,
-    render: renderResult
+    render: renderResult,
+    extractPdfText,
+    parseFieldsFromPdfText
   };
 })();
