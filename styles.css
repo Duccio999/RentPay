@@ -390,3 +390,25 @@ input:-webkit-autofill:focus{
 .badge.ok{border-color:rgba(90,200,120,.35);background:rgba(90,200,120,.12)}
 .badge.bad{border-color:rgba(255,90,90,.35);background:rgba(255,90,90,.12)}
 .badge.warn{border-color:rgba(255,200,90,.35);background:rgba(255,200,90,.12)}
+
+/* ===== Contract & Data Assistant (DEMO) ===== */
+.ai-box{border:1px solid rgba(255,255,255,.18);border-radius:14px;padding:12px 12px;background:rgba(255,255,255,.03)}
+.ai-muted{opacity:.8;margin:0}
+.ai-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px}
+.ai-title{font-weight:800}
+.ai-sub{opacity:.85;font-size:.95rem;margin-top:2px}
+.ai-score{display:inline-block;padding:2px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.22);font-weight:800}
+.ai-score.ok{border-color:rgba(90,200,120,.35);background:rgba(90,200,120,.12)}
+.ai-score.warn{border-color:rgba(255,200,90,.35);background:rgba(255,200,90,.12)}
+.ai-score.bad{border-color:rgba(255,90,90,.35);background:rgba(255,90,90,.12)}
+.ai-grid{display:grid;grid-template-columns:1fr;gap:10px}
+@media(min-width:900px){.ai-grid{grid-template-columns:1fr 1fr 1fr}}
+.ai-panel{border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:10px;background:rgba(0,0,0,.08)}
+.ai-panel h4{margin:0 0 8px;font-size:1rem}
+.ai-list{margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+.ai-list li{display:flex;gap:10px;align-items:flex-start;line-height:1.25}
+.ai-dot{width:10px;height:10px;border-radius:50%;margin-top:4px;flex:0 0 auto;background:rgba(255,255,255,.35)}
+.ai-dot.ok{background:rgba(90,200,120,.85)}
+.ai-dot.warn{background:rgba(255,200,90,.9)}
+.ai-dot.bad{background:rgba(255,90,90,.9)}
+.ai-dot.info{background:rgba(120,170,255,.9)}
