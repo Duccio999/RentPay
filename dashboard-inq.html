@@ -80,6 +80,30 @@
       </table>
     </div>
   </section>
+
+
+  <!-- PROSSIME RATE -->
+  <section class="card section">
+    <div class="section-head">
+      <h2>Prossime rate</h2>
+    </div>
+    <p class="lead" style="margin-top:-6px">DEMO: qui vedi le prossime scadenze del tuo contratto attivo. Puoi simulare il pagamento per mostrare il flusso end-to-end.</p>
+    <div class="table-wrap edge">
+      <table class="rp-table">
+        <thead>
+          <tr>
+            <th>Scadenza</th>
+            <th>Immobile</th>
+            <th>Importo</th>
+            <th>Stato</th>
+            <th>Azioni</th>
+          </tr>
+        </thead>
+        <tbody id="tblUpcoming"></tbody>
+      </table>
+    </div>
+  </section>
+
 </main>
 
 <footer class="footer container">
@@ -136,10 +160,9 @@
         <td style="white-space:nowrap">
           <a class="btn ghost" href="${pdf}" target="_blank" rel="noopener">📄 PDF</a>
           ${isPending
-            ? `<button class="btn primary" data-sign="${c.id}">✍️ Firma</button>`
+            ? `<a class="btn primary" href="firma.html?cid=${c.id}">✍️ Firma</a>`
             : `<a class="btn primary" href="${pdf}" target="_blank" rel="noopener">📄 PDF firmato</a>`
-          }
-        </td>
+          }</td>
       </tr>
     `;
   }
@@ -154,30 +177,63 @@
     toSignTB.innerHTML = pending.length ? pending.map(rowHTML).join('') : `<tr><td colspan="5">Nessun contratto in attesa di firma.</td></tr>`;
     signedTB.innerHTML = active.length  ? active.map(rowHTML).join('')  : `<tr><td colspan="5">Nessun contratto firmato.</td></tr>`;
   }
+  // Render iniziale
+  render();
 
-  // click delegato per FIRMA
-  document.addEventListener('click', (e)=>{
-    const id = e.target && e.target.dataset && e.target.dataset.sign;
-    if(!id) return;
+  // ===== Prossime rate + simulazione pagamento =====
+  const upTB = document.getElementById('tblUpcoming');
+  const fmtDMY = (iso)=>{
+    if(!iso) return '-';
+    const [y,m,d] = iso.split('-');
+    return `${d}/${m}/${y}`;
+  };
+  const badge = (s)=>{
+    const map = { scheduled:'Programmato', paid:'Pagato', failed:'Fallito', late:'In ritardo' };
+    const lbl = map[s] || s;
+    const cls = (s==='paid') ? 'badge ok' : (s==='failed') ? 'badge bad' : (s==='late') ? 'badge warn' : 'badge';
+    return `<span class="${cls}">${lbl}</span>`;
+  };
 
+  function renderUpcoming(){
     const db = RP.read();
-    const c = db.contratti.find(x => x.id === id);
-    if(!c) return;
+    const contractsById = { ...Object.fromEntries(db.contratti.map(c=>[c.id,c])) };
+    const upcoming = RP.upcomingRatesForTenant(me.id, 10);
 
-    // inizializza se mancano i campi
-    c.signed = c.signed || { landlord:false, tenant:false };
-    c.pdfUrl = c.pdfUrl || DEFAULT_PDF;
+    upTB.innerHTML = upcoming.length ? upcoming.map(r=>{
+      const c = contractsById[r.contractId] || {};
+      const imm = c.address || c.indirizzo || '-';
+      const amount = fmtEUR(r.amount||0);
+      return `
+        <tr>
+          <td>${fmtDMY(r.dueDate)}</td>
+          <td>${imm}</td>
+          <td>${amount}</td>
+          <td>${badge(r.status)}</td>
+          <td style="white-space:nowrap">
+            <button class="btn primary" data-pay-ok="${r.id}">✅ Paga (demo)</button>
+            <button class="btn ghost" data-pay-late="${r.id}">⏱️ Ritardo</button>
+          </td>
+        </tr>
+      `;
+    }).join('') : `<tr><td colspan="5">Nessuna rata in programma.</td></tr>`;
+  }
 
-    c.signed.tenant = true;
-    c.status = 'active'; // ora il contratto risulta attivo
-
-    RP.write(db);
-    alert('Hai firmato il contratto! Puoi scaricare il PDF tra i Contratti firmati.');
-    render();
+  document.addEventListener('click', (e)=>{
+    const ok = e.target?.getAttribute?.('data-pay-ok');
+    const late = e.target?.getAttribute?.('data-pay-late');
+    if(ok){
+      RP.setRateStatus(ok, 'paid');
+      renderUpcoming();
+      return;
+    }
+    if(late){
+      RP.setRateStatus(late, 'late');
+      renderUpcoming();
+      return;
+    }
   });
 
-  // prima render
-  render();
+  renderUpcoming();
 })();
 </script>
 </body>
